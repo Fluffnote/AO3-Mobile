@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_markdown/flutter_markdown.dart';
-import 'package:ao3mobile/misc/miscUtils.dart';
-import '../misc/Work.dart';
+import 'package:ao3mobile/classes/miscUtils.dart';
+import '../classes/Chapter.dart';
+import '../classes/Work.dart';
 
 
 class ReadingView extends StatefulWidget {
@@ -50,7 +51,7 @@ class _ReadingView extends State<ReadingView> {
               print(snapshot);
               return FutureErrorView(snapshot: snapshot);
             }
-            return LoadingView();
+            return const LoadingView();
           },
     );
   }
@@ -100,6 +101,8 @@ class ReadingViewContent extends StatelessWidget {
           ),
           const SizedBox(height: 30,),
           MarkdownBody(data: chapter.body),
+          const SizedBox(height: 30,),
+
         ],
       ),
     );

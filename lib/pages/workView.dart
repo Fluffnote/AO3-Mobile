@@ -1,12 +1,14 @@
 import 'package:expandable/expandable.dart';
 import 'package:flutter/material.dart';
-import 'package:ao3mobile/misc/miscUtils.dart';
+import 'package:ao3mobile/classes/miscUtils.dart';
 import 'package:ao3mobile/pages/readingView.dart';
 
-import '../misc/Work.dart';
+import '../classes/Work.dart';
 
 class WorkView extends StatefulWidget {
-  const WorkView({super.key});
+  final int workId;
+  const WorkView({super.key, required this.workId});
+
   @override
   State<WorkView> createState() => _WorkView();
 }
@@ -17,13 +19,13 @@ class _WorkView extends State<WorkView> {
   @override
   void initState() {
     super.initState();
-    work = getWork(51635425);
+    work = getWork(widget.workId);
   }
 
   @override
   void reassemble() {
     super.reassemble();
-    work = getWork(51635425);
+    work = getWork(widget.workId);
   }
 
   @override
@@ -36,21 +38,23 @@ class _WorkView extends State<WorkView> {
             appBar: AppBar(
               leading: IconButton(
                 icon: const Icon(Icons.arrow_back),
-                onPressed: () {},
+                onPressed: () { Navigator.pop(context); },
               ),
               actions: [
-                IconButton(
-                  icon: const Icon(Icons.bookmark_add_outlined),
-                  onPressed: () {},
-                ),
+                // IconButton(
+                //   icon: const Icon(Icons.bookmark_add_outlined),
+                //   onPressed: () {},
+                // ),
                 IconButton(
                   icon: const Icon(Icons.public),
-                  onPressed: () {},
+                  onPressed: () {
+                    openWebPage(snapshot.data!.id);
+                  },
                 ),
-                IconButton(
-                  icon: const Icon(Icons.more_vert),
-                  onPressed: () {},
-                )
+                // IconButton(
+                //   icon: const Icon(Icons.more_vert),
+                //   onPressed: () {},
+                // )
               ],
               backgroundColor: Theme.of(context).primaryColor,
               forceMaterialTransparency: true,
@@ -58,11 +62,10 @@ class _WorkView extends State<WorkView> {
             body: MainWorkView(work: snapshot.data!,)
             );
         } else if (snapshot.hasError) {
-          return Text('${snapshot.error}');
+          print(snapshot);
+          return FutureErrorView(snapshot: snapshot);
         }
-
-        // By default, show a loading spinner.
-        return const Center(child: CircularProgressIndicator(),);
+        return const LoadingView();
       },
     );
   }
@@ -106,7 +109,7 @@ class MainWorkView extends StatelessWidget {
 // Expandable info section
 class WorkInfo extends StatelessWidget {
   final Work work;
-  WorkInfo({super.key, required this.work});
+  const WorkInfo({super.key, required this.work});
 
   @override
   Widget build(BuildContext context) {
@@ -202,62 +205,71 @@ class WorkInfo extends StatelessWidget {
                             const Icon(Icons.comment, size: 18.0,),
                             Text(" ${work.comments}", style: Theme.of(context).textTheme.bodyMedium,),
                           ]),
-                          Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              const SizedBox(height: 15.0,),
-                              const Text("Relationships:"),
-                              Wrap(
-                                spacing: 4.0,
-                                clipBehavior: Clip.antiAliasWithSaveLayer,
-                                children: [
-                                  for (var relation in work.relationships) Chip(
-                                    label: Text(relation),
-                                    labelStyle: Theme.of(context).textTheme.labelSmall,
-                                    labelPadding: const EdgeInsets.all(0),
-                                    visualDensity: VisualDensity.compact,
-                                  )
-                                ],
-                              ),
-                            ],
+                          Visibility(
+                            visible: work.relationships.isNotEmpty,
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                const SizedBox(height: 15.0,),
+                                const Text("Relationships:"),
+                                Wrap(
+                                  spacing: 4.0,
+                                  clipBehavior: Clip.antiAliasWithSaveLayer,
+                                  children: [
+                                    for (var relation in work.relationships) Chip(
+                                      label: Text(relation),
+                                      labelStyle: Theme.of(context).textTheme.labelSmall,
+                                      labelPadding: const EdgeInsets.all(0),
+                                      visualDensity: VisualDensity.compact,
+                                    )
+                                  ],
+                                ),
+                              ],
+                            )
                           ),
-                          Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              const SizedBox(height: 15.0,),
-                              const Text("Characters:"),
-                              Wrap(
-                                spacing: 4.0,
-                                clipBehavior: Clip.antiAliasWithSaveLayer,
-                                children: [
-                                  for (var character in work.characters) Chip(
-                                    label: Text(character),
-                                    labelStyle: Theme.of(context).textTheme.labelSmall,
-                                    labelPadding: const EdgeInsets.all(0),
-                                    visualDensity: VisualDensity.compact,
-                                  )
-                                ],
-                              ),
-                            ],
+                          Visibility(
+                            visible: work.characters.isNotEmpty,
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                const SizedBox(height: 15.0,),
+                                const Text("Characters:"),
+                                Wrap(
+                                  spacing: 4.0,
+                                  clipBehavior: Clip.antiAliasWithSaveLayer,
+                                  children: [
+                                    for (var character in work.characters) Chip(
+                                      label: Text(character),
+                                      labelStyle: Theme.of(context).textTheme.labelSmall,
+                                      labelPadding: const EdgeInsets.all(0),
+                                      visualDensity: VisualDensity.compact,
+                                    )
+                                  ],
+                                ),
+                              ],
+                            )
                           ),
-                          Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              const SizedBox(height: 15.0,),
-                              const Text("Tags:"),
-                              Wrap(
-                                spacing: 4.0,
-                                clipBehavior: Clip.antiAliasWithSaveLayer,
-                                children: [
-                                  for (var tag in work.addTags) Chip(
-                                    label: Text(tag),
-                                    labelStyle: Theme.of(context).textTheme.labelSmall,
-                                    labelPadding: const EdgeInsets.all(0),
-                                    visualDensity: VisualDensity.compact,
-                                  )
-                                ],
-                              ),
-                            ],
+                          Visibility(
+                            visible: work.addTags.isNotEmpty,
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                const SizedBox(height: 15.0,),
+                                const Text("Tags:"),
+                                Wrap(
+                                  spacing: 4.0,
+                                  clipBehavior: Clip.antiAliasWithSaveLayer,
+                                  children: [
+                                    for (var tag in work.addTags) Chip(
+                                      label: Text(tag),
+                                      labelStyle: Theme.of(context).textTheme.labelSmall,
+                                      labelPadding: const EdgeInsets.all(0),
+                                      visualDensity: VisualDensity.compact,
+                                    )
+                                  ],
+                                ),
+                              ],
+                            )
                           ),
                         ],
                       ),
