@@ -34,7 +34,7 @@ class _ExpandedMarkdownBoxState extends State<ExpandedMarkdownBox> {
     return Container(
       child: !longerThanLimit?MarkdownBody(data: widget.body,):Column(
         children: [
-          MarkdownBody(data: !expanded?"${widget.body.substring(0, widget.limit)}...":widget.body,),
+          MarkdownBody(data: !expanded&&widget.body.length>widget.limit?"${widget.body.substring(0, widget.limit)}...":widget.body,),
           InkWell(
             onTap: (){ setState(() { expanded = !expanded; });},
             child: Container(
@@ -62,10 +62,21 @@ class FutureErrorView extends StatelessWidget {
           ),
           forceMaterialTransparency: true,
         ),
-        body: Container( padding: const EdgeInsets.all(5.0), child: Text('$snapshot', style: const TextStyle(fontSize: 14.0, color: Color.fromRGBO(226, 70, 70, 1.0)),),)
+        body: Container( padding: const EdgeInsets.all(5.0), child: Text(snapshot.stackTrace.toString(), style: const TextStyle(fontSize: 14.0, color: Color.fromRGBO(226, 70, 70, 1.0)),),)
     );
   }
 }
+
+class FutureErrorBody extends StatelessWidget {
+  final AsyncSnapshot snapshot;
+  const FutureErrorBody({super.key, required this.snapshot});
+
+  @override
+  Widget build(BuildContext context) {
+    return Container( padding: const EdgeInsets.all(5.0), child: Text('$snapshot', style: const TextStyle(fontSize: 14.0, color: Color.fromRGBO(226, 70, 70, 1.0)),),);
+  }
+}
+
 
 class LoadingView extends StatelessWidget {
   const LoadingView({super.key});
