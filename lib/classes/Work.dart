@@ -79,7 +79,7 @@ class Work {
         temp.addTags.add(elem.text);
       }
     }
-    temp.language = page.getElementsByClassName("language").last.text.replaceAll("\n", ""); // Adding language
+    temp.language = page.getElementsByClassName("language").last.text.replaceAll("\n", "").trim(); // Adding language
 
     // Getting stats
     dom.Element stats = page.getElementsByClassName("stats").last;
@@ -113,6 +113,7 @@ class Work {
         String tempIDClipping = elem.outerHtml.substring(
             elem.outerHtml.indexOf('value="') + 7);
         temp.chapters.add(Chapter.create(
+            workId: workId,
             id: int.parse(
                 tempIDClipping.substring(0, tempIDClipping.indexOf('"'))),
             title: tempIDClipping.substring(
@@ -121,6 +122,15 @@ class Work {
                 tempIDClipping.indexOf(">") + 1, tempIDClipping.indexOf("."))
         ));
       }
+    }
+    else {
+      temp.chapters.add(Chapter.create(
+          workId: workId,
+          id: -1,
+          title: page.getElementsByClassName("title heading").first.text.replaceAll("\n", "").trim(),
+          num: "1"
+      )
+      );
     }
 
     // Getting first summary

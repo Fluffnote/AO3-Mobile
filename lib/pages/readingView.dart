@@ -6,9 +6,9 @@ import '../classes/Work.dart';
 
 
 class ReadingView extends StatefulWidget {
-  final Work work;
+  final int workId;
   final int chapterId;
-  const ReadingView({super.key, required this.work, required this.chapterId});
+  const ReadingView({super.key, required this.workId, required this.chapterId});
 
   @override
   State<ReadingView> createState() => _ReadingView();
@@ -20,14 +20,14 @@ class _ReadingView extends State<ReadingView> {
   @override
   void initState() {
     super.initState();
-    chapter = getChapter(widget.work.id, widget.chapterId);
+    chapter = getChapter(widget.workId, widget.chapterId);
   }
 
-  @override
-  void reassemble() {
-    super.reassemble();
-    chapter = getChapter(widget.work.id, widget.chapterId);
-  }
+  // @override
+  // void reassemble() {
+  //   super.reassemble();
+  //   chapter = getChapter(widget.workId, widget.chapterId);
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -41,7 +41,7 @@ class _ReadingView extends State<ReadingView> {
                       icon: const Icon(Icons.arrow_back),
                       onPressed: () { Navigator.pop(context); },
                     ),
-                    title: Text(widget.work.title),
+                    title: Text(snapshot.data!.workTitle),
                     backgroundColor: Theme.of(context).primaryColor,
                     forceMaterialTransparency: true,
                   ),
@@ -57,9 +57,16 @@ class _ReadingView extends State<ReadingView> {
   }
 }
 
-class ReadingViewContent extends StatelessWidget {
+class ReadingViewContent extends StatefulWidget {
   final Chapter chapter;
   const ReadingViewContent({super.key, required this.chapter});
+
+  @override
+  State<ReadingViewContent> createState() => _ReadingViewContentState();
+}
+
+class _ReadingViewContentState extends State<ReadingViewContent> {
+  late Future<Chapter> chapter;
 
   @override
   Widget build(BuildContext context) {
@@ -69,10 +76,11 @@ class ReadingViewContent extends StatelessWidget {
         children: [
           Container(
             margin: const EdgeInsets.only(bottom: 30),
-            child: Text(chapter.title.isNotEmpty?"${chapter.num}. ${chapter.title}":"Chapter ${chapter.num}", style: Theme.of(context).textTheme.headlineSmall,),
+            child: Text(widget.chapter.title.isNotEmpty?"${widget.chapter.num}${widget.chapter.num.isNotEmpty?". ":""}${widget.chapter.title}":"Chapter ${widget.chapter.num}",
+              style: Theme.of(context).textTheme.headlineSmall,),
           ),
           Visibility(
-            visible: chapter.summary.isNotEmpty,
+            visible: widget.chapter.summary.isNotEmpty,
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -80,13 +88,13 @@ class ReadingViewContent extends StatelessWidget {
                   margin: const EdgeInsets.only(bottom: 10),
                   child: Text("Summary: ", style: Theme.of(context).textTheme.titleMedium,),
                 ),
-                ExpandedMarkdownBox(body: chapter.summary),
+                ExpandedMarkdownBox(body: widget.chapter.summary),
                 const Divider(),
               ],
             ),
           ),
           Visibility(
-            visible: chapter.notes.isNotEmpty,
+            visible: widget.chapter.notes.isNotEmpty,
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -94,15 +102,28 @@ class ReadingViewContent extends StatelessWidget {
                   margin: const EdgeInsets.only(bottom: 10),
                   child: Text("Notes: ", style: Theme.of(context).textTheme.titleMedium,),
                 ),
-                ExpandedMarkdownBox(body: chapter.notes),
+                ExpandedMarkdownBox(body: widget.chapter.notes),
                 const Divider(),
               ],
             ),
           ),
           const SizedBox(height: 30,),
-          MarkdownBody(data: chapter.body),
-          const SizedBox(height: 30,),
-
+          MarkdownBody(data: widget.chapter.body),
+          const SizedBox(height: 50,),
+          // Text(chapter.nextId.toString(), style: Theme.of(context).textTheme.titleMedium),
+          const Divider(),
+          const SizedBox(height: 10,),
+          InkWell(
+            onTap: (){
+              setState(() {
+                chapter = getChapter(widget.chapter.workId, widget.chapter.nextId);
+              });
+            },
+            child: Container(
+              padding: const EdgeInsets.all(4),
+              child: Row(mainAxisAlignment: MainAxisAlignment.center, children: [Text("Next Chapter", style: Theme.of(context).textTheme.titleMedium)],),
+            ),
+          )
         ],
       ),
     );

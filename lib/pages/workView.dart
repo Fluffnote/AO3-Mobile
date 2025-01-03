@@ -20,13 +20,14 @@ class _WorkView extends State<WorkView> {
   void initState() {
     super.initState();
     work = getWork(widget.workId);
+    print(widget.workId);
   }
 
-  @override
-  void reassemble() {
-    super.reassemble();
-    work = getWork(widget.workId);
-  }
+  // @override
+  // void reassemble() {
+  //   super.reassemble();
+  //   work = getWork(widget.workId);
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -95,7 +96,7 @@ class MainWorkView extends StatelessWidget {
         ),
         for (var chapter in work.chapters) ListTile(
           onTap: () {
-            Navigator.push(context, MaterialPageRoute(builder: (context) => ReadingView(work: work, chapterId: chapter.id)));
+            Navigator.push(context, MaterialPageRoute(builder: (context) => ReadingView(workId: work.id, chapterId: chapter.id)));
           },
           title: Text("${chapter.num}. ${chapter.title}"),
           titleTextStyle: Theme.of(context).textTheme.titleMedium,

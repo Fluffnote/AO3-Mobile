@@ -25,13 +25,13 @@ class _SearchView extends State<SearchView> {
     works = workSearch(WorkSearchQueryParameters(query: ""));
   }
 
-  @override
-  void reassemble() {
-    super.reassemble();
-
-    searchCon = TextEditingController();
-    works = workSearch(WorkSearchQueryParameters(query: ""));
-  }
+  // @override
+  // void reassemble() {
+  //   super.reassemble();
+  //
+  //   searchCon = TextEditingController();
+  //   works = workSearch(WorkSearchQueryParameters(query: ""));
+  // }
 
   @override
   void dispose() {
@@ -48,8 +48,9 @@ class _SearchView extends State<SearchView> {
         //   onPressed: () {},
         // ),
         title: TextField(
+          textInputAction: TextInputAction.search,
           controller: searchCon,
-          onChanged: (String value) {
+          onSubmitted: (String value) {
             setState(() {
               query = value;
               works = workSearch(WorkSearchQueryParameters(query: value));

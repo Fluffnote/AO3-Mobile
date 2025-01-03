@@ -62,7 +62,15 @@ class FutureErrorView extends StatelessWidget {
           ),
           forceMaterialTransparency: true,
         ),
-        body: Container( padding: const EdgeInsets.all(5.0), child: Text(snapshot.stackTrace.toString(), style: const TextStyle(fontSize: 14.0, color: Color.fromRGBO(226, 70, 70, 1.0)),),)
+        body: Container(
+          padding: const EdgeInsets.all(5.0),
+          child: Column(
+            children: [
+              Text(snapshot.error.toString(), style: const TextStyle(fontSize: 14.0, color: Color.fromRGBO(226, 70, 70, 1.0)),),
+              Text(snapshot.stackTrace.toString(), style: const TextStyle(fontSize: 14.0, color: Color.fromRGBO(226, 70, 70, 1.0)),),
+            ],
+          ),
+        ),
     );
   }
 }
