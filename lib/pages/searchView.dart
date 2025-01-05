@@ -14,7 +14,7 @@ class SearchView extends StatefulWidget {
 
 class _SearchView extends State<SearchView> {
   late TextEditingController searchCon;
-  late Future<SearchData>? works;
+  late Future<SearchData> works;
   String query = "";
 
   @override
@@ -41,6 +41,65 @@ class _SearchView extends State<SearchView> {
 
   @override
   Widget build(BuildContext context) {
+    // final _scrollController = ScrollController();
+    // return Scaffold(
+    //   body: CustomScrollView(
+    //     controller: _scrollController,
+    //     scrollBehavior: const MaterialScrollBehavior(),
+    //     slivers: [
+    //       SliverAppBar(
+    //         title: TextField(
+    //           textInputAction: TextInputAction.search,
+    //           controller: searchCon,
+    //           onSubmitted: (String value) {
+    //             setState(() {
+    //               query = value;
+    //               works = null;
+    //               works = workSearch(WorkSearchQueryParameters(query: value));
+    //             });
+    //           },
+    //           decoration: const InputDecoration(
+    //             border: InputBorder.none,
+    //             hintText: 'Search...',
+    //             icon: Icon(Icons.search),
+    //           ),
+    //         ),
+    //         actions: [
+    //           Visibility(
+    //             visible: query.isNotEmpty,
+    //             child: IconButton(
+    //               onPressed: () {
+    //                 searchCon.clear();
+    //                 setState(() {
+    //                   query = "";
+    //                   works = workSearch(WorkSearchQueryParameters(query: ""));
+    //                 });
+    //               },
+    //               icon: const Icon(Icons.clear),
+    //             ),
+    //           ),
+    //           IconButton(
+    //             icon: const Icon(Icons.filter_list_outlined),
+    //             onPressed: () {},
+    //           ),
+    //         ],
+    //         // backgroundColor: Theme.of(context).primaryColor,
+    //         floating: true,
+    //         pinned: false,
+    //         // forceMaterialTransparency: true,
+    //       ),
+    //       SliverList(
+    //           delegate: SliverChildListDelegate([
+    //             for (int i = 0; i < 100; i++)
+    //               ListTile(
+    //                 leading: CircleAvatar(),
+    //                 title: Text(i.toString()),
+    //               )
+    //           ])
+    //       )
+    //     ],
+    //   ),
+    // );
     return Scaffold(
       appBar: AppBar(
         // leading: IconButton(
@@ -53,7 +112,6 @@ class _SearchView extends State<SearchView> {
           onSubmitted: (String value) {
             setState(() {
               query = value;
-              works = null;
               works = workSearch(WorkSearchQueryParameters(query: value));
             });
           },
@@ -88,7 +146,7 @@ class _SearchView extends State<SearchView> {
       body: FutureBuilder(
         future: works,
         builder: (context, snapshot) {
-          if (snapshot.hasData && works != null) {
+          if (snapshot.hasData) {
             return PartialWorkList(searchData: snapshot.requireData);
           } else if (snapshot.hasError) {
             return FutureErrorBody(snapshot: snapshot);

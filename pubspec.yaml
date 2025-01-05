@@ -41,6 +41,7 @@ dependencies:
   flutter_markdown: ^0.7.1
   expandable: ^5.0.1
   url_launcher: ^6.2.6
+  sqflite: ^2.4.1
 
 dev_dependencies:
   flutter_test:
