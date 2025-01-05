@@ -1,4 +1,5 @@
 import 'package:ao3mobile/classes/Work.dart';
+import 'package:flutter/foundation.dart';
 import 'package:html/dom.dart' as dom;
 import 'package:html/parser.dart';
 import 'package:http/http.dart' as http;
@@ -174,6 +175,9 @@ Future<SearchData> workSearch(WorkSearchQueryParameters params) async {
       queryParameters: params.getParams()
   );
 
+  if (kDebugMode) {
+    print("Search started: $httpsSearch");
+  }
   dom.Document page = parse((await http.get(httpsSearch)).body);
   // Can't find any results
   if (page.getElementsByClassName("work index group").isEmpty) return SearchData();

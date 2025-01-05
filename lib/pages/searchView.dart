@@ -14,7 +14,7 @@ class SearchView extends StatefulWidget {
 
 class _SearchView extends State<SearchView> {
   late TextEditingController searchCon;
-  late Future<SearchData> works;
+  late Future<SearchData>? works;
   String query = "";
 
   @override
@@ -53,6 +53,7 @@ class _SearchView extends State<SearchView> {
           onSubmitted: (String value) {
             setState(() {
               query = value;
+              works = null;
               works = workSearch(WorkSearchQueryParameters(query: value));
             });
           },
@@ -87,7 +88,7 @@ class _SearchView extends State<SearchView> {
       body: FutureBuilder(
         future: works,
         builder: (context, snapshot) {
-          if (snapshot.hasData) {
+          if (snapshot.hasData && works != null) {
             return PartialWorkList(searchData: snapshot.requireData);
           } else if (snapshot.hasError) {
             return FutureErrorBody(snapshot: snapshot);

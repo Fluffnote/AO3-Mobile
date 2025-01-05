@@ -2,6 +2,7 @@ import 'package:html/dom.dart' as dom;
 import 'package:html/parser.dart';
 import 'package:html2md/html2md.dart';
 import 'package:http/http.dart' as http;
+import 'package:http/retry.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import 'Chapter.dart';
@@ -11,7 +12,14 @@ import 'Chapter.dart';
 
 // Work functions
 Future<Work> getWork(int workId) async {
-  http.Response response = await http.get(Uri.parse("https://archiveofourown.org/works/$workId?view_adult=true"));
+  http.Response response;
+  final client = RetryClient(http.Client());
+  try {
+    response = await client.get(Uri.parse("https://archiveofourown.org/works/$workId?view_adult=true"));
+  }
+  finally {
+    client.close();
+  }
   return Work.createWork(parse(response.body), workId);
 }
 
@@ -142,9 +150,7 @@ class Work {
 
 Future<void> openWebPage(int work) async {
   Uri uri =  Uri.parse("https://archiveofourown.org/works/$work?view_adult=true");
-  if (!await launchUrl(uri)) {
-    throw Exception('Could not launch $uri');
-  }
+  if (!await launchUrl(uri)) throw Exception('Could not launch $uri');
 }
 
 

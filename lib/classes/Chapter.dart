@@ -2,16 +2,23 @@ import 'package:html/dom.dart' as dom;
 import 'package:html/parser.dart';
 import 'package:html2md/html2md.dart';
 import 'package:http/http.dart' as http;
+import 'package:http/retry.dart';
 
 
 
 Future<Chapter> getChapter(int workId, int chapterId) async {
   http.Response response;
-  if (chapterId == -1) {
-    response = await http.get(Uri.parse("https://archiveofourown.org/works/$workId#workskin?view_adult=true"));
+  final client = RetryClient(http.Client());
+  try {
+    if (chapterId == -1) {
+      response = await client.get(Uri.parse("https://archiveofourown.org/works/$workId#workskin?view_adult=true"));
+    }
+    else {
+      response = await client.get(Uri.parse("https://archiveofourown.org/works/$workId/chapters/$chapterId#workskin?view_adult=true"));
+    }
   }
-  else {
-    response = await http.get(Uri.parse("https://archiveofourown.org/works/$workId/chapters/$chapterId#workskin?view_adult=true"));
+  finally {
+    client.close();
   }
   return Chapter.getChapter(workId, chapterId, parse(response.body));
 }

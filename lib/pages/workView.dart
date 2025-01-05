@@ -20,7 +20,6 @@ class _WorkView extends State<WorkView> {
   void initState() {
     super.initState();
     work = getWork(widget.workId);
-    print(widget.workId);
   }
 
   // @override
@@ -52,10 +51,10 @@ class _WorkView extends State<WorkView> {
                     openWebPage(snapshot.data!.id);
                   },
                 ),
-                // IconButton(
-                //   icon: const Icon(Icons.more_vert),
-                //   onPressed: () {},
-                // )
+                IconButton(
+                  icon: const Icon(Icons.more_vert),
+                  onPressed: () {},
+                )
               ],
               backgroundColor: Theme.of(context).primaryColor,
               forceMaterialTransparency: true,
@@ -141,8 +140,8 @@ class WorkInfo extends StatelessWidget {
                             Text(" ${work.fandom}", style: Theme.of(context).textTheme.bodyMedium,),
                           ]),
                           Row(children: [
-                            const Icon(Icons.check_rounded, size: 18.0,),
-                            Text(" ${work.statusLabel} · ${work.statusDate}", style: Theme.of(context).textTheme.bodyMedium,),
+                            Icon((work.statusLabel.isNotEmpty)?Icons.check_rounded:Icons.edit, size: 18.0,),
+                            Text((work.statusLabel.isNotEmpty)?" ${work.statusLabel} · ${work.statusDate}":" Published · ${work.publishedDate}", style: Theme.of(context).textTheme.bodyMedium,),
                           ]),
                         ],
                       ),
@@ -182,10 +181,13 @@ class WorkInfo extends StatelessWidget {
                             const Icon(Icons.edit, size: 18.0,),
                             Text(" Published · ${work.publishedDate}", style: Theme.of(context).textTheme.bodyMedium,),
                           ]),
-                          Row(children: [
-                            const Icon(Icons.check_rounded, size: 18.0,),
-                            Text(" ${work.statusLabel} · ${work.statusDate}", style: Theme.of(context).textTheme.bodyMedium,),
-                          ]),
+                          Visibility(
+                            visible: work.statusLabel.isNotEmpty,
+                            child: Row(children: [
+                              const Icon(Icons.check_rounded, size: 18.0,),
+                              Text(" ${work.statusLabel} · ${work.statusDate}", style: Theme.of(context).textTheme.bodyMedium,),
+                            ]),
+                          ),
                           Row(children: [
                             const Icon(Icons.language, size: 18.0,),
                             Text(" ${work.language}", style: Theme.of(context).textTheme.bodyMedium,),
