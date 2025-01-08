@@ -1,21 +1,27 @@
-import 'package:ao3mobile/pages/searchView.dart';
+import 'package:ao3mobile/pages/homeView.dart';
 import 'package:flutter/material.dart';
 
 void main() {
   runApp (const MyApp());
 }
 
-class MyApp extends StatelessWidget {
+class MyApp extends StatefulWidget {
   const MyApp({super.key});
 
   @override
+  State<MyApp> createState() => _MyAppState();
+}
+
+class _MyAppState extends State<MyApp> {
+  @override
   Widget build(BuildContext context) {
+
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      home: const SearchView(),
+      home: const HomeView(),
       theme: ThemeData(
         brightness: Brightness.dark,
-        primaryColor: const Color.fromRGBO(255, 58, 71, 1.0)
+        primaryColor: const Color.fromRGBO(151, 0, 0, 1.0)
       ),
     );
   }

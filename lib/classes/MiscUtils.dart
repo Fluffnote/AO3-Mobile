@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_markdown/flutter_markdown.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class ExpandedMarkdownBox extends StatefulWidget {
   final String body;
@@ -102,6 +103,11 @@ class LoadingView extends StatelessWidget {
         body: const Center(child: CircularProgressIndicator(),)
     );
   }
+}
+
+Future<void> openWebPage(String url) async {
+  Uri uri = Uri.parse(url);
+  if (!await launchUrl(uri)) throw Exception('Could not launch $uri');
 }
 
 

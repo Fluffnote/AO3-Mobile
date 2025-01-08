@@ -1,7 +1,8 @@
 import 'package:expandable/expandable.dart';
 import 'package:flutter/material.dart';
-import 'package:ao3mobile/classes/miscUtils.dart';
+import 'package:ao3mobile/classes/MiscUtils.dart';
 import 'package:ao3mobile/pages/readingView.dart';
+import 'package:flutter/services.dart';
 
 import '../classes/Work.dart';
 
@@ -15,10 +16,18 @@ class WorkView extends StatefulWidget {
 
 class _WorkView extends State<WorkView> {
   late Future<Work> work;
+  late final _scrollController;
+  double _scrollOffset = 0;
 
   @override
   void initState() {
     super.initState();
+    _scrollController = ScrollController();
+    _scrollController.addListener(() {
+      setState(() {
+        _scrollOffset = _scrollController.offset;
+      });
+    });
     work = getWork(widget.workId);
   }
 
@@ -27,6 +36,12 @@ class _WorkView extends State<WorkView> {
   //   super.reassemble();
   //   work = getWork(widget.workId);
   // }
+  
+  @override
+  void dispose() {
+    print("disposed");
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -35,32 +50,46 @@ class _WorkView extends State<WorkView> {
       builder: (context, snapshot) {
         if (snapshot.hasData) {
           return Scaffold(
-            appBar: AppBar(
-              leading: IconButton(
-                icon: const Icon(Icons.arrow_back),
-                onPressed: () { Navigator.pop(context); },
-              ),
-              actions: [
-                // IconButton(
-                //   icon: const Icon(Icons.bookmark_add_outlined),
-                //   onPressed: () {},
-                // ),
-                IconButton(
-                  icon: const Icon(Icons.public),
-                  onPressed: () {
-                    openWebPage(snapshot.data!.id);
-                  },
+            body: CustomScrollView(
+              controller: _scrollController,
+              scrollBehavior: const MaterialScrollBehavior(),
+              slivers: [
+                SliverAppBar(
+                  leading: IconButton(
+                    icon: const Icon(Icons.arrow_back),
+                    onPressed: () { Navigator.pop(context); },
+                  ),
+                  title: Visibility(
+                    visible: _scrollOffset > 240,
+                    child: Text(snapshot.data!.title)
+                  ),
+                  actions: [
+                    // IconButton(
+                    //   icon: const Icon(Icons.bookmark_add_outlined),
+                    //   onPressed: () {},
+                    // ),
+                    IconButton(
+                      icon: const Icon(Icons.public),
+                      onPressed: () {
+                        openWorkPage(snapshot.data!.id);
+                      },
+                    ),
+                    IconButton(
+                      icon: const Icon(Icons.more_vert),
+                      onPressed: () {},
+                    )
+                  ],
+                  backgroundColor: Theme.of(context).primaryColor,
+                  floating: true,
+                  pinned: false,
+                  systemOverlayStyle: SystemUiOverlayStyle(
+                      systemNavigationBarColor: Theme.of(context).primaryColor
+                  ),
                 ),
-                IconButton(
-                  icon: const Icon(Icons.more_vert),
-                  onPressed: () {},
-                )
+                MainWorkView(work: snapshot.data!)
               ],
-              backgroundColor: Theme.of(context).primaryColor,
-              forceMaterialTransparency: true,
             ),
-            body: MainWorkView(work: snapshot.data!,)
-            );
+          );
         } else if (snapshot.hasError) {
           print(snapshot);
           return FutureErrorView(snapshot: snapshot);
@@ -78,8 +107,8 @@ class MainWorkView extends StatelessWidget {
   const MainWorkView({super.key, required this.work});
   @override
   Widget build(BuildContext context) {
-    return ListView(
-      children: [
+    return SliverList(
+      delegate: SliverChildListDelegate([
         Container(
           margin: const EdgeInsets.fromLTRB(15.0, 15.0, 15.0, 0),
           child: Text(work.title, style: Theme.of(context).textTheme.headlineLarge,),
@@ -101,7 +130,7 @@ class MainWorkView extends StatelessWidget {
           titleTextStyle: Theme.of(context).textTheme.titleMedium,
           // trailing: Icon(Icons.download),
         )
-      ],
+      ]),
     );
   }
 }

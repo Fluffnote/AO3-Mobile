@@ -51,7 +51,7 @@ class WorkSearchQueryParameters {
   String complete = '';
   String crossover = '';
   bool singleChapter = false;
-  int wordCount = -1;
+  String wordCount = "";
   String languageId = '';
 
   // Work Tags
@@ -83,7 +83,7 @@ class WorkSearchQueryParameters {
     this.complete = "",
     this.crossover = "",
     this.singleChapter = false,
-    this.wordCount = -1,
+    this.wordCount = "",
     this.languageId = "",
     this.fandomNames = const [],
     this.ratingIds = "",
@@ -114,7 +114,7 @@ class WorkSearchQueryParameters {
       'work_search[complete]':complete,
       'work_search[crossover]':crossover,
       'work_search[single_chapter]':singleChapter?'1':'0',
-      'work_search[word_count]':(wordCount != -1)?'$wordCount':'',
+      'work_search[word_count]':wordCount,
       'work_search[language_id]':languageId,
     });
 
@@ -137,10 +137,10 @@ class WorkSearchQueryParameters {
 
     // Adding work stats
     out.addAll({
-      'work_search[hits]':'',
-      'work_search[kudos_count]':'',
-      'work_search[comments_count]':'',
-      'work_search[bookmarks_count]':'',
+      'work_search[hits]':hits,
+      'work_search[kudos_count]':kudosCount,
+      'work_search[comments_count]':commentsCount,
+      'work_search[bookmarks_count]':bookmarksCount,
     });
 
     // Adding search options
@@ -175,9 +175,8 @@ Future<SearchData> workSearch(WorkSearchQueryParameters params) async {
       queryParameters: params.getParams()
   );
 
-  if (kDebugMode) {
-    print("Search started: $httpsSearch");
-  }
+  if (kDebugMode) print("Search started: $httpsSearch");
+
   dom.Document page = parse((await http.get(httpsSearch)).body);
   // Can't find any results
   if (page.getElementsByClassName("work index group").isEmpty) return SearchData();
@@ -191,5 +190,6 @@ Future<SearchData> workSearch(WorkSearchQueryParameters params) async {
     out.add(PartialWork.create(elem));
   }
 
+  if (kDebugMode) print("Search finished: $numFound");
   return SearchData(numFound:numFound, works: out);
 }

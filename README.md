@@ -4,4 +4,4 @@ An unofficial AO3 reader app
 
 This project is built on [Flutter](https://flutter.dev)
 
-At this point in time it is ***unusable*** without manipulating the Work ID that you would like to appear
+Anything that requires pulling data from AO3's site (searching, updating) may fail sometimes due to lag in connection, server hiccups, etc. This is no ones fault, please be patient

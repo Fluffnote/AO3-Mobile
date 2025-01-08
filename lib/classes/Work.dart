@@ -148,7 +148,7 @@ class Work {
   }
 }
 
-Future<void> openWebPage(int work) async {
+Future<void> openWorkPage(int work) async {
   Uri uri =  Uri.parse("https://archiveofourown.org/works/$work?view_adult=true");
   if (!await launchUrl(uri)) throw Exception('Could not launch $uri');
 }

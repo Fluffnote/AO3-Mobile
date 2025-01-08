@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_markdown/flutter_markdown.dart';
-import 'package:ao3mobile/classes/miscUtils.dart';
+import 'package:ao3mobile/classes/MiscUtils.dart';
 import '../classes/Chapter.dart';
 import '../classes/Work.dart';
 
