@@ -8,7 +8,8 @@ import '../classes/Work.dart';
 
 class WorkView extends StatefulWidget {
   final int workId;
-  const WorkView({super.key, required this.workId});
+  final int refreshType;
+  const WorkView({super.key, required this.workId, this.refreshType = 0 });
 
   @override
   State<WorkView> createState() => _WorkView();
@@ -28,7 +29,7 @@ class _WorkView extends State<WorkView> {
         _scrollOffset = _scrollController.offset;
       });
     });
-    work = getWork(widget.workId);
+    work = getWork(widget.workId, widget.refreshType);
   }
 
   // @override
@@ -39,7 +40,7 @@ class _WorkView extends State<WorkView> {
   
   @override
   void dispose() {
-    print("disposed");
+
     super.dispose();
   }
 
@@ -117,7 +118,7 @@ class MainWorkView extends StatelessWidget {
             margin: const EdgeInsets.fromLTRB(15.0, 15.0, 15.0, 5.0),
             child: WorkInfo(work: work)
         ),
-        SingleChildScrollView(padding: const EdgeInsets.fromLTRB(15.0, 15.0, 15.0, 0), child: ExpandedMarkdownBox( body: work.firstSummary, ),),
+        SingleChildScrollView(padding: const EdgeInsets.fromLTRB(15.0, 15.0, 15.0, 0), child: ExpandedMarkdownBox( body: work.summary, ),),
         Container(
           margin: const EdgeInsets.fromLTRB(15.0, 15.0, 15.0, 0),
           child: Text("${work.chapterStats} chapters", style: Theme.of(context).textTheme.bodyLarge,),
@@ -153,20 +154,20 @@ class WorkInfo extends StatelessWidget {
                       child: Column(
                         children: [
                           Row(children: [
-                            const Icon(Icons.person, size: 18.0,),
-                            Text(" ${work.author}", style: Theme.of(context).textTheme.bodyMedium,)
+                            Container(margin: const EdgeInsets.fromLTRB(0, 0, 5, 0), child: const Icon(Icons.person, size: 18.0,),),
+                            Text(work.author, style: Theme.of(context).textTheme.bodyMedium,)
                           ]),
                           Row(children: [
-                            const Icon(Icons.sensor_occupied, size: 18.0,),
-                            Text(" ${work.rating}", style: Theme.of(context).textTheme.bodyMedium,),
+                            Container(margin: const EdgeInsets.fromLTRB(0, 0, 5, 0), child: const Icon(Icons.sensor_occupied, size: 18.0,),),
+                            Text(work.rating, style: Theme.of(context).textTheme.bodyMedium,),
                           ]),
                           Row(children: [
-                            const Icon(Icons.warning, size: 18.0,),
-                            Text(" ${work.archiveWarning}", style: Theme.of(context).textTheme.bodyMedium,),
+                            Container(margin: const EdgeInsets.fromLTRB(0, 0, 5, 0), child: const Icon(Icons.warning, size: 18.0,),),
+                            Expanded(child: Text(work.warning, style: Theme.of(context).textTheme.bodyMedium))
                           ]),
                           Row(children: [
-                            const Icon(Icons.grid_view, size: 18.0,),
-                            Text(" ${work.fandom}", style: Theme.of(context).textTheme.bodyMedium,),
+                            Container(margin: const EdgeInsets.fromLTRB(0, 0, 5, 0), child: const Icon(Icons.grid_view, size: 18.0,),),
+                            Expanded(child: Text(work.fandoms.join(", "), style: Theme.of(context).textTheme.bodyMedium))
                           ]),
                           Row(children: [
                             Icon((work.statusLabel.isNotEmpty)?Icons.check_rounded:Icons.edit, size: 18.0,),
@@ -191,51 +192,51 @@ class WorkInfo extends StatelessWidget {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Row(children: [
-                            const Icon(Icons.person, size: 18.0,),
-                            Text(" ${work.author}", style: Theme.of(context).textTheme.bodyMedium,)
+                            Container(margin: const EdgeInsets.fromLTRB(0, 0, 5, 0), child: const Icon(Icons.person, size: 18.0,),),
+                            Text(work.author, style: Theme.of(context).textTheme.bodyMedium,)
                           ]),
                           Row(children: [
-                            const Icon(Icons.sensor_occupied, size: 18.0,),
-                            Text(" ${work.rating}", style: Theme.of(context).textTheme.bodyMedium,),
+                            Container(margin: const EdgeInsets.fromLTRB(0, 0, 5, 0), child: const Icon(Icons.sensor_occupied, size: 18.0,),),
+                            Text(work.rating, style: Theme.of(context).textTheme.bodyMedium,),
                           ]),
                           Row(children: [
-                            const Icon(Icons.warning, size: 18.0,),
-                            Text(" ${work.archiveWarning}", style: Theme.of(context).textTheme.bodyMedium,),
+                            Container(margin: const EdgeInsets.fromLTRB(0, 0, 5, 0), child: const Icon(Icons.warning, size: 18.0,),),
+                            Text(work.warning, style: Theme.of(context).textTheme.bodyMedium,),
                           ]),
                           Row(children: [
-                            const Icon(Icons.grid_view, size: 18.0,),
-                            Text(" ${work.fandom}", style: Theme.of(context).textTheme.bodyMedium,),
+                            Container(margin: const EdgeInsets.fromLTRB(0, 0, 5, 0), child: const Icon(Icons.grid_view, size: 18.0,),),
+                            Expanded(child: Text(work.fandoms.join(", "), style: Theme.of(context).textTheme.bodyMedium))
                           ]),
                           Row(children: [
-                            const Icon(Icons.edit, size: 18.0,),
-                            Text(" Published · ${work.publishedDate}", style: Theme.of(context).textTheme.bodyMedium,),
+                            Container(margin: const EdgeInsets.fromLTRB(0, 0, 5, 0), child: const Icon(Icons.edit, size: 18.0,),),
+                            Text("Published · ${work.publishedDate}", style: Theme.of(context).textTheme.bodyMedium,),
                           ]),
                           Visibility(
                             visible: work.statusLabel.isNotEmpty,
                             child: Row(children: [
-                              const Icon(Icons.check_rounded, size: 18.0,),
-                              Text(" ${work.statusLabel} · ${work.statusDate}", style: Theme.of(context).textTheme.bodyMedium,),
+                              Container(margin: const EdgeInsets.fromLTRB(0, 0, 5, 0), child: const Icon(Icons.check_rounded, size: 18.0,),),
+                              Text("${work.statusLabel} · ${work.statusDate}", style: Theme.of(context).textTheme.bodyMedium,),
                             ]),
                           ),
                           Row(children: [
-                            const Icon(Icons.language, size: 18.0,),
-                            Text(" ${work.language}", style: Theme.of(context).textTheme.bodyMedium,),
+                            Container(margin: const EdgeInsets.fromLTRB(0, 0, 5, 0), child: const Icon(Icons.language, size: 18.0,),),
+                            Text(work.language, style: Theme.of(context).textTheme.bodyMedium,),
                           ]),
                           Row(children: [
-                            const Icon(Icons.abc, size: 18.0,),
-                            Text(" ${work.words}", style: Theme.of(context).textTheme.bodyMedium,),
+                            Container(margin: const EdgeInsets.fromLTRB(0, 0, 5, 0), child: const Icon(Icons.abc, size: 18.0,),),
+                            Text("${work.words}", style: Theme.of(context).textTheme.bodyMedium,),
                           ]),
                           Row(children: [
-                            const Icon(Icons.bookmarks, size: 18.0,),
-                            Text(" ${work.bookmarks}", style: Theme.of(context).textTheme.bodyMedium,),
+                            Container(margin: const EdgeInsets.fromLTRB(0, 0, 5, 0), child: const Icon(Icons.bookmarks, size: 18.0,),),
+                            Text("${work.bookmarks}", style: Theme.of(context).textTheme.bodyMedium,),
                           ]),
                           Row(children: [
-                            const Icon(Icons.favorite, size: 18.0,),
-                            Text(" ${work.kudos}", style: Theme.of(context).textTheme.bodyMedium,),
+                            Container(margin: const EdgeInsets.fromLTRB(0, 0, 5, 0), child: const Icon(Icons.favorite, size: 18.0,),),
+                            Text("${work.kudos}", style: Theme.of(context).textTheme.bodyMedium,),
                           ]),
                           Row(children: [
-                            const Icon(Icons.comment, size: 18.0,),
-                            Text(" ${work.comments}", style: Theme.of(context).textTheme.bodyMedium,),
+                            Container(margin: const EdgeInsets.fromLTRB(0, 0, 5, 0), child: const Icon(Icons.comment, size: 18.0,),),
+                            Text("${work.comments}", style: Theme.of(context).textTheme.bodyMedium,),
                           ]),
                           Visibility(
                             visible: work.relationships.isNotEmpty,

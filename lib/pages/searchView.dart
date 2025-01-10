@@ -137,7 +137,7 @@ class PartialWorkList extends StatelessWidget {
               ),
             )
           ),
-          for (int i = 0; i<searchData.works.length; i++) PartialWorkCard(partWork: searchData.works[i])
+          for (int i = 0; i<searchData.works.length; i++) PartialWorkCard(work: searchData.works[i])
         ]),
       );
     }
@@ -154,37 +154,37 @@ class PartialWorkList extends StatelessWidget {
 }
 
 class PartialWorkCard extends StatelessWidget {
-  final PartialWork partWork;
-  const PartialWorkCard({super.key, required this.partWork});
+  final Work work;
+  const PartialWorkCard({super.key, required this.work});
 
   @override
   Widget build(BuildContext context) {
     return Card(
       child: InkWell(
         onTap: (){
-          Navigator.push(context, MaterialPageRoute(builder: (context) => WorkView(workId: partWork.id)));
+          Navigator.push(context, MaterialPageRoute(builder: (context) => WorkView(workId: work.id, refreshType: 1)));
         },
         child: Container(
           padding: const EdgeInsets.all(10.0),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text(partWork.title, style: Theme.of(context).textTheme.titleMedium,),
+              Text(work.title, style: Theme.of(context).textTheme.titleMedium,),
               Opacity(
                   opacity: 0.65,
                   child: Row(
                     children: [
-                      Text(partWork.author, style: Theme.of(context).textTheme.labelSmall,),
+                      Text(work.author, style: Theme.of(context).textTheme.labelSmall,),
                       const Spacer(),
                       Row(children: [
                         const Icon(Icons.language, size: 14.0,),
-                        Text(" ${partWork.language}", style: Theme.of(context).textTheme.labelSmall,),
+                        Text(" ${work.language}", style: Theme.of(context).textTheme.labelSmall,),
                       ]),
                     ],
                   )
               ),
               Visibility(
-                visible: partWork.tags.isNotEmpty,
+                visible: work.addTags.isNotEmpty,
                 child: Opacity(
                     opacity: 0.65,
                     child: Container(
@@ -193,7 +193,7 @@ class PartialWorkCard extends StatelessWidget {
                       child: ListView(
                         scrollDirection: Axis.horizontal,
                         children: [
-                          for (var tag in partWork.tags) Chip(
+                          for (var tag in work.addTags) Chip(
                             label: Text(tag),
                             labelStyle: Theme.of(context).textTheme.labelSmall,
                             labelPadding: const EdgeInsets.all(0),
@@ -205,44 +205,35 @@ class PartialWorkCard extends StatelessWidget {
                 ),
               ),
               const SizedBox(height: 10.0,),
-              Visibility(visible: partWork.summary.isNotEmpty, child: ExpandedMarkdownBox(body: partWork.summary,)),
+              Visibility(visible: work.summary.isNotEmpty, child: ExpandedMarkdownBox(body: work.summary,)),
               Opacity(
                 opacity: 0.65,
                 child: Row(
                   children: [
                     Visibility(
-                        visible: partWork.chapters.isNotEmpty,
+                        visible: work.chapterStats.isNotEmpty,
                         child: Row(children: [
                           const Icon(Icons.menu_book, size: 14.0,),
-                          Text(" ${partWork.chapters}", style: Theme.of(context).textTheme.labelSmall,),
+                          Text(" ${work.chapterStats}", style: Theme.of(context).textTheme.labelSmall,),
                         ])
                     ),
-                    Visibility(
-                        visible: partWork.words.isNotEmpty,
-                        child: Row(children: [
-                          const SizedBox(width: 5.0,),
-                          const Icon(Icons.abc, size: 26.0,),
-                          Text(" ${partWork.words}", style: Theme.of(context).textTheme.labelSmall,),
-                        ])
-                    ),
-                    Visibility(
-                      visible: partWork.kudos.isNotEmpty,
-                      child: Row(children: [
-                        const SizedBox(width: 5.0,),
-                        const Icon(Icons.favorite, size: 14.0,),
-                        Text(" ${partWork.kudos}", style: Theme.of(context).textTheme.labelSmall,),
-                      ]),
-                    ),
-                    Visibility(
-                      visible: partWork.comments.isNotEmpty,
-                      child: Row(children: [
-                        const SizedBox(width: 5.0,),
-                        const Icon(Icons.comment, size: 14.0,),
-                        Text(" ${partWork.comments}", style: Theme.of(context).textTheme.labelSmall,),
-                      ]),
-                    ),
+                    Row(children: [
+                      const SizedBox(width: 5.0,),
+                      const Icon(Icons.abc, size: 26.0,),
+                      Text(" ${work.words}", style: Theme.of(context).textTheme.labelSmall,),
+                    ]),
+                    Row(children: [
+                      const SizedBox(width: 5.0,),
+                      const Icon(Icons.favorite, size: 14.0,),
+                      Text(" ${work.kudos}", style: Theme.of(context).textTheme.labelSmall,),
+                    ]),
+                    Row(children: [
+                      const SizedBox(width: 5.0,),
+                      const Icon(Icons.comment, size: 14.0,),
+                      Text(" ${work.comments}", style: Theme.of(context).textTheme.labelSmall,),
+                    ]),
                     const Spacer(),
-                    Text(partWork.lastEditDate, style: Theme.of(context).textTheme.labelSmall,),
+                    Text(work.statusDate, style: Theme.of(context).textTheme.labelSmall,),
                   ],
                 ),
               )

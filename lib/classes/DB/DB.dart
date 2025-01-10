@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:sqflite/sqflite.dart';
 import 'DBCommon.dart';
 import 'DBSchema.dart';
@@ -29,6 +30,9 @@ class DB {
         db.execute(DBSchema.FILTERS_CREATE);
       },
       onOpen: (db) {
+        if (kDebugMode) {
+          print("Resetting cache");
+        }
         db.execute(DBCommon.DROP_CHAPTER_CACHE);
         db.execute(DBCommon.DROP_WORK_CACHE);
         db.execute(DBSchema.WORK_CACHE_CREATE);

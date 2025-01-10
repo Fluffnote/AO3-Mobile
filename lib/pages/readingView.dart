@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_markdown/flutter_markdown.dart';
 import 'package:ao3mobile/classes/MiscUtils.dart';
 import '../classes/Chapter.dart';
-import '../classes/Work.dart';
 
 
 class ReadingView extends StatefulWidget {
@@ -16,10 +15,18 @@ class ReadingView extends StatefulWidget {
 
 class _ReadingView extends State<ReadingView> {
   late Future<Chapter> chapter;
+  late final _scrollController;
+  double _scrollOffset = 0;
 
   @override
   void initState() {
     super.initState();
+    _scrollController = ScrollController();
+    _scrollController.addListener(() {
+      setState(() {
+        _scrollOffset = _scrollController.offset;
+      });
+    });
     chapter = getChapter(widget.workId, widget.chapterId);
   }
 
@@ -36,22 +43,29 @@ class _ReadingView extends State<ReadingView> {
         builder: (context, snapshot) {
             if (snapshot.hasData) {
               return Scaffold(
-                  appBar: AppBar(
-                    leading: IconButton(
-                      icon: const Icon(Icons.arrow_back),
-                      onPressed: () { Navigator.pop(context); },
+                body: CustomScrollView(
+                  controller: _scrollController,
+                  scrollBehavior: const MaterialScrollBehavior(),
+                  slivers: [
+                    SliverAppBar(
+                      leading: IconButton(
+                        icon: const Icon(Icons.arrow_back),
+                        onPressed: () { Navigator.pop(context); },
+                      ),
+                      title: Text(snapshot.data!.workTitle),
+                      actions: [
+                        IconButton(
+                          icon: const Icon(Icons.refresh_rounded),
+                          onPressed: () {},
+                        )
+                      ],
+                      backgroundColor: Theme.of(context).primaryColor,
+                      floating: true,
+                      pinned: false,
                     ),
-                    title: Text(snapshot.data!.workTitle),
-                    actions: [
-                      IconButton(
-                        icon: const Icon(Icons.refresh_rounded),
-                        onPressed: () {},
-                      )
-                    ],
-                    backgroundColor: Theme.of(context).primaryColor,
-                    forceMaterialTransparency: true,
-                  ),
-                  body: ReadingViewContent(chapter: snapshot.data!)
+                    ReadingViewContent(chapter: snapshot.data!)
+                  ],
+                ),
               );
             } else if (snapshot.hasError) {
               print(snapshot);
@@ -76,64 +90,57 @@ class _ReadingViewContentState extends State<ReadingViewContent> {
 
   @override
   Widget build(BuildContext context) {
-    return Scrollbar(
-      child: Container(
-        margin: const EdgeInsets.all(15.0),
-        child: ListView(
+    return SliverList(delegate: SliverChildListDelegate([
+      Container(
+        margin: const EdgeInsets.only(bottom: 30),
+        child: Text(widget.chapter.title.isNotEmpty?"${widget.chapter.num}${widget.chapter.num.isNotEmpty?". ":""}${widget.chapter.title}":"Chapter ${widget.chapter.num}",
+          style: Theme.of(context).textTheme.headlineSmall,),
+      ),
+      Visibility(
+        visible: widget.chapter.summary.isNotEmpty,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Container(
-              margin: const EdgeInsets.only(bottom: 30),
-              child: Text(widget.chapter.title.isNotEmpty?"${widget.chapter.num}${widget.chapter.num.isNotEmpty?". ":""}${widget.chapter.title}":"Chapter ${widget.chapter.num}",
-                style: Theme.of(context).textTheme.headlineSmall,),
+              margin: const EdgeInsets.only(bottom: 10),
+              child: Text("Summary: ", style: Theme.of(context).textTheme.titleMedium,),
             ),
-            Visibility(
-              visible: widget.chapter.summary.isNotEmpty,
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Container(
-                    margin: const EdgeInsets.only(bottom: 10),
-                    child: Text("Summary: ", style: Theme.of(context).textTheme.titleMedium,),
-                  ),
-                  ExpandedMarkdownBox(body: widget.chapter.summary),
-                  const Divider(),
-                ],
-              ),
-            ),
-            Visibility(
-              visible: widget.chapter.notes.isNotEmpty,
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Container(
-                    margin: const EdgeInsets.only(bottom: 10),
-                    child: Text("Notes: ", style: Theme.of(context).textTheme.titleMedium,),
-                  ),
-                  ExpandedMarkdownBox(body: widget.chapter.notes),
-                  const Divider(),
-                ],
-              ),
-            ),
-            const SizedBox(height: 30,),
-            MarkdownBody(data: widget.chapter.body),
-            const SizedBox(height: 50,),
-            // Text(chapter.nextId.toString(), style: Theme.of(context).textTheme.titleMedium),
+            ExpandedMarkdownBox(body: widget.chapter.summary),
             const Divider(),
-            const SizedBox(height: 10,),
-            InkWell(
-              onTap: (){
-                Navigator.pop(context);
-                Navigator.push(context, MaterialPageRoute(builder: (context) => ReadingView(workId: widget.chapter.workId, chapterId: widget.chapter.id)));
-              },
-              child: Container(
-                padding: const EdgeInsets.all(4),
-                child: Row(mainAxisAlignment: MainAxisAlignment.center, children: [Text("Next Chapter", style: Theme.of(context).textTheme.titleMedium)],),
-              ),
-            )
           ],
         ),
+      ),
+      Visibility(
+        visible: widget.chapter.notes.isNotEmpty,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Container(
+              margin: const EdgeInsets.only(bottom: 10),
+              child: Text("Notes: ", style: Theme.of(context).textTheme.titleMedium,),
+            ),
+            ExpandedMarkdownBox(body: widget.chapter.notes),
+            const Divider(),
+          ],
+        ),
+      ),
+      const SizedBox(height: 30,),
+      MarkdownBody(data: widget.chapter.body),
+      const SizedBox(height: 50,),
+      // Text(chapter.nextId.toString(), style: Theme.of(context).textTheme.titleMedium),
+      const Divider(),
+      const SizedBox(height: 10,),
+      InkWell(
+        onTap: (){
+          Navigator.pop(context);
+          Navigator.push(context, MaterialPageRoute(builder: (context) => ReadingView(workId: widget.chapter.workId, chapterId: widget.chapter.id)));
+        },
+        child: Container(
+          padding: const EdgeInsets.all(4),
+          child: Row(mainAxisAlignment: MainAxisAlignment.center, children: [Text("Next Chapter", style: Theme.of(context).textTheme.titleMedium)],),
+        ),
       )
-    );
+    ]));
   }
 }
 

@@ -3,6 +3,9 @@ import 'package:flutter/foundation.dart';
 import 'package:html/dom.dart' as dom;
 import 'package:html/parser.dart';
 import 'package:http/http.dart' as http;
+import 'package:sqflite/sqflite.dart';
+
+import 'DB/DB.dart';
 
 // Static query maps
 final Map<String, String> completionStatusOptions = {
@@ -158,7 +161,7 @@ class WorkSearchQueryParameters {
 class SearchData {
 
   String numFound = "";
-  List<PartialWork> works = [];
+  List<Work> works = [];
 
   SearchData({
     this.numFound = "",
@@ -167,6 +170,8 @@ class SearchData {
 }
 
 Future<SearchData> workSearch(WorkSearchQueryParameters params) async {
+
+  clearSearchResults();
 
   Uri httpsSearch = Uri(
       scheme: 'https',
@@ -180,16 +185,30 @@ Future<SearchData> workSearch(WorkSearchQueryParameters params) async {
   dom.Document page = parse((await http.get(httpsSearch)).body);
   // Can't find any results
   if (page.getElementsByClassName("work index group").isEmpty) return SearchData();
-  List<PartialWork> out = [];
+  List<Work> out = [];
   String numFound = "";
 
   String numFoundRaw = page.getElementById("main")?.children.elementAt(4).text ?? "";
   numFound = (numFoundRaw.isNotEmpty)?numFoundRaw.substring(0, numFoundRaw.indexOf("Found")+5):"";
 
   for(dom.Element elem in page.getElementsByClassName("work index group").first.children) {
-    out.add(PartialWork.create(elem));
+    Work work = Work.createPartial(elem);
+    addWorkToSearchResults(work);
+    out.add(work);
   }
 
-  if (kDebugMode) print("Search finished: $numFound");
+  if (kDebugMode) print("Search finished: ${out.length}");
   return SearchData(numFound:numFound, works: out);
 }
+
+Future<void> addWorkToSearchResults(Work work) async {
+  Database db = await DB.instance.database;
+  var checkRes = await db.rawQuery("SELECT * FROM SEARCH_RESULTS WHERE WORK_ID = ${work.id};");
+  if (checkRes.isEmpty) await db.rawInsert("INSERT INTO SEARCH_RESULTS (WORK_ID) VALUES (${work.id});");
+}
+
+Future<void> clearSearchResults() async {
+  Database db = await DB.instance.database;
+  await db.rawQuery("DELETE FROM SEARCH_RESULTS;");
+}
+

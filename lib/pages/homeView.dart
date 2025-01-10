@@ -1,7 +1,5 @@
-import 'package:ao3mobile/classes/DB/DBCommon.dart';
 import 'package:ao3mobile/pages/searchView.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/rendering.dart';
 import 'package:sqflite/sqflite.dart';
 
 import '../classes/DB/DB.dart';
@@ -38,10 +36,7 @@ class _HomeViewState extends State<HomeView> {
 
 
 
-  Future<void> openDB() async {
-    db = await DB.instance.database;
-    print("Grabbed database instance");
-  }
+  Future<void> openDB() async => db = await DB.instance.database;
 
 
 
