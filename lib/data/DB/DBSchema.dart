@@ -1,18 +1,20 @@
 class DBSchema {
 
-  static const String HISTORY_CREATE = """
+  static const String CREATE_HISTORY = """
   CREATE TABLE IF NOT EXISTS HISTORY(
     ID INTEGER PRIMARY KEY,
     WORK_ID INTEGER,
     WORK_NAME TEXT,
     AUTHOR TEXT,
     CHAP_ID INTEGER,
+    CHAP_NUM TEXT,
     CHAP_NAME TEXT,
     POS DOUBLE,
-    MAX_POS DOUBLE
+    MAX_POS DOUBLE,
+    ACCESS_DATE DATE
   );""";
 
-  static const String WORK_CREATE = """
+  static const String CREATE_WORK = """
   CREATE TABLE IF NOT EXISTS WORK(
     ID INTEGER PRIMARY KEY,
     WORK_ID INTEGER,
@@ -39,7 +41,7 @@ class DBSchema {
     LAST_FETCH_DATE TIMESTAMP
   );""";
 
-  static const String WORK_CACHE_CREATE = """
+  static const String CREATE_WORK_CACHE = """
   CREATE TABLE IF NOT EXISTS WORK_CACHE(
     ID INTEGER PRIMARY KEY,
     WORK_ID INTEGER,
@@ -66,7 +68,7 @@ class DBSchema {
     LAST_FETCH_DATE TIMESTAMP
   );""";
 
-  static const String CHAPTER_CREATE = """
+  static const String CREATE_CHAPTER = """
   CREATE TABLE IF NOT EXISTS CHAPTER(
     ID INTEGER PRIMARY KEY,
     WORK_ID INTEGER,
@@ -82,7 +84,7 @@ class DBSchema {
     LAST_FETCH_DATE TIMESTAMP
   );""";
 
-  static const String CHAPTER_CACHE_CREATE = """
+  static const String CREATE_CHAPTER_CACHE = """
   CREATE TABLE IF NOT EXISTS CHAPTER_CACHE(
     ID INTEGER PRIMARY KEY,
     WORK_ID INTEGER,
@@ -98,13 +100,13 @@ class DBSchema {
     LAST_FETCH_DATE TIMESTAMP
   );""";
 
-  static const String SEARCH_RESULTS_CREATE = """
+  static const String CREATE_SEARCH_RESULTS = """
   CREATE TABLE IF NOT EXISTS SEARCH_RESULTS(
     ID INTEGER PRIMARY KEY,
     WORK_ID INTEGER
   );""";
 
-  static const String LIBRARY_CREATE = """
+  static const String CREATE_LIBRARY = """
   CREATE TABLE IF NOT EXISTS LIBRARY(
     ID INTEGER PRIMARY KEY,
     WORK_ID INTEGER,
@@ -112,14 +114,14 @@ class DBSchema {
     DATE_ADDED TIMESTAMP
   );""";
 
-  static const String LABELS_CREATE = """
+  static const String CREATE_LABELS = """
   CREATE TABLE IF NOT EXISTS LABELS(
     ID INTEGER PRIMARY KEY,
     LABEL_NAME TEXT,
     LABEL_ORDER INTEGER
   );""";
 
-  static const String FILTERS_CREATE = """
+  static const String CREATE_FILTERS = """
   CREATE TABLE IF NOT EXISTS FILTERS(
     ID INTEGER PRIMARY KEY,
     SEARCH_QUERY TEXT,

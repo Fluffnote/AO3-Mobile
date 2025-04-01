@@ -1,10 +1,13 @@
+import 'package:ao3mobile/data/repositories/WorkRepo.dart';
+import 'package:ao3mobile/layout/ui/core/IconLabel.dart';
 import 'package:expandable/expandable.dart';
 import 'package:flutter/material.dart';
-import 'package:ao3mobile/classes/MiscUtils.dart';
-import 'package:ao3mobile/pages/readingView.dart';
+import 'package:ao3mobile/layout/ui/MiscUtils.dart';
+import 'package:ao3mobile/views/readingView.dart';
 import 'package:flutter/services.dart';
 
-import '../classes/Work.dart';
+import '../data/models/Work.dart';
+import '../layout/ui/core/ExpandedMarkdownBox.dart';
 
 class WorkView extends StatefulWidget {
   final int workId;
@@ -20,6 +23,8 @@ class _WorkView extends State<WorkView> {
   late final _scrollController;
   double _scrollOffset = 0;
 
+  final WorkRepo workRepo = new WorkRepo();
+
   @override
   void initState() {
     super.initState();
@@ -29,7 +34,7 @@ class _WorkView extends State<WorkView> {
         _scrollOffset = _scrollController.offset;
       });
     });
-    work = getWork(widget.workId, widget.refreshType);
+    work = workRepo.getWork(widget.workId, widget.refreshType);
   }
 
   // @override
@@ -51,6 +56,13 @@ class _WorkView extends State<WorkView> {
       builder: (context, snapshot) {
         if (snapshot.hasData) {
           return Scaffold(
+            appBar: AppBar(
+              systemOverlayStyle: SystemUiOverlayStyle(
+                statusBarColor: Theme.of(context).primaryColor,
+              ),
+              toolbarHeight: 0,
+              backgroundColor: Theme.of(context).primaryColor,
+            ),
             body: CustomScrollView(
               controller: _scrollController,
               scrollBehavior: const MaterialScrollBehavior(),
@@ -61,7 +73,7 @@ class _WorkView extends State<WorkView> {
                     onPressed: () { Navigator.pop(context); },
                   ),
                   title: Visibility(
-                    visible: _scrollOffset > 240,
+                    visible: _scrollOffset > 120,
                     child: Text(snapshot.data!.title)
                   ),
                   actions: [
@@ -72,7 +84,13 @@ class _WorkView extends State<WorkView> {
                     IconButton(
                       icon: const Icon(Icons.public),
                       onPressed: () {
-                        openWorkPage(snapshot.data!.id);
+                        workRepo.openWorkPage(snapshot.data!.id);
+                      },
+                    ),
+                    IconButton(
+                      icon: const Icon(Icons.code),
+                      onPressed: () {
+                        workRepo.openHTML(snapshot.data!.id);
                       },
                     ),
                     IconButton(
@@ -130,7 +148,8 @@ class MainWorkView extends StatelessWidget {
           title: Text("${chapter.num}. ${chapter.title}"),
           titleTextStyle: Theme.of(context).textTheme.titleMedium,
           // trailing: Icon(Icons.download),
-        )
+        ),
+        const SizedBox(height: 30,),
       ]),
     );
   }
@@ -153,26 +172,28 @@ class WorkInfo extends StatelessWidget {
                       opacity: 0.7,
                       child: Column(
                         children: [
-                          Row(children: [
-                            Container(margin: const EdgeInsets.fromLTRB(0, 0, 5, 0), child: const Icon(Icons.person, size: 18.0,),),
-                            Text(work.author, style: Theme.of(context).textTheme.bodyMedium,)
-                          ]),
-                          Row(children: [
-                            Container(margin: const EdgeInsets.fromLTRB(0, 0, 5, 0), child: const Icon(Icons.sensor_occupied, size: 18.0,),),
-                            Text(work.rating, style: Theme.of(context).textTheme.bodyMedium,),
-                          ]),
-                          Row(children: [
-                            Container(margin: const EdgeInsets.fromLTRB(0, 0, 5, 0), child: const Icon(Icons.warning, size: 18.0,),),
-                            Expanded(child: Text(work.warning, style: Theme.of(context).textTheme.bodyMedium))
-                          ]),
-                          Row(children: [
-                            Container(margin: const EdgeInsets.fromLTRB(0, 0, 5, 0), child: const Icon(Icons.grid_view, size: 18.0,),),
-                            Expanded(child: Text(work.fandoms.join(", "), style: Theme.of(context).textTheme.bodyMedium))
-                          ]),
-                          Row(children: [
-                            Icon((work.statusLabel.isNotEmpty)?Icons.check_rounded:Icons.edit, size: 18.0,),
-                            Text((work.statusLabel.isNotEmpty)?" ${work.statusLabel} · ${work.statusDate}":" Published · ${work.publishedDate}", style: Theme.of(context).textTheme.bodyMedium,),
-                          ]),
+                          IconLabel(icon: Icons.person, text: work.author, size: 18.0, style: Theme.of(context).textTheme.bodyMedium),
+                          IconLabel(icon: Icons.sensor_occupied, text: work.rating, size: 18.0, style: Theme.of(context).textTheme.bodyMedium),
+                          IconLabel(
+                            icon: Icons.warning,
+                            text: work.warning,
+                            size: 18.0,
+                            style: Theme.of(context).textTheme.bodyMedium,
+                            wrap: true,
+                          ),
+                          IconLabel(
+                            icon: Icons.grid_view,
+                            text: work.fandoms.join(", "),
+                            size: 18.0,
+                            style: Theme.of(context).textTheme.bodyMedium,
+                            wrap: true,
+                          ),
+                          IconLabel(
+                            icon: (work.statusLabel.isNotEmpty)?Icons.check_rounded:Icons.edit,
+                            text: (work.statusLabel.isNotEmpty)?" ${work.statusLabel} · ${work.statusDate}":" Published · ${work.publishedDate}",
+                            size: 18.0,
+                            style: Theme.of(context).textTheme.bodyMedium
+                          ),
                         ],
                       ),
                     ),
@@ -191,53 +212,32 @@ class WorkInfo extends StatelessWidget {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Row(children: [
-                            Container(margin: const EdgeInsets.fromLTRB(0, 0, 5, 0), child: const Icon(Icons.person, size: 18.0,),),
-                            Text(work.author, style: Theme.of(context).textTheme.bodyMedium,)
-                          ]),
-                          Row(children: [
-                            Container(margin: const EdgeInsets.fromLTRB(0, 0, 5, 0), child: const Icon(Icons.sensor_occupied, size: 18.0,),),
-                            Text(work.rating, style: Theme.of(context).textTheme.bodyMedium,),
-                          ]),
-                          Row(children: [
-                            Container(margin: const EdgeInsets.fromLTRB(0, 0, 5, 0), child: const Icon(Icons.warning, size: 18.0,),),
-                            Text(work.warning, style: Theme.of(context).textTheme.bodyMedium,),
-                          ]),
-                          Row(children: [
-                            Container(margin: const EdgeInsets.fromLTRB(0, 0, 5, 0), child: const Icon(Icons.grid_view, size: 18.0,),),
-                            Expanded(child: Text(work.fandoms.join(", "), style: Theme.of(context).textTheme.bodyMedium))
-                          ]),
-                          Row(children: [
-                            Container(margin: const EdgeInsets.fromLTRB(0, 0, 5, 0), child: const Icon(Icons.edit, size: 18.0,),),
-                            Text("Published · ${work.publishedDate}", style: Theme.of(context).textTheme.bodyMedium,),
-                          ]),
+                          IconLabel(icon: Icons.person, text: work.author, size: 18.0, style: Theme.of(context).textTheme.bodyMedium),
+                          IconLabel(icon: Icons.sensor_occupied, text: work.rating, size: 18.0, style: Theme.of(context).textTheme.bodyMedium),
+                          IconLabel(
+                            icon: Icons.warning,
+                            text: work.warning,
+                            size: 18.0,
+                            style: Theme.of(context).textTheme.bodyMedium,
+                            wrap: true,
+                          ),
+                          IconLabel(
+                            icon: Icons.grid_view,
+                            text: work.fandoms.join(", "),
+                            size: 18.0,
+                            style: Theme.of(context).textTheme.bodyMedium,
+                            wrap: true,
+                          ),
+                          IconLabel(icon: Icons.edit, text: " Published · ${work.publishedDate}", size: 18.0, style: Theme.of(context).textTheme.bodyMedium),
                           Visibility(
                             visible: work.statusLabel.isNotEmpty,
-                            child: Row(children: [
-                              Container(margin: const EdgeInsets.fromLTRB(0, 0, 5, 0), child: const Icon(Icons.check_rounded, size: 18.0,),),
-                              Text("${work.statusLabel} · ${work.statusDate}", style: Theme.of(context).textTheme.bodyMedium,),
-                            ]),
+                            child: IconLabel(icon: Icons.check_rounded, text: "${work.statusLabel} · ${work.statusDate}", size: 18.0, style: Theme.of(context).textTheme.bodyMedium),
                           ),
-                          Row(children: [
-                            Container(margin: const EdgeInsets.fromLTRB(0, 0, 5, 0), child: const Icon(Icons.language, size: 18.0,),),
-                            Text(work.language, style: Theme.of(context).textTheme.bodyMedium,),
-                          ]),
-                          Row(children: [
-                            Container(margin: const EdgeInsets.fromLTRB(0, 0, 5, 0), child: const Icon(Icons.abc, size: 18.0,),),
-                            Text("${work.words}", style: Theme.of(context).textTheme.bodyMedium,),
-                          ]),
-                          Row(children: [
-                            Container(margin: const EdgeInsets.fromLTRB(0, 0, 5, 0), child: const Icon(Icons.bookmarks, size: 18.0,),),
-                            Text("${work.bookmarks}", style: Theme.of(context).textTheme.bodyMedium,),
-                          ]),
-                          Row(children: [
-                            Container(margin: const EdgeInsets.fromLTRB(0, 0, 5, 0), child: const Icon(Icons.favorite, size: 18.0,),),
-                            Text("${work.kudos}", style: Theme.of(context).textTheme.bodyMedium,),
-                          ]),
-                          Row(children: [
-                            Container(margin: const EdgeInsets.fromLTRB(0, 0, 5, 0), child: const Icon(Icons.comment, size: 18.0,),),
-                            Text("${work.comments}", style: Theme.of(context).textTheme.bodyMedium,),
-                          ]),
+                          IconLabel(icon: Icons.language, text: work.language, size: 18.0, style: Theme.of(context).textTheme.bodyMedium),
+                          IconLabel(icon: Icons.abc, text: "${work.words}", size: 18.0, style: Theme.of(context).textTheme.bodyMedium),
+                          IconLabel(icon: Icons.bookmarks, text: "${work.bookmarks}", size: 18.0, style: Theme.of(context).textTheme.bodyMedium),
+                          IconLabel(icon: Icons.favorite, text: "${work.kudos}", size: 18.0, style: Theme.of(context).textTheme.bodyMedium),
+                          IconLabel(icon: Icons.comment, text: "${work.comments}", size: 18.0, style: Theme.of(context).textTheme.bodyMedium),
                           Visibility(
                             visible: work.relationships.isNotEmpty,
                             child: Column(

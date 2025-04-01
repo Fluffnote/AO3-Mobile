@@ -1,51 +1,42 @@
-import 'package:ao3mobile/classes/Work.dart';
-import 'package:flutter/foundation.dart';
-import 'package:html/dom.dart' as dom;
-import 'package:html/parser.dart';
-import 'package:http/http.dart' as http;
-import 'package:sqflite/sqflite.dart';
 
-import 'DB/DB.dart';
+class SearchQueryParameters {
+  // Static query maps
+  static final Map<String, String> completionStatusOptions = {
+    "":"All works",
+    "T":"Complete works only",
+    "F":"Works in progress only",
+  };
 
-// Static query maps
-final Map<String, String> completionStatusOptions = {
-  "":"All works",
-  "T":"Complete works only",
-  "F":"Works in progress only",
-};
+  static final Map<String, String> crossoversOptions = {
+    "":"Include crossovers",
+    "F":"Exclude crossovers",
+    "T":"Only crossovers",
+  };
 
-final Map<String, String> crossoversOptions = {
-  "":"Include crossovers",
-  "F":"Exclude crossovers",
-  "T":"Only crossovers",
-};
+  static final Map<String, String> languageOptions = {
+    "":"Any",
+  };
 
-final Map<String, String> languageOptions = {
-  "":"Any",
-};
+  static final Map<String, String> sortColumnOptions = {
+    "_score":"Best Match",
+    "authors_to_sort_on":"Author",
+    "title_to_sort_on":"Title",
+    "created_at":"Date Posted",
+    "revised_at":"Date Updated",
+    "word_count":"Word Count",
+    "hits":"Hits",
+    "kudos_count":"Kudos",
+    "comments_count":"Comments",
+    "bookmarks_count":"Bookmarks",
+  };
 
-final Map<String, String> sortColumnOptions = {
-  "_score":"Best Match",
-  "authors_to_sort_on":"Author",
-  "title_to_sort_on":"Title",
-  "created_at":"Date Posted",
-  "revised_at":"Date Updated",
-  "word_count":"Word Count",
-  "hits":"Hits",
-  "kudos_count":"Kudos",
-  "comments_count":"Comments",
-  "bookmarks_count":"Bookmarks",
-};
-
-final Map<String, String> sortDirectionOptions = {
-  "asc":"Ascending",
-  "desc":"Descending",
-};
+  static final Map<String, String> sortDirectionOptions = {
+    "asc":"Ascending",
+    "desc":"Descending",
+  };
 
 
 
-// Main
-class WorkSearchQueryParameters {
   // Work Info
   String query = '';
   String title = '';
@@ -77,7 +68,7 @@ class WorkSearchQueryParameters {
   String sortDirection = 'desc';
   int page = 1;
 
-  WorkSearchQueryParameters({
+  SearchQueryParameters({
 
     this.query = "",
     this.title = "",
@@ -157,58 +148,3 @@ class WorkSearchQueryParameters {
     return out;
   }
 }
-
-class SearchData {
-
-  String numFound = "";
-  List<Work> works = [];
-
-  SearchData({
-    this.numFound = "",
-    this.works = const []
-  });
-}
-
-Future<SearchData> workSearch(WorkSearchQueryParameters params) async {
-
-  clearSearchResults();
-
-  Uri httpsSearch = Uri(
-      scheme: 'https',
-      host: 'archiveofourown.org',
-      path: 'works/search',
-      queryParameters: params.getParams()
-  );
-
-  if (kDebugMode) print("Search started: $httpsSearch");
-
-  dom.Document page = parse((await http.get(httpsSearch)).body);
-  // Can't find any results
-  if (page.getElementsByClassName("work index group").isEmpty) return SearchData();
-  List<Work> out = [];
-  String numFound = "";
-
-  String numFoundRaw = page.getElementById("main")?.children.elementAt(4).text ?? "";
-  numFound = (numFoundRaw.isNotEmpty)?numFoundRaw.substring(0, numFoundRaw.indexOf("Found")+5):"";
-
-  for(dom.Element elem in page.getElementsByClassName("work index group").first.children) {
-    Work work = Work.createPartial(elem);
-    addWorkToSearchResults(work);
-    out.add(work);
-  }
-
-  if (kDebugMode) print("Search finished: ${out.length}");
-  return SearchData(numFound:numFound, works: out);
-}
-
-Future<void> addWorkToSearchResults(Work work) async {
-  Database db = await DB.instance.database;
-  var checkRes = await db.rawQuery("SELECT * FROM SEARCH_RESULTS WHERE WORK_ID = ${work.id};");
-  if (checkRes.isEmpty) await db.rawInsert("INSERT INTO SEARCH_RESULTS (WORK_ID) VALUES (${work.id});");
-}
-
-Future<void> clearSearchResults() async {
-  Database db = await DB.instance.database;
-  await db.rawQuery("DELETE FROM SEARCH_RESULTS;");
-}
-

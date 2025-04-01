@@ -2,53 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_markdown/flutter_markdown.dart';
 import 'package:url_launcher/url_launcher.dart';
 
-class ExpandedMarkdownBox extends StatefulWidget {
-  final String body;
-  final int limit;
-  const ExpandedMarkdownBox({super.key, required this.body, this.limit = 150});
-
-  @override
-  State<ExpandedMarkdownBox> createState() => _ExpandedMarkdownBoxState();
-}
-
-
-class _ExpandedMarkdownBoxState extends State<ExpandedMarkdownBox> {
-  late bool longerThanLimit = false;
-  bool expanded = false;
-
-  @override
-  void initState() {
-    super.initState();
-    if (widget.body.length>widget.limit) { longerThanLimit = true; }
-    else { longerThanLimit = false; }
-  }
-
-  @override
-  void reassemble() {
-    super.reassemble();
-    if (widget.body.length>widget.limit) { longerThanLimit = true; }
-    else { longerThanLimit = false; }
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      child: !longerThanLimit?MarkdownBody(data: widget.body,):Column(
-        children: [
-          MarkdownBody(data: !expanded&&widget.body.length>widget.limit?"${widget.body.substring(0, widget.limit)}...":widget.body,),
-          InkWell(
-            onTap: (){ setState(() { expanded = !expanded; });},
-            child: Container(
-              padding: const EdgeInsets.all(4),
-              child: Row(mainAxisAlignment: MainAxisAlignment.center, children: [Icon(!expanded?Icons.keyboard_arrow_down:Icons.keyboard_arrow_up, size: 26,)],),
-            ),
-          )
-        ],
-      ),
-    );
-  }
-}
-
 class FutureErrorView extends StatelessWidget {
   final AsyncSnapshot snapshot;
   const FutureErrorView({super.key, required this.snapshot});

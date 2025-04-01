@@ -1,23 +1,33 @@
-import 'package:ao3mobile/classes/Work.dart';
+import 'dart:collection';
+
 import 'package:intl/intl.dart';
+import 'package:sqflite/sqflite.dart';
 
-class DBSet {
-  String sql = "";
-  List<Object> params = [];
-  DBSet(this.sql, this.params);
-}
+import '../DB/DB.dart';
+import '../models/Work.dart';
 
-class DBCommon {
 
-  static const String DROP_WORK_CACHE = "DROP TABLE IF EXISTS WORK_CACHE;";
-  static const String DROP_CHAPTER_CACHE = "DROP TABLE IF EXISTS CHAPTER_CACHE;";
+class WorkProvider {
+
+  WorkProvider();
+
+
 
   static String CHECK_IF_WORK_EXISTS(int workId) {
     String sql = """
-    SELECT 'WORK_CACHE' AS WORK_TABLE FROM WORK_CACHE WHERE WORK_ID = \${ID}
+    SELECT 'WORK_CACHE' AS WORK_TABLE FROM WORK_CACHE WHERE WORK_ID = $workId
     UNION
-    SELECT 'WORK' AS WORK_TABLE FROM WORK WHERE WORK_ID = \${ID};""";
-    return sql.replaceAll("\$\{ID}", workId.toString());
+    SELECT 'WORK' AS WORK_TABLE FROM WORK WHERE WORK_ID = $workId;""";
+    return sql;
+  }
+
+  static String GET_WORK_CHAPTERS(int workId) {
+    String sql = """
+    SELECT CHAP_ID, CHAP_ORDER FROM CHAPTER_CACHE WHERE WORK_ID = $workId
+    UNION
+    SELECT CHAP_ID, CHAP_ORDER FROM CHAPTER WHERE WORK_ID = $workId
+    ORDER BY CHAP_ORDER DESC;""";
+    return sql;
   }
 
   static DBSet BUILD_INSERT_INTO_WORK(Work work, bool cache, [bool updateFetch = true]) {
@@ -83,4 +93,55 @@ class DBCommon {
     return DBSet(sql, params);
   }
 
+
+
+  Future<Map<String, Object?>> getWorkData(int workId) async {
+    String table = await whichTableIsWorkIn(workId);
+    if (table == "NONE") return new Map();
+    Database db = await DB.instance.database;
+    List<Map<String, Object?>> results = await db.rawQuery("SELECT * FROM $table WHERE WORK_ID = $workId");
+
+    if (results.isEmpty) return new Map();
+    else return results.first;
+  }
+
+  Future<String> whichTableIsWorkIn(int workId) async {
+    Database db = await DB.instance.database;
+    List<Map<String, Object?>> checkRes = await db.rawQuery(CHECK_IF_WORK_EXISTS(workId));
+    if (checkRes.isEmpty) return "NONE";
+    else return (checkRes.first.entries.first.value as String);
+  }
+
+  Future<bool> doesWorkNeedRefresh(int workId) async {
+    print("checking refresh");
+    Database db = await DB.instance.database;
+    List<Map<String, Object?>> checkRes = await db.rawQuery(CHECK_IF_WORK_EXISTS(workId));
+    if (checkRes.isNotEmpty) {
+      List<Map<String, Object?>> fetchRes = await db.rawQuery("SELECT LAST_FETCH_DATE FROM ${(checkRes.first.entries.first.value as String)} WHERE WORK_ID = $workId");
+      if (fetchRes.isNotEmpty && fetchRes.first["LAST_FETCH_DATE"] != null) {
+        DateTime fetchDate = DateTime.parse(fetchRes.first["LAST_FETCH_DATE"] as String);
+
+        return fetchDate.isBefore(DateTime.now().subtract(Duration(hours: 12)));
+      }
+    }
+    return true;
+  }
+
+  Future<void> addWorkToCache(Work work, [bool updateFetch = true]) async {
+    Database db = await DB.instance.database;
+    List<Map<String, Object?>> checkRes = await db.rawQuery(CHECK_IF_WORK_EXISTS(work.id));
+    if (checkRes.isEmpty) {
+      DBSet query = BUILD_INSERT_INTO_WORK(work, true, updateFetch);
+      await db.rawInsert(query.sql, query.params);
+    }
+    else {
+      DBSet query = BUILD_UPDATE_INTO_WORK(work, (checkRes.first.entries.first.value as String) == "WORK_CACHE", updateFetch);
+      await db.rawUpdate(query.sql, query.params);
+    }
+  }
+
+  Future<List<Map<String, Object?>>> getWorkChaptersData(int workId) async {
+    Database db = await DB.instance.database;
+    return await db.rawQuery(GET_WORK_CHAPTERS(workId));
+  }
 }

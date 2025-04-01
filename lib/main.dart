@@ -1,5 +1,8 @@
-import 'package:ao3mobile/pages/homeView.dart';
+import 'package:ao3mobile/layout/MainLayout.dart';
+import 'package:ao3mobile/layout/ThemeSwitcher.dart';
 import 'package:flutter/material.dart';
+
+final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
 
 void main() {
   runApp (const MyApp());
@@ -13,16 +16,15 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
+
   @override
   Widget build(BuildContext context) {
 
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      home: const HomeView(),
-      theme: ThemeData(
-        brightness: Brightness.dark,
-        primaryColor: const Color.fromRGBO(151, 0, 0, 1.0)
-      ),
+      home: const MainLayout(),
+      theme: ThemeSwitcher.instance.theme,
+      navigatorKey: navigatorKey,
     );
   }
 }

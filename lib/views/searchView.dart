@@ -1,13 +1,17 @@
 import 'dart:ffi';
 
-import 'package:ao3mobile/classes/Work.dart';
-import 'package:ao3mobile/pages/workView.dart';
+import 'package:ao3mobile/data/models/Work.dart';
+import 'package:ao3mobile/data/repositories/SearchRepo.dart';
+import 'package:ao3mobile/layout/ui/core/IconLabel.dart';
+import 'package:ao3mobile/views/workView.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
-import '../classes/Search.dart';
-import '../classes/MiscUtils.dart';
+import '../data/models/SearchData.dart';
+import '../data/models/SearchQueryParameters.dart';
+import '../layout/ui/MiscUtils.dart';
+import '../layout/ui/WorkCard.dart';
 
 class SearchView extends StatefulWidget {
   const SearchView({super.key});
@@ -47,6 +51,8 @@ class _SearchView extends State<SearchView> {
   @override
   Widget build(BuildContext context) {
     final _scrollController = ScrollController();
+    final SearchRepo searchRepo = new SearchRepo();
+
     return CustomScrollView(
       controller: _scrollController,
       scrollBehavior: const MaterialScrollBehavior(),
@@ -59,7 +65,7 @@ class _SearchView extends State<SearchView> {
               setState(() {
                 query = value;
                 initScreen = false;
-                works = workSearch(WorkSearchQueryParameters(query: value));
+                works = searchRepo.workSearch(SearchQueryParameters(query: value));
               });
             },
             decoration: const InputDecoration(
@@ -76,7 +82,7 @@ class _SearchView extends State<SearchView> {
                   searchCon.clear();
                   setState(() {
                     query = "";
-                    works = workSearch(WorkSearchQueryParameters(query: ""));
+                    works = searchRepo.workSearch(SearchQueryParameters(query: ""));
                   });
                 },
                 icon: const Icon(Icons.clear),
@@ -89,10 +95,10 @@ class _SearchView extends State<SearchView> {
           ],
           backgroundColor: Theme.of(context).primaryColor,
           floating: true,
-          pinned: false,
+          snap: true,
           systemOverlayStyle: SystemUiOverlayStyle(
-            systemNavigationBarColor: Theme.of(context).primaryColor
-          ),
+            statusBarColor: Theme.of(context).primaryColor,
+          )
           // forceMaterialTransparency: true,
         ),
         FutureBuilder(
@@ -137,7 +143,7 @@ class PartialWorkList extends StatelessWidget {
               ),
             )
           ),
-          for (int i = 0; i<searchData.works.length; i++) PartialWorkCard(work: searchData.works[i])
+          for (int i = 0; i<searchData.works.length; i++) WorkCard(work: searchData.works[i])
         ]),
       );
     }
@@ -149,98 +155,6 @@ class PartialWorkList extends StatelessWidget {
           child: Text("Nothing to see here :/", style: Theme.of(context).textTheme.displaySmall,),
         ),
       ),
-    );
-  }
-}
-
-class PartialWorkCard extends StatelessWidget {
-  final Work work;
-  const PartialWorkCard({super.key, required this.work});
-
-  @override
-  Widget build(BuildContext context) {
-    return Card(
-      child: InkWell(
-        onTap: (){
-          Navigator.push(context, MaterialPageRoute(builder: (context) => WorkView(workId: work.id, refreshType: 1)));
-        },
-        child: Container(
-          padding: const EdgeInsets.all(10.0),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(work.title, style: Theme.of(context).textTheme.titleMedium,),
-              Opacity(
-                  opacity: 0.65,
-                  child: Row(
-                    children: [
-                      Text(work.author, style: Theme.of(context).textTheme.labelSmall,),
-                      const Spacer(),
-                      Row(children: [
-                        const Icon(Icons.language, size: 14.0,),
-                        Text(" ${work.language}", style: Theme.of(context).textTheme.labelSmall,),
-                      ]),
-                    ],
-                  )
-              ),
-              Visibility(
-                visible: work.addTags.isNotEmpty,
-                child: Opacity(
-                    opacity: 0.65,
-                    child: Container(
-                      margin: const EdgeInsets.only(top: 10),
-                      height: 26,
-                      child: ListView(
-                        scrollDirection: Axis.horizontal,
-                        children: [
-                          for (var tag in work.addTags) Chip(
-                            label: Text(tag),
-                            labelStyle: Theme.of(context).textTheme.labelSmall,
-                            labelPadding: const EdgeInsets.all(0),
-                            visualDensity: VisualDensity.compact,
-                          )
-                        ],
-                      ),
-                    )
-                ),
-              ),
-              const SizedBox(height: 10.0,),
-              Visibility(visible: work.summary.isNotEmpty, child: ExpandedMarkdownBox(body: work.summary,)),
-              Opacity(
-                opacity: 0.65,
-                child: Row(
-                  children: [
-                    Visibility(
-                        visible: work.chapterStats.isNotEmpty,
-                        child: Row(children: [
-                          const Icon(Icons.menu_book, size: 14.0,),
-                          Text(" ${work.chapterStats}", style: Theme.of(context).textTheme.labelSmall,),
-                        ])
-                    ),
-                    Row(children: [
-                      const SizedBox(width: 5.0,),
-                      const Icon(Icons.abc, size: 26.0,),
-                      Text(" ${work.words}", style: Theme.of(context).textTheme.labelSmall,),
-                    ]),
-                    Row(children: [
-                      const SizedBox(width: 5.0,),
-                      const Icon(Icons.favorite, size: 14.0,),
-                      Text(" ${work.kudos}", style: Theme.of(context).textTheme.labelSmall,),
-                    ]),
-                    Row(children: [
-                      const SizedBox(width: 5.0,),
-                      const Icon(Icons.comment, size: 14.0,),
-                      Text(" ${work.comments}", style: Theme.of(context).textTheme.labelSmall,),
-                    ]),
-                    const Spacer(),
-                    Text(work.statusDate, style: Theme.of(context).textTheme.labelSmall,),
-                  ],
-                ),
-              )
-            ],
-          ),
-        ),
-      )
     );
   }
 }
@@ -288,15 +202,13 @@ class DefaultPane extends StatelessWidget {
               const Spacer(),
               InkWell(
                 onTap: (){ openWebPage("https://archiveofourown.org/admin_posts"); },
-                child: Container(
-                  padding: const EdgeInsets.fromLTRB(5, 5, 5, 5),
-                  child: const Row(
-                    children: [
-                      Text("All News "),
-                      Icon(Icons.open_in_new, size: 15.0,)
-                    ]
-                  )
-                )
+                child: const IconLabel(
+                  icon: Icons.open_in_new,
+                  size: 15.0,
+                  text: "All News",
+                  padding: EdgeInsets.all(5),
+                  right: true,
+                ),
               ),
             ],
           ),
@@ -324,45 +236,39 @@ class DefaultPane extends StatelessWidget {
           margin: const EdgeInsets.fromLTRB(15, 0, 0, 10),
           child: InkWell(
             onTap: (){ openWebPage("https://www.transformativeworks.org/where-find-us/"); },
-            child: Container(
-              padding: const EdgeInsets.fromLTRB(0, 5, 5, 5),
-              child: Row(
-                children: [
-                  Icon(Icons.open_in_new, size: 15.0,),
-                  Text("  OTW News Outlets", style: Theme.of(context).textTheme.bodyMedium)
-                ]
-              )
-            )
+            child: IconLabel(
+              icon: Icons.open_in_new,
+              size: 15.0,
+              text: "OTW News Outlets",
+              style: Theme.of(context).textTheme.bodyMedium,
+              padding: const EdgeInsets.fromLTRB(0, 5, 5, 5)
+            ),
           )
         ),
         Container(
           margin: const EdgeInsets.fromLTRB(15, 0, 0, 10),
           child: InkWell(
-              onTap: (){ openWebPage("https://twitter.com/AO3_Status"); },
-              child: Container(
-                  padding: const EdgeInsets.fromLTRB(0, 5, 5, 5),
-                  child: Row(
-                      children: [
-                        Icon(FontAwesomeIcons.twitter, size: 15.0,),
-                        Text("  @AO3_Status on Twitter", style: Theme.of(context).textTheme.bodyMedium)
-                      ]
-                  )
-              )
+            onTap: (){ openWebPage("https://twitter.com/AO3_Status"); },
+            child: IconLabel(
+              icon: FontAwesomeIcons.twitter,
+              size: 15.0,
+              text: "@AO3_Status on Twitter",
+              style: Theme.of(context).textTheme.bodyMedium,
+              padding: const EdgeInsets.fromLTRB(0, 5, 5, 5)
+            ),
           )
         ),
         Container(
           margin: const EdgeInsets.fromLTRB(15, 0, 0, 15),
           child: InkWell(
-              onTap: (){ openWebPage("https://ao3org.tumblr.com/"); },
-              child: Container(
-                  padding: const EdgeInsets.fromLTRB(0, 5, 5, 5),
-                  child: Row(
-                      children: [
-                        Icon(FontAwesomeIcons.tumblr, size: 15.0,),
-                        Text("  ao3org on Tumblr", style: Theme.of(context).textTheme.bodyMedium)
-                      ]
-                  )
-              )
+            onTap: (){ openWebPage("https://ao3org.tumblr.com/"); },
+            child: IconLabel(
+              icon: FontAwesomeIcons.tumblr,
+              size: 15.0,
+              text: "ao3org on Tumblr",
+              style: Theme.of(context).textTheme.bodyMedium,
+              padding: const EdgeInsets.fromLTRB(0, 5, 5, 5)
+            )
           )
         ),
       ])

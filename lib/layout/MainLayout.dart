@@ -1,18 +1,24 @@
-import 'package:ao3mobile/pages/searchView.dart';
+import 'package:ao3mobile/data/Singletons/ClientKeeper.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:http/retry.dart';
 import 'package:sqflite/sqflite.dart';
 
-import '../classes/DB/DB.dart';
+import '../data/DB/DB.dart';
+import '../views/historyView.dart';
+import '../views/libraryView.dart';
+import '../views/searchView.dart';
 
-class HomeView extends StatefulWidget {
-  const HomeView({super.key});
+class MainLayout extends StatefulWidget {
+  const MainLayout({super.key});
 
   @override
-  State<HomeView> createState() => _HomeViewState();
+  State<MainLayout> createState() => _MainLayoutState();
 }
 
-class _HomeViewState extends State<HomeView> {
+class _MainLayoutState extends State<MainLayout> {
   late Database db;
+  late RetryClient client;
 
   int _currentIndex = 0;
   ScrollController _scrollController = new ScrollController();
@@ -21,8 +27,8 @@ class _HomeViewState extends State<HomeView> {
 
   final List<Widget> _tabs = [
     SearchView(),
-    LibraryScreen(),
-    HistoryScreen(),
+    Libraryview(),
+    Historyview(),
     SettingsScreen(),
   ];
 
@@ -32,17 +38,32 @@ class _HomeViewState extends State<HomeView> {
   void initState() {
     super.initState();
     openDB();
+    openClient();
+  }
+
+  @override
+  void dispose() {
+    // ClientKeeper.instance.closeClient();
+    super.dispose();
   }
 
 
 
   Future<void> openDB() async => db = await DB.instance.database;
+  Future<void> openClient() async => client = await ClientKeeper.instance.client;
 
 
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        systemOverlayStyle: SystemUiOverlayStyle(
+          statusBarColor: Theme.of(context).primaryColor,
+        ),
+        toolbarHeight: 0,
+        backgroundColor: Theme.of(context).primaryColor,
+      ),
       body: _tabs[_currentIndex],
       bottomNavigationBar: BottomNavigationBar(
         type: BottomNavigationBarType.fixed,
@@ -71,35 +92,7 @@ class _HomeViewState extends State<HomeView> {
           ),
         ],
         backgroundColor: Theme.of(context).primaryColor,
-
       ),
-    );
-  }
-}
-
-class HomeScreen extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return Center(
-      child: Text('Home Screen'),
-    );
-  }
-}
-
-class LibraryScreen extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return Center(
-      child: Text('Library Screen'),
-    );
-  }
-}
-
-class HistoryScreen extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return Center(
-      child: Text('History Screen'),
     );
   }
 }
@@ -107,7 +100,7 @@ class HistoryScreen extends StatelessWidget {
 class SettingsScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return Center(
+    return const Center(
       child: Text('Settings Screen'),
     );
   }
