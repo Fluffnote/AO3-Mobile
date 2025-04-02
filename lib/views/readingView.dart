@@ -1,7 +1,9 @@
 import 'dart:async';
+import 'dart:ffi';
 
 import 'package:ao3mobile/data/repositories/ChapterRepo.dart';
 import 'package:ao3mobile/data/repositories/WorkRepo.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_markdown/flutter_markdown.dart';
@@ -27,12 +29,13 @@ class _ReadingView extends State<ReadingView> {
   final WorkRepo workRepo = new WorkRepo();
   final ChapterRepo chapterRepo = new ChapterRepo();
 
-  late final Future<Chapter> chapter;
+  late Future<Chapter> chapter;
   late final Future<Work> work;
   late final _scrollController;
+  double _savedScrollOffset = 0;
   double _scrollOffset = 0;
   double _scrollMax = 0;
-  late Timer timer;
+  double _scrollSaveDistance = 100;
   bool loaded = false;
 
   @override
@@ -57,16 +60,16 @@ class _ReadingView extends State<ReadingView> {
       }
     }
     _scrollController.addListener(scrollListen);
-    timer = Timer.periodic(const Duration(seconds: 2), (timer) {
-      // setState(() {
-        chapterRepo.updateHistoryPos(widget.workId, widget.chapterId, _scrollOffset, _scrollMax);
-      // });
-    });
   }
 
   void scrollListen() {
     _scrollOffset = _scrollController.offset;
     if (_scrollController.positions.isNotEmpty) _scrollMax = _scrollController.positions[0].maxScrollExtent;
+    if ((_scrollOffset - _savedScrollOffset).abs() >= _scrollSaveDistance) {
+      _savedScrollOffset = _scrollOffset;
+      chapterRepo.updateHistoryPos(widget.workId, widget.chapterId, _savedScrollOffset, _scrollMax);
+      if (kDebugMode) print("saved spot");
+    }
     setState(() {});
   }
 
@@ -74,10 +77,6 @@ class _ReadingView extends State<ReadingView> {
   @override
   void dispose() {
     chapterRepo.updateHistoryPos(widget.workId, widget.chapterId, _scrollOffset, _scrollMax);
-    timer.cancel();
-    // _scrollController.removeListener(scrollListen);
-    // _scrollController.removeListener(() {});
-    // _scrollController.dispose();
     super.dispose();
   }
 
@@ -112,7 +111,9 @@ class _ReadingView extends State<ReadingView> {
                         actions: [
                           IconButton(
                             icon: const Icon(Icons.refresh_rounded),
-                            onPressed: () {},
+                            onPressed: () {
+                              chapter = chapterRepo.getChapter(widget.workId, widget.chapterId, 2);
+                            },
                           )
                         ],
                         backgroundColor: Theme.of(context).primaryColor,
@@ -148,13 +149,25 @@ class _ReadingViewContentState extends State<ReadingViewContent> {
 
   @override
   Widget build(BuildContext context) {
+    // Build chapter header
+    String chapterHead = "";
+    if (widget.chapter.title.isNotEmpty) {
+      if (widget.chapter.id != -1 && widget.chapter.num.isNotEmpty) {
+        chapterHead += "${widget.chapter.num}. ";
+      }
+      chapterHead += widget.chapter.title;
+    }
+    else {
+      chapterHead = "Chapter ${widget.chapter.num}";
+    }
+
+
     return SliverList(delegate: SliverChildListDelegate([
       Column(
         children: [
           Container(
             margin: const EdgeInsets.fromLTRB(15, 15, 15, 30),
-            child: Text(widget.chapter.title.isNotEmpty?"${widget.chapter.num}${widget.chapter.num.isNotEmpty?". ":""}${widget.chapter.title}":"Chapter ${widget.chapter.num}",
-              style: Theme.of(context).textTheme.headlineSmall,),
+            child: Text(chapterHead, style: Theme.of(context).textTheme.headlineSmall),
           ),
           Visibility(
               visible: widget.chapter.summary.isNotEmpty,

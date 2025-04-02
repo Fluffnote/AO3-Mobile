@@ -92,6 +92,7 @@ class ChapterRepo {
     }
 
     if (chapterId == -1) {
+      temp.num = "1";
       if (page.getElementsByClassName("title heading").isNotEmpty) {
         temp.title = page.getElementsByClassName("title heading").first.text.replaceAll("\n", "").trim();
       }
