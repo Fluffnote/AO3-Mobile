@@ -27,9 +27,9 @@ class _MainLayoutState extends State<MainLayout> {
 
   final List<Widget> _tabs = [
     SearchView(),
-    Libraryview(),
+    // Libraryview(),
     Historyview(),
-    SettingsScreen(),
+    // SettingsScreen(),
   ];
 
 
@@ -78,18 +78,18 @@ class _MainLayoutState extends State<MainLayout> {
             icon: Icon(Icons.home),
             label: 'Home',
           ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.collections_bookmark),
-            label: 'Library',
-          ),
+          // BottomNavigationBarItem(
+          //   icon: Icon(Icons.collections_bookmark),
+          //   label: 'Library',
+          // ),
           BottomNavigationBarItem(
             icon: Icon(Icons.history),
             label: 'History',
           ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.settings),
-            label: 'Settings',
-          ),
+          // BottomNavigationBarItem(
+          //   icon: Icon(Icons.settings),
+          //   label: 'Settings',
+          // ),
         ],
         backgroundColor: Theme.of(context).primaryColor,
       ),

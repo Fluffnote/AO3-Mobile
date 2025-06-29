@@ -3,6 +3,7 @@ import 'dart:ffi';
 import 'package:ao3mobile/data/models/Work.dart';
 import 'package:ao3mobile/data/repositories/SearchRepo.dart';
 import 'package:ao3mobile/layout/ui/core/IconLabel.dart';
+import 'package:ao3mobile/views/filterSelectView.dart';
 import 'package:ao3mobile/views/workView.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -90,7 +91,9 @@ class _SearchView extends State<SearchView> {
             ),
             IconButton(
               icon: const Icon(Icons.filter_list_outlined),
-              onPressed: () {},
+              onPressed: () {
+                Navigator.push(context, MaterialPageRoute(builder: (context) => FilterSelectView()));
+              },
             ),
           ],
           backgroundColor: Theme.of(context).primaryColor,

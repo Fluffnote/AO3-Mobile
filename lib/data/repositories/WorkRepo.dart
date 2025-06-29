@@ -254,6 +254,10 @@ class WorkRepo {
       String tempKudos = stats.getElementsByClassName("kudos").last.text;
       temp.kudos = tempKudos.isNotEmpty?int.parse(tempKudos.replaceAll(RegExp(r"[^0-9]"), "")):0;
     }
+    if (stats.getElementsByClassName("hits").isNotEmpty) { // Getting hit count
+      String tempHits = stats.getElementsByClassName("hits").last.text;
+      temp.hits = tempHits.isNotEmpty?int.parse(tempHits.replaceAll(RegExp(r"[^0-9]"), "")):0;
+    }
 
 
 

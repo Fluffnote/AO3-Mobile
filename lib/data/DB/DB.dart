@@ -29,9 +29,10 @@ class DB {
         db.execute(DBSchema.CREATE_WORK);
         db.execute(DBSchema.CREATE_CHAPTER);
         db.execute(DBSchema.CREATE_SEARCH_RESULTS);
-        db.execute(DBSchema.CREATE_LIBRARY);
-        db.execute(DBSchema.CREATE_LABELS);
-        db.execute(DBSchema.CREATE_FILTERS);
+        db.execute(DBSchema.CREATE_FILTER);
+        db.execute(DBSchema.CREATE_FILTER_COMPONENTS);
+        // db.execute(DBSchema.CREATE_LIBRARY);
+        // db.execute(DBSchema.CREATE_LABELS);
       },
       onOpen: (db) {
         if (kDebugMode) {

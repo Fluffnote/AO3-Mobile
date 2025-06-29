@@ -79,7 +79,7 @@ class WorkCard extends StatelessWidget {
                               ),
                               IconLabel(icon: Icons.abc, text: "${work.words}", size: 26.0, margin: const EdgeInsets.only(left: 5.0)),
                               IconLabel(icon: Icons.favorite, text: "${work.kudos}", margin: const EdgeInsets.only(left: 5.0)),
-                              IconLabel(icon: Icons.comment, text: "${work.comments}", margin: const EdgeInsets.only(left: 5.0)),
+                              IconLabel(icon: Icons.remove_red_eye, text: "${work.hits}", margin: const EdgeInsets.only(left: 5.0)),
                               const Spacer(),
                               Text(work.statusDate, style: Theme.of(context).textTheme.labelSmall,),
                             ],

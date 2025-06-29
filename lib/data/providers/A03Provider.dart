@@ -61,10 +61,10 @@ class AO3Provider {
   Future<dom.Document> getRawChapter(int workId, int chapterId) async {
     Uri uri;
     if (chapterId == -1) {
-      uri = Uri.parse("https://archiveofourown.org/works/$workId#workskin?view_adult=true");
+      uri = Uri.parse("https://archiveofourown.org/works/$workId?view_adult=true");
     }
     else {
-      uri = Uri.parse("https://archiveofourown.org/works/$workId/chapters/$chapterId#workskin?view_adult=true");
+      uri = Uri.parse("https://archiveofourown.org/works/$workId/chapters/$chapterId?view_adult=true");
     }
     return await clientGet(uri);
   }

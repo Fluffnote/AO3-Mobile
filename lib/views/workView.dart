@@ -238,6 +238,7 @@ class WorkInfo extends StatelessWidget {
                           IconLabel(icon: Icons.bookmarks, text: "${work.bookmarks}", size: 18.0, style: Theme.of(context).textTheme.bodyMedium),
                           IconLabel(icon: Icons.favorite, text: "${work.kudos}", size: 18.0, style: Theme.of(context).textTheme.bodyMedium),
                           IconLabel(icon: Icons.comment, text: "${work.comments}", size: 18.0, style: Theme.of(context).textTheme.bodyMedium),
+                          IconLabel(icon: Icons.remove_red_eye, text: "${work.hits}", size: 18.0, style: Theme.of(context).textTheme.bodyMedium),
                           Visibility(
                             visible: work.relationships.isNotEmpty,
                             child: Column(
