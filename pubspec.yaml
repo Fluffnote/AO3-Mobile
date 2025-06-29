@@ -48,6 +48,7 @@ dependencies:
   flutter_bloc: ^9.1.0
   webview_flutter: ^4.10.0
   web: ^1.1.1
+  gpt_markdown: ^1.0.9
 
 dev_dependencies:
   flutter_test:
