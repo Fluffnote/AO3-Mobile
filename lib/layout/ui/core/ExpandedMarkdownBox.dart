@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_markdown/flutter_markdown.dart';
+import 'package:gpt_markdown/gpt_markdown.dart';
 
 class ExpandedMarkdownBox extends StatefulWidget {
   final String body;
@@ -45,7 +45,7 @@ class _ExpandedMarkdownBoxState extends State<ExpandedMarkdownBox> {
         data = widget.body;
       }
 
-      list.add(MarkdownBody(data: data));
+      list.add(GptMarkdown(data));
 
       if (widget.showButton) {
         list.add(
@@ -60,7 +60,7 @@ class _ExpandedMarkdownBoxState extends State<ExpandedMarkdownBox> {
       }
     }
     else {
-      list.add(MarkdownBody(data: widget.body));
+      list.add(GptMarkdown(widget.body));
     }
 
     return Container(child: Column(children: list));
