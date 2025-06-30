@@ -6,8 +6,8 @@ import 'package:ao3mobile/data/repositories/WorkRepo.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_markdown/flutter_markdown.dart';
 import 'package:ao3mobile/layout/ui/MiscUtils.dart';
+import 'package:gpt_markdown/gpt_markdown.dart';
 import 'package:sqflite/sqflite.dart';
 import '../data/models/Chapter.dart';
 import '../data/DB/DB.dart';
@@ -209,7 +209,7 @@ class _ReadingViewContentState extends State<ReadingViewContent> {
           ),
           Container(
               margin: const EdgeInsets.fromLTRB(15, 0, 15, 0),
-              child: MarkdownBody(data: widget.chapter.body)
+              child: GptMarkdown(widget.chapter.body)
           ),
           Container(
               margin: const EdgeInsets.fromLTRB(15, 0, 15, 0),
