@@ -1,4 +1,5 @@
 import 'package:ao3mobile/data/Singletons/ClientKeeper.dart';
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:http/retry.dart';
@@ -18,7 +19,7 @@ class MainLayout extends StatefulWidget {
 
 class _MainLayoutState extends State<MainLayout> {
   late Database db;
-  late RetryClient client;
+  late Dio client;
 
   int _currentIndex = 0;
   ScrollController _scrollController = new ScrollController();

@@ -1,31 +1,41 @@
+import 'dart:io';
+
+import 'package:cookie_jar/cookie_jar.dart';
+import 'package:dio/dio.dart';
+import 'package:dio_cookie_manager/dio_cookie_manager.dart';
 import 'package:http/retry.dart';
 import 'package:http/http.dart' as http;
+import 'package:path_provider/path_provider.dart';
 
 class ClientKeeper {
 
-  static final ClientKeeper _CK = new ClientKeeper._internal();
   ClientKeeper._internal();
+
+  static final ClientKeeper _CK = ClientKeeper._internal();
   static ClientKeeper get instance => _CK;
   static var _client;
+  static var _cookies;
+
+  final options = BaseOptions(baseUrl: "https://archiveofourown.org");
 
   Map<String, String> headers = {};
 
-  Future<RetryClient> get client async {
+  Future<Dio> get client async {
     if (_client != null) return _client;
-    _client = RetryClient(http.Client());
+
+    final Directory appDocDir = await getApplicationDocumentsDirectory();
+    final String appDocPath = appDocDir.path;
+    _cookies = PersistCookieJar(
+        ignoreExpires: true,
+        storage: FileStorage(appDocPath + "/.cookies/")
+    );
+    _client = Dio(options);
+    _client.interceptors.add(CookieManager(_cookies));
+
     return _client;
   }
 
   Future<void> closeClient() async {
     if (_client != null) (_client as RetryClient).close();
-  }
-
-  void updateCookie(http.Response response) {
-    String? rawCookie = response.headers['set-cookie'];
-    if (rawCookie != null) {
-      int index = rawCookie.indexOf(';');
-      headers['cookie'] =
-      (index == -1) ? rawCookie : rawCookie.substring(0, index);
-    }
   }
 }

@@ -1,4 +1,5 @@
 import 'package:ao3mobile/data/Singletons/ClientKeeper.dart';
+import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:html/dom.dart' as dom;
@@ -14,9 +15,9 @@ class AO3Provider {
   AO3Provider();
 
   Future<dom.Document> clientGet(Uri uri) async {
-    http.Response response = await (await ClientKeeper.instance.client).get(uri, headers: ClientKeeper.instance.headers);
-    ClientKeeper.instance.updateCookie(response);
-    dom.Document page = parse(response.body);
+    if (kDebugMode) print(uri.toString());
+    Response response = await (await ClientKeeper.instance.client).requestUri(uri);
+    dom.Document page = parse(response.data);
 
     // navigatorKey.currentState?.push(MaterialPageRoute(builder: (context) => HTMLView(body: response.body)));
 
@@ -24,12 +25,12 @@ class AO3Provider {
   }
 
   Future<String> clientGetBody(Uri uri) async {
-    http.Response response = await (await ClientKeeper.instance.client).get(uri, headers: ClientKeeper.instance.headers);
-    ClientKeeper.instance.updateCookie(response);
+    if (kDebugMode) print(uri.toString());
+    Response response = await (await ClientKeeper.instance.client).requestUri(uri);
 
     // navigatorKey.currentState?.push(MaterialPageRoute(builder: (context) => HTMLView(body: response.body)));
 
-    return response.body;
+    return response.data;
   }
 
   Future<dom.Document> getRawSearch(SearchQueryParameters params) async {
