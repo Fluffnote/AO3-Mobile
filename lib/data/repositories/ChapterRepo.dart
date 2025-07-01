@@ -126,10 +126,10 @@ class ChapterRepo {
       temp.body = convert(
           body.replaceAll('<h3 class="landmark heading" id="work">Chapter Text</h3>', "")
               .replaceAll('<h3 class="landmark heading" id="work">Work Text:</h3>', "")
-      ); // Getting body
+      , styleOptions: {"hr":"- - -", "emDelimiter":"*", "bulletListMarker":"-"}); // Getting body
     }
     else {
-      temp.body = convert(page.body!.innerHtml as Object);
+      temp.body = convert(page.body!.innerHtml as Object, styleOptions: {"hr":"- - -", "emDelimiter":"*", "bulletListMarker":"-"});
     }
 
 
