@@ -1,11 +1,8 @@
-import 'package:ao3mobile/data/Singletons/ClientKeeper.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:http/retry.dart';
 import 'package:sqflite/sqflite.dart';
 
-import '../data/DB/DB.dart';
 import '../views/historyView.dart';
 import '../views/libraryView.dart';
 import '../views/searchView.dart';
@@ -38,8 +35,6 @@ class _MainLayoutState extends State<MainLayout> {
   @override
   void initState() {
     super.initState();
-    openDB();
-    openClient();
   }
 
   @override
@@ -49,9 +44,6 @@ class _MainLayoutState extends State<MainLayout> {
   }
 
 
-
-  Future<void> openDB() async => db = await DB.instance.database;
-  Future<void> openClient() async => client = await ClientKeeper.instance.client;
 
 
 

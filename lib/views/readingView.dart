@@ -1,6 +1,6 @@
 import 'dart:async';
-import 'dart:ffi';
 
+import 'package:ao3mobile/data/models/History.dart';
 import 'package:ao3mobile/data/repositories/ChapterRepo.dart';
 import 'package:ao3mobile/data/repositories/WorkRepo.dart';
 import 'package:flutter/foundation.dart';
@@ -8,9 +8,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:ao3mobile/layout/ui/MiscUtils.dart';
 import 'package:gpt_markdown/gpt_markdown.dart';
-import 'package:sqflite/sqflite.dart';
 import '../data/models/Chapter.dart';
-import '../data/DB/DB.dart';
 import '../data/models/Work.dart';
 import '../layout/ui/core/ExpandedMarkdownBox.dart';
 
@@ -42,24 +40,22 @@ class _ReadingView extends State<ReadingView> {
   void initState() {
     super.initState();
     _scrollController = ScrollController();
-    work = workRepo.getWork(widget.workId, 0, false);
+    work = workRepo.getWork(widget.workId, 0);
     chapter = chapterRepo.getChapter(widget.workId, widget.chapterId, widget.refreshType);
   }
 
   Future<void> setup() async {
 
-    Database db = await DB.instance.database;
-    await chapterRepo.addHistoryEntry(await work, await chapter);
-    List<Map<String, Object?>> posRes = await db.rawQuery("SELECT POS, MAX_POS FROM HISTORY WHERE WORK_ID = ${widget.workId} AND CHAP_ID = ${widget.chapterId};");
-    if (posRes.isNotEmpty) {
-      _scrollOffset = (posRes.first["POS"] as double);
-      _scrollMax = (posRes.first["MAX_POS"] as double);
-      if (_scrollController.positions.isNotEmpty && !loaded) {
-        _scrollController.jumpTo(_scrollOffset.toDouble());
-        loaded = true;
-      }
-    }
-    _scrollController.addListener(scrollListen);
+    // History history = await chapterRepo.addHistoryEntry(await work, await chapter);
+    //
+    // _scrollOffset = (history.pos);
+    // _scrollMax = (history.maxPos);
+    // if (_scrollController.positions.isNotEmpty && !loaded) {
+    //   _scrollController.jumpTo(_scrollOffset.toDouble());
+    //   loaded = true;
+    // }
+    //
+    // _scrollController.addListener(scrollListen);
   }
 
   void scrollListen() {
@@ -67,7 +63,7 @@ class _ReadingView extends State<ReadingView> {
     if (_scrollController.positions.isNotEmpty) _scrollMax = _scrollController.positions[0].maxScrollExtent;
     if ((_scrollOffset - _savedScrollOffset).abs() >= _scrollSaveDistance) {
       _savedScrollOffset = _scrollOffset;
-      chapterRepo.updateHistoryPos(widget.workId, widget.chapterId, _savedScrollOffset, _scrollMax);
+      // chapterRepo.updateHistoryPos(widget.workId, widget.chapterId, _savedScrollOffset, _scrollMax);
       if (kDebugMode) print("saved spot");
     }
     setState(() {});
@@ -76,7 +72,7 @@ class _ReadingView extends State<ReadingView> {
 
   @override
   void dispose() {
-    chapterRepo.updateHistoryPos(widget.workId, widget.chapterId, _scrollOffset, _scrollMax);
+    // chapterRepo.updateHistoryPos(widget.workId, widget.chapterId, _scrollOffset, _scrollMax);
     super.dispose();
   }
 

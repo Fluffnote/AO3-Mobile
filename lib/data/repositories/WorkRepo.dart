@@ -1,27 +1,27 @@
-import 'package:ao3mobile/data/providers/A03Provider.dart';
-import 'package:ao3mobile/data/providers/HistoryProvider.dart';
-import 'package:ao3mobile/data/providers/WorkProvider.dart';
+import 'package:ao3mobile/data/models/Chapter.dart';
+import 'package:ao3mobile/data/providers/AO3_P.dart';
+import 'package:ao3mobile/data/providers/Work_P.dart';
 import 'package:ao3mobile/data/repositories/ChapterRepo.dart';
 import 'package:html/dom.dart' as dom;
 import 'package:html2md/html2md.dart';
 import 'package:intl/intl.dart';
 import 'package:url_launcher/url_launcher.dart';
 
-import '../models/Chapter.dart';
 import '../models/History.dart';
 import '../models/Work.dart';
+import '../providers/History_P.dart';
 
 class WorkRepo {
 
   WorkRepo();
 
   // Repos
-  final ChapterRepo chapterRepo = new ChapterRepo();
+  final ChapterRepo chapterRepo = ChapterRepo();
 
   // Providers
-  final AO3Provider ao3provider = new AO3Provider();
-  final WorkProvider workProvider = new WorkProvider();
-  final HistoryProvider historyProvider = new HistoryProvider();
+  final AO3_P ao3_P = AO3_P();
+  final Work_P work_P = Work_P();
+  final History_P history_P = History_P();
 
 
 
@@ -33,53 +33,17 @@ class WorkRepo {
   ///
   /// [refreshType] = 2 : Hard refresh - Will attempt to refresh info regardless of last fetch
   ///
-  Future<Work> getWork(int workId, [int refreshType = 0, bool getChapters = true]) async {
-    String table = await workProvider.whichTableIsWorkIn(workId);
-    if (table == "NONE" || refreshType >= 2 || (refreshType == 1 && await workProvider.doesWorkNeedRefresh(workId))) {
-      await parseRawPage(await ao3provider.getRawWork(workId), workId);
-    }
-
-
-    Map<String, Object?> workData = await workProvider.getWorkData(workId);
-    if (workData.isEmpty) getWork(workId, refreshType+1); // Catching for failed caching
-    Work temp = parseTableResult(workData);
-
-    if (getChapters) temp.chapters = await getWorkChapters(temp.id);
-
-    return temp;
-  }
-
-
-
-  // Table parsing
-  Work parseTableResult(Map<String, Object?> map) {
+  Future<Work> getWork(int workId, [int refreshType = 0]) async {
     Work temp = Work();
-
-    temp.id = map["WORK_ID"] as int;
-    temp.title = map["TITLE"] as String;
-    temp.author = map["AUTHOR"] as String;
-
-    temp.rating = map["RATING"] as String;
-    temp.warning = map["WARNING"] as String;
-    temp.categories = (map["CATEGORIES"] as String).split("|");
-    temp.fandoms = (map["FANDOMS"] as String).split("|");
-    temp.relationships = (map["RELATIONSHIPS"] as String).split("|");
-    temp.characters = (map["CHARACTERS"] as String).split("|");
-    temp.addTags = (map["TAGS"] as String).split("|");
-    temp.language = map["LANGUAGE"] as String;
-
-    // Stats
-    temp.publishedDate = map["PUBLISHED_DATE"]!=null&&(map["PUBLISHED_DATE"] as String).isNotEmpty?DateFormat.yMMMd('en_US').format(DateTime.parse(map["PUBLISHED_DATE"] as String)):"";
-    temp.statusLabel = map["STATUS_LABEL"] as String;
-    temp.statusDate = map["STATUS_DATE"]!=null&&(map["STATUS_DATE"] as String).isNotEmpty?DateFormat.yMMMd('en_US').format(DateTime.parse(map["STATUS_DATE"] as String)):"";
-    temp.words = map["WORDS"] as int;
-    temp.chapterStats = map["CHAPTER_STATS"] as String;
-    temp.comments = map["COMMENTS"] as int;
-    temp.kudos = map["KUDOS"] as int;
-    temp.bookmarks = map["BOOKMARKS"] as int;
-    temp.hits = map["HITS"] as int;
-
-    temp.summary = map["SUMMARY"] as String;
+    String db = await work_P.getWorkDB(workId);
+    if (db == "NONE" || refreshType >= 2 || (refreshType == 1 && await work_P.doesWorkNeedRefresh(workId, db))) {
+      temp = await parseRawPage(await ao3_P.getRawWork(workId), workId);
+      db = await work_P.getWorkDB(workId);
+    }
+    else {
+      if (db == "LIBRARY") temp = await work_P.getWorkLibrary(workId);
+      if (db == "TEMP") temp = await work_P.getWorkTemp(workId);
+    }
 
     return temp;
   }
@@ -178,35 +142,41 @@ class WorkRepo {
           .asMap().forEach((index, elem) {
         if (!elem.outerHtml.contains('<span class="submit actions">')) {
           String tempIDClipping = elem.outerHtml.substring(elem.outerHtml.indexOf('value="') + 7);
-          temp.chapters.add(chapterRepo.createPartialChapter(
-              workId,
-              int.parse(tempIDClipping.substring(0, tempIDClipping.indexOf('"'))),
-              tempIDClipping.substring(tempIDClipping.indexOf(".") + 2, tempIDClipping.indexOf("<")),
-              tempIDClipping.substring(tempIDClipping.indexOf(">") + 1, tempIDClipping.indexOf(".")),
-              index+1
-          ));
+          ChapterKey chapterKey = ChapterKey();
+
+          chapterKey.workId = workId;
+          chapterKey.id = int.parse(tempIDClipping.substring(0, tempIDClipping.indexOf('"')));
+
+          chapterKey.num = tempIDClipping.substring(tempIDClipping.indexOf(".") + 2, tempIDClipping.indexOf("<"));
+          chapterKey.title = tempIDClipping.substring(tempIDClipping.indexOf(">") + 1, tempIDClipping.indexOf("."));
+
+          chapterKey.order = index + 1;
+          chapterKey.workTitle = temp.title;
+
+          temp.chapters.add(chapterKey);
         }
       });
     }
     else {
       if (page.getElementsByClassName("title heading").isNotEmpty) {
-        temp.chapters.add(chapterRepo.createPartialChapter(
-          workId,
-          -1,
-          page.getElementsByClassName("title heading").first.text.replaceAll("\n", "").trim(),
-          "1",
-          1
-        ));
+        ChapterKey chapterKey = ChapterKey();
+
+        chapterKey.workId = workId;
+        chapterKey.num = "1";
+        chapterKey.title = page.getElementsByClassName("title heading").first.text.replaceAll("\n", "").trim();
+        chapterKey.workTitle = temp.title;
+
+        temp.chapters.add(chapterKey);
       }
     }
 
 
     // Getting first summary
-    if (page.getElementsByClassName("summary module").isNotEmpty) temp.summary = convert(page.getElementsByClassName("summary module").first.getElementsByClassName("userstuff").first.innerHtml);
+    if (page.getElementsByClassName("summary module").isNotEmpty) temp.summary = convert(page.getElementsByClassName("summary module").first.getElementsByClassName("userstuff").first.innerHtml, styleOptions: {"hr":"- - -", "emDelimiter":"*", "bulletListMarker":"-"});
 
 
 
-    workProvider.addWorkToCache(temp, true);
+    work_P.pushWork(temp);
 
     return temp;
   }
@@ -262,12 +232,12 @@ class WorkRepo {
 
 
     if (part.getElementsByClassName("userstuff summary").isNotEmpty) {
-      temp.summary = convert(part.getElementsByClassName("userstuff summary").first.innerHtml);
+      temp.summary = convert(part.getElementsByClassName("userstuff summary").first.innerHtml, styleOptions: {"hr":"- - -", "emDelimiter":"*", "bulletListMarker":"-"});
     }
 
 
 
-    workProvider.addWorkToCache(temp, false);
+    work_P.pushWork(temp);
 
     return temp;
   }
@@ -281,32 +251,13 @@ class WorkRepo {
     if (!await launchUrl(uri)) throw Exception('Could not launch $uri');
   }
 
-  Future<void> openHTML(int work) async => ao3provider.openRawWorkHTML(work);
-
-
-  Future<List<Chapter>> getWorkChapters(int workId) async {
-    List<Chapter> out = [];
-    List<Map<String, Object?>> chapterRes = await workProvider.getWorkChaptersData(workId);
-    if (chapterRes.isNotEmpty) {
-      for (Map<String, Object?> chap in chapterRes) {
-        out.add(await chapterRepo.getChapter(workId, (chap["CHAP_ID"] as int), 0));
-      }
-    }
-
-    return out;
-  }
+  Future<void> openHTML(int work) async => ao3_P.openRawWorkHTML(work);
 
   Future<List<History>> getHistoryList() async {
-    List<History> out = [];
-
-    for (Map<String, Object?> history in await historyProvider.getHistoryListData()) {
-      out.add(History.parse(history));
-    }
-
-    return out;
+    return await history_P.getHistoryList();
   }
 
   Future<void> deleteHistory(int workId) async {
-    await historyProvider.deleteHistory(workId);
+    // await historyProvider.deleteHistory(workId);
   }
 }

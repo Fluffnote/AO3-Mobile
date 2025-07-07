@@ -10,9 +10,9 @@ import 'package:ao3mobile/main.dart';
 import '../../views/htmlView.dart';
 import '../models/SearchQueryParameters.dart';
 
-class AO3Provider {
+class AO3_P {
 
-  AO3Provider();
+  AO3_P();
 
   Future<dom.Document> clientGet(Uri uri) async {
     if (kDebugMode) print(uri.toString());
