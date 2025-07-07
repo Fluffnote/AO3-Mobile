@@ -2,6 +2,7 @@ import 'dart:ffi';
 
 import 'package:ao3mobile/data/models/Work.dart';
 import 'package:ao3mobile/data/repositories/SearchRepo.dart';
+import 'package:ao3mobile/data/repositories/WorkRepo.dart';
 import 'package:ao3mobile/layout/ui/core/IconLabel.dart';
 import 'package:ao3mobile/views/filterSelectView.dart';
 import 'package:ao3mobile/views/workView.dart';

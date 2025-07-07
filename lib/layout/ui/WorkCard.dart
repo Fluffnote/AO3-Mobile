@@ -18,7 +18,7 @@ class WorkCard extends StatelessWidget {
     return Card(
         child: InkWell(
           onTap: (){
-            Navigator.push(context, MaterialPageRoute(builder: (context) => WorkView(workId: work.id, refreshType: 1)));
+            Navigator.push(context, MaterialPageRoute(builder: (context) => WorkView(workId: work.id, refreshType: 2)));
           },
           child: ExpandableNotifier(
             child: Container(

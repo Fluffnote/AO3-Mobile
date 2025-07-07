@@ -1,6 +1,6 @@
 import 'dart:async';
-import 'dart:ffi';
 
+import 'package:ao3mobile/data/models/History.dart';
 import 'package:ao3mobile/data/repositories/ChapterRepo.dart';
 import 'package:ao3mobile/data/repositories/WorkRepo.dart';
 import 'package:flutter/foundation.dart';
@@ -8,9 +8,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:ao3mobile/layout/ui/MiscUtils.dart';
 import 'package:gpt_markdown/gpt_markdown.dart';
-import 'package:sqflite/sqflite.dart';
 import '../data/models/Chapter.dart';
-import '../data/DB/DB.dart';
 import '../data/models/Work.dart';
 import '../layout/ui/core/ExpandedMarkdownBox.dart';
 
@@ -42,23 +40,21 @@ class _ReadingView extends State<ReadingView> {
   void initState() {
     super.initState();
     _scrollController = ScrollController();
-    work = workRepo.getWork(widget.workId, 0, false);
+    work = workRepo.getWork(widget.workId, 0);
     chapter = chapterRepo.getChapter(widget.workId, widget.chapterId, widget.refreshType);
   }
 
   Future<void> setup() async {
 
-    Database db = await DB.instance.database;
-    await chapterRepo.addHistoryEntry(await work, await chapter);
-    List<Map<String, Object?>> posRes = await db.rawQuery("SELECT POS, MAX_POS FROM HISTORY WHERE WORK_ID = ${widget.workId} AND CHAP_ID = ${widget.chapterId};");
-    if (posRes.isNotEmpty) {
-      _scrollOffset = (posRes.first["POS"] as double);
-      _scrollMax = (posRes.first["MAX_POS"] as double);
-      if (_scrollController.positions.isNotEmpty && !loaded) {
-        _scrollController.jumpTo(_scrollOffset.toDouble());
-        loaded = true;
-      }
+    History history = await chapterRepo.addHistoryEntry(await work, await chapter);
+
+    _scrollOffset = (history.pos);
+    _scrollMax = (history.maxPos);
+    if (_scrollController.positions.isNotEmpty && !loaded) {
+      _scrollController.jumpTo(_scrollOffset.toDouble());
+      loaded = true;
     }
+
     _scrollController.addListener(scrollListen);
   }
 
@@ -224,7 +220,7 @@ class _ReadingViewContentState extends State<ReadingViewContent> {
               child: const SizedBox(height: 10)
           ),
           Visibility(
-            visible: widget.chapter.id != -1,
+            visible: widget.chapter.id != 0,
             child: Container(
                 margin: const EdgeInsets.fromLTRB(15, 0, 15, 45),
                 child: InkWell(

@@ -188,10 +188,10 @@ packages:
     dependency: "direct main"
     description:
       name: gpt_markdown
-      sha256: "0ef0d258b8a97ed11a985a5ed348e9ec9428199f73011704704ddd0620a894eb"
+      sha256: "68d5337c8a00fc03a37dbddf84a6fd90401c30e99b6baf497ef9522a81fc34ee"
       url: "https://pub.dev"
     source: hosted
-    version: "1.1.1"
+    version: "1.1.2"
   html:
     dependency: "direct main"
     description:
@@ -397,6 +397,22 @@ packages:
     description:
       name: scroll_to_hide
       sha256: "242005340d5be2a4294c41195baad3abe29253914ac055c29f21fc9f94e0fa77"
+      url: "https://pub.dev"
+    source: hosted
+    version: "2.2.1"
+  sembast:
+    dependency: transitive
+    description:
+      name: sembast
+      sha256: "7119cf6f79bd1d48c8ec7943f4facd96c15ab26823021ed0792a487c7cd34441"
+      url: "https://pub.dev"
+    source: hosted
+    version: "3.8.5+1"
+  sembast_sqflite:
+    dependency: "direct main"
+    description:
+      name: sembast_sqflite
+      sha256: "38ffa967af36d6867d087ec82c37b70b55707b2cd533157e8a32d15aa66e40d2"
       url: "https://pub.dev"
     source: hosted
     version: "2.2.1"

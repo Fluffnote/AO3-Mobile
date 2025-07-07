@@ -1,29 +1,29 @@
 class History {
 
-  int workId = -1;
+  History();
+
+  int workId = 0;
   String workName = "";
   String author = "";
-  int chapId = -1;
+  int chapId = 0;
   String chapNum = "";
   String chapName = "";
   double pos = 0;
   double maxPos = 1;
   DateTime accessDate = DateTime.now();
 
-  History();
-
-  factory History.parse(Map<String, Object?> results) {
-    History temp = new History();
-
-    temp.workId = results["WORK_ID"] as int;
-    temp.workName = results["WORK_NAME"] as String;
-    temp.author = results["AUTHOR"] as String;
-    temp.chapId = results["CHAP_ID"] as int;
-    temp.chapNum = results["CHAP_NUM"] as String;
-    temp.chapName = results["CHAP_NAME"] as String;
-    temp.pos = results["POS"] as double;
-    temp.maxPos = results["MAX_POS"] as double;
-    temp.accessDate = DateTime.parse(results["ACCESS_DATE"] as String);
+  Map<String, dynamic> toMap() {
+    Map<String, dynamic> temp = {
+      "workId": workId,
+      "workName": workName,
+      "author": author,
+      "chapId": chapId,
+      "chapNum": chapNum,
+      "chapName": chapName,
+      "pos": pos,
+      "maxPos": maxPos,
+      "accessDate": accessDate.toIso8601String()
+    };
 
     return temp;
   }

@@ -1,5 +1,4 @@
-import 'package:ao3mobile/data/providers/A03Provider.dart';
-import 'package:ao3mobile/data/providers/SearchProvider.dart';
+import 'package:ao3mobile/data/providers/AO3_P.dart';
 import 'package:ao3mobile/data/repositories/WorkRepo.dart';
 import 'package:flutter/foundation.dart';
 import 'package:html/dom.dart' as dom;
@@ -7,37 +6,42 @@ import 'package:html/dom.dart' as dom;
 import '../models/SearchData.dart';
 import '../models/SearchQueryParameters.dart';
 import '../models/Work.dart';
+import '../providers/Search_P.dart';
 
 class SearchRepo {
 
   SearchRepo();
 
-  final WorkRepo workRepo = new WorkRepo();
+  final WorkRepo workRepo = WorkRepo();
 
-  final SearchProvider searchProvider = new SearchProvider();
-  final AO3Provider ao3provider = new AO3Provider();
+  final Search_P search_P = Search_P();
+  final AO3_P ao3_P = AO3_P();
+
+  SearchData searchData = SearchData();
 
 
   Future<SearchData> workSearch(SearchQueryParameters params) async {
 
-    searchProvider.clearSearchResults();
+    if (params.page == 1) {
+      await search_P.clearStore();
+      searchData = SearchData();
+    }
 
-    dom.Document page = await ao3provider.getRawSearch(params);
+    dom.Document page = await ao3_P.getRawSearch(params);
     // Can't find any results
-    if (page.getElementsByClassName("work index group").isEmpty) return SearchData();
-    List<Work> out = [];
-    String numFound = "";
+    if (page.getElementsByClassName("work index group").isEmpty) searchData;
 
     String numFoundRaw = page.getElementById("main")?.children.elementAt(4).text ?? "";
-    numFound = (numFoundRaw.isNotEmpty)?numFoundRaw.substring(0, numFoundRaw.indexOf("Found")+5):"";
+    searchData.numFound = (numFoundRaw.isNotEmpty)?numFoundRaw.substring(0, numFoundRaw.indexOf("Found")+5):"";
 
     for(dom.Element elem in page.getElementsByClassName("work index group").first.children) {
       Work work = await workRepo.parseRawSearchPart(elem);
-      searchProvider.addWorkToSearchResults(work.id);
-      out.add(work);
+      searchData.workIds.add(work.id);
+      searchData.works.add(work);
     }
 
-    if (kDebugMode) print("Search finished: ${out.length}");
-    return SearchData(numFound:numFound, works: out);
+    await search_P.updateSearchinfo(searchData.toList());
+
+    return searchData;
   }
 }
