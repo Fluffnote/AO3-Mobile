@@ -3,9 +3,9 @@ class ChapterKey {
 
   ChapterKey();
 
-  int id = -1;
-  int workId = -1;
-  int nextId = -1;
+  int id = 0;
+  int workId = 0;
+  int nextId = 0;
   int order = 1;
   String num = "";
   String title = "";
@@ -32,9 +32,9 @@ class Chapter {
 
   DateTime lastFetchDate = DateTime.now();
 
-  int id = -1;
-  int workId = -1;
-  int nextId = -1;
+  int id = 0;
+  int workId = 0;
+  int nextId = 0;
   int order = 1;
   String num = "";
   String title = "";

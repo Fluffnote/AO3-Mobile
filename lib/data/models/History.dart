@@ -2,10 +2,10 @@ class History {
 
   History();
 
-  int workId = -1;
+  int workId = 0;
   String workName = "";
   String author = "";
-  int chapId = -1;
+  int chapId = 0;
   String chapNum = "";
   String chapName = "";
   double pos = 0;
@@ -22,7 +22,7 @@ class History {
       "chapName": chapName,
       "pos": pos,
       "maxPos": maxPos,
-      "accessDate": accessDate
+      "accessDate": accessDate.toIso8601String()
     };
 
     return temp;

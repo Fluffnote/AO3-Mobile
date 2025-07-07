@@ -46,16 +46,16 @@ class _ReadingView extends State<ReadingView> {
 
   Future<void> setup() async {
 
-    // History history = await chapterRepo.addHistoryEntry(await work, await chapter);
-    //
-    // _scrollOffset = (history.pos);
-    // _scrollMax = (history.maxPos);
-    // if (_scrollController.positions.isNotEmpty && !loaded) {
-    //   _scrollController.jumpTo(_scrollOffset.toDouble());
-    //   loaded = true;
-    // }
-    //
-    // _scrollController.addListener(scrollListen);
+    History history = await chapterRepo.addHistoryEntry(await work, await chapter);
+
+    _scrollOffset = (history.pos);
+    _scrollMax = (history.maxPos);
+    if (_scrollController.positions.isNotEmpty && !loaded) {
+      _scrollController.jumpTo(_scrollOffset.toDouble());
+      loaded = true;
+    }
+
+    _scrollController.addListener(scrollListen);
   }
 
   void scrollListen() {
@@ -63,7 +63,7 @@ class _ReadingView extends State<ReadingView> {
     if (_scrollController.positions.isNotEmpty) _scrollMax = _scrollController.positions[0].maxScrollExtent;
     if ((_scrollOffset - _savedScrollOffset).abs() >= _scrollSaveDistance) {
       _savedScrollOffset = _scrollOffset;
-      // chapterRepo.updateHistoryPos(widget.workId, widget.chapterId, _savedScrollOffset, _scrollMax);
+      chapterRepo.updateHistoryPos(widget.workId, widget.chapterId, _savedScrollOffset, _scrollMax);
       if (kDebugMode) print("saved spot");
     }
     setState(() {});
@@ -72,7 +72,7 @@ class _ReadingView extends State<ReadingView> {
 
   @override
   void dispose() {
-    // chapterRepo.updateHistoryPos(widget.workId, widget.chapterId, _scrollOffset, _scrollMax);
+    chapterRepo.updateHistoryPos(widget.workId, widget.chapterId, _scrollOffset, _scrollMax);
     super.dispose();
   }
 
@@ -220,7 +220,7 @@ class _ReadingViewContentState extends State<ReadingViewContent> {
               child: const SizedBox(height: 10)
           ),
           Visibility(
-            visible: widget.chapter.id != -1,
+            visible: widget.chapter.id != 0,
             child: Container(
                 margin: const EdgeInsets.fromLTRB(15, 0, 15, 45),
                 child: InkWell(

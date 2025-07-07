@@ -61,7 +61,7 @@ class AO3_P {
 
   Future<dom.Document> getRawChapter(int workId, int chapterId) async {
     Uri uri;
-    if (chapterId == -1) {
+    if (chapterId == 0) {
       uri = Uri.parse("https://archiveofourown.org/works/$workId?view_adult=true");
     }
     else {

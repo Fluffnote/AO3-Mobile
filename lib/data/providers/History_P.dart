@@ -13,7 +13,7 @@ class History_P {
 
   Future<bool> checkIfHistoryExists(int workId, int chapId) async {
     String key = "${workId}_${chapId}";
-    return HistoryStore.record(key).get(await SDB.instance.history) != null;
+    return await HistoryStore.record(key).get(await SDB.instance.history) != null;
   }
 
   Future<void> pushHistory(History history) async {
@@ -23,16 +23,16 @@ class History_P {
 
   Future<History> getHistory(int workId, int chapId) async {
     String key = "${workId}_${chapId}";
-    return mapToHistory(HistoryStore.record(key).get(await SDB.instance.history) as Map<String, dynamic>);
+    return mapToHistory(await HistoryStore.record(key).get(await SDB.instance.history) as Map<String, dynamic>);
   }
 
   Future<List<History>> getHistoryList() async {
     Finder search = Finder(sortOrders: [SortOrder("accessDate", false)], limit: 100); // limiting to 100 max for performance
-    List<Map<String, dynamic>> recs = await HistoryStore.find(await SDB.instance.history, finder: search) as List<Map<String, dynamic>>;
+    List<RecordSnapshot<String, Map<String, dynamic>>> recs = await HistoryStore.find(await SDB.instance.history, finder: search);
 
     List<History> out = [];
-    for(Map<String, dynamic> rec in recs) {
-      out.add(mapToHistory(rec));
+    for(RecordSnapshot<String, Map<String, dynamic>> rec in recs) {
+      out.add(mapToHistory(rec.value));
     }
 
     return out;
@@ -51,7 +51,7 @@ class History_P {
     if (input.containsKey("chapName")) temp.chapName = input["chapName"];
     if (input.containsKey("pos")) temp.pos = input["pos"];
     if (input.containsKey("maxPos")) temp.maxPos = input["maxPos"];
-    if (input.containsKey("accessDate")) temp.accessDate = input["accessDate"];
+    if (input.containsKey("accessDate")) temp.accessDate = DateTime.parse(input["accessDate"]);
 
     return temp;
   }

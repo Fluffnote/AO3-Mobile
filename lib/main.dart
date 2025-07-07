@@ -1,6 +1,8 @@
 import 'package:ao3mobile/data/DB/SDB.dart';
+import 'package:ao3mobile/data/models/History.dart';
 import 'package:ao3mobile/data/models/SearchData.dart';
 import 'package:ao3mobile/data/models/Work.dart';
+import 'package:ao3mobile/data/providers/History_P.dart';
 import 'package:ao3mobile/data/providers/Work_P.dart';
 import 'package:ao3mobile/layout/MainLayout.dart';
 import 'package:ao3mobile/layout/ThemeSwitcher.dart';

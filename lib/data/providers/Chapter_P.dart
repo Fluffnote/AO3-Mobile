@@ -24,12 +24,12 @@ class Chapter_P {
 
   Future<Chapter> getChapterTemp(int workId, int chapId) async {
     String key = "${workId}_${chapId}";
-    return mapToChapter(ChapterStore.record(key).get(await SDB.instance.temp) as Map<String, dynamic>);
+    return mapToChapter(await ChapterStore.record(key).get(await SDB.instance.temp) as Map<String, dynamic>);
   }
 
   Future<Chapter> getChapterLibrary(int workId, int chapId) async {
     String key = "${workId}_${chapId}";
-    return mapToChapter(ChapterStore.record(key).get(await SDB.instance.library) as Map<String, dynamic>);
+    return mapToChapter(await ChapterStore.record(key).get(await SDB.instance.library) as Map<String, dynamic>);
   }
 
   Future<String> getChapterDB(int workId, int chapId) async {
@@ -40,7 +40,6 @@ class Chapter_P {
   }
 
   Future<bool> doesChapterNeedRefresh(int workId, int chapId, String db) async {
-    return true;
     late DateTime fetchDate;
     if (db == "LIBRARY") fetchDate = (await getChapterLibrary(workId, chapId)).lastFetchDate;
     if (db == "TEMP") fetchDate = (await getChapterTemp(workId, chapId)).lastFetchDate;
@@ -58,9 +57,9 @@ class Chapter_P {
     if (input.containsKey("workId")) temp.workId = input["workId"];
     if (input.containsKey("nextId")) temp.nextId = input["nextId"];
     if (input.containsKey("order")) temp.order = input["order"];
-    if (input.containsKey("num")) temp.id = input["num"];
-    if (input.containsKey("title")) temp.id = input["title"];
-    if (input.containsKey("workTitle")) temp.id = input["workTitle"];
+    if (input.containsKey("num")) temp.num = input["num"];
+    if (input.containsKey("title")) temp.title = input["title"];
+    if (input.containsKey("workTitle")) temp.workTitle = input["workTitle"];
 
     if (input.containsKey("summary")) temp.summary = input["summary"];
     if (input.containsKey("notes")) temp.notes = input["notes"];
