@@ -1,5 +1,7 @@
+import 'package:ao3mobile/layout/ui/core/AO3Symbols.dart';
 import 'package:ao3mobile/layout/ui/core/IconLabel.dart';
 import 'package:expandable/expandable.dart';
+import 'package:exui/exui.dart';
 import 'package:flutter/material.dart';
 
 import '../../data/models/Work.dart';
@@ -29,17 +31,28 @@ class WorkCard extends StatelessWidget {
                     collapsed: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text(work.title, style: Theme.of(context).textTheme.titleMedium,),
-                        Opacity(
-                          opacity: 0.65,
-                          child: Row(
-                            children: [
-                              Text(work.author, style: Theme.of(context).textTheme.labelSmall,),
-                              const Spacer(),
-                              IconLabel(icon: Icons.language, text: work.language)
-                            ],
-                          )
+                        Row(
+                          // crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            // Container(color: Colors.white, height: 25, width: 25),
+                            AO3Symbols(
+                              height: 40, width: 40,
+                              ratingSymbol: work.ratingSymbol,
+                              RPOSymbol: work.RPOSymbol,
+                              warningSymbol: work.warningSymbol,
+                              statusSymbol: work.statusSymbol
+                            ),
+                            Text(work.title, style: Theme.of(context).textTheme.titleMedium, maxLines: 2, overflow: TextOverflow.ellipsis)
+                                .marginOnly(left: 10).flexTight(1)
+                          ],
                         ),
+                        Row(
+                          children: [
+                            Text(work.author, style: Theme.of(context).textTheme.labelSmall,),
+                            const Spacer(),
+                            IconLabel(icon: Icons.language, text: work.language)
+                          ],
+                        ).opacity(0.65).marginTop(10),
                         Visibility(
                           visible: work.addTags.isNotEmpty,
                           child: Opacity(
@@ -62,48 +75,53 @@ class WorkCard extends StatelessWidget {
                           ),
                         ),
                         const SizedBox(height: 10.0,),
-                        Visibility(visible: work.summary.isNotEmpty, child: ExpandedMarkdownBox(body: work.summary, showButton: false)),
+                        ExpandedMarkdownBox(body: work.summary, showButton: false).visibleIf(work.summary.isNotEmpty),
                         ExpandableButton(
                           child: Container(
                             padding: const EdgeInsets.all(4),
                             child: const Row(mainAxisAlignment: MainAxisAlignment.center, children: [Icon(Icons.keyboard_arrow_down, size: 26,)],),
                           ),
                         ),
-                        Opacity(
-                          opacity: 0.65,
-                          child: Row(
-                            children: [
-                              Visibility(
-                                  visible: work.chapterStats.isNotEmpty,
-                                  child: IconLabel(icon: Icons.menu_book, text: work.chapterStats)
-                              ),
-                              IconLabel(icon: Icons.abc, text: "${work.words}", size: 26.0, margin: const EdgeInsets.only(left: 5.0)),
-                              IconLabel(icon: Icons.favorite, text: "${work.kudos}", margin: const EdgeInsets.only(left: 5.0)),
-                              IconLabel(icon: Icons.remove_red_eye, text: "${work.hits}", margin: const EdgeInsets.only(left: 5.0)),
-                              const Spacer(),
-                              Text(work.statusDate, style: Theme.of(context).textTheme.labelSmall,),
-                            ],
-                          ),
-                        )
+                        Row(
+                          children: [
+                            Visibility(
+                                visible: work.chapterStats.isNotEmpty,
+                                child: IconLabel(icon: Icons.menu_book, text: work.chapterStats)
+                            ),
+                            IconLabel(icon: Icons.abc, text: "${work.words}", size: 26.0, margin: const EdgeInsets.only(left: 5.0)),
+                            IconLabel(icon: Icons.favorite, text: "${work.kudos}", margin: const EdgeInsets.only(left: 5.0)),
+                            IconLabel(icon: Icons.remove_red_eye, text: "${work.hits}", margin: const EdgeInsets.only(left: 5.0)),
+                            const Spacer(),
+                            Text(work.statusDate, style: Theme.of(context).textTheme.labelSmall,),
+                          ],
+                        ).opacity(0.65),
                       ],
                     ),
                     expanded: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text(work.title, style: Theme.of(context).textTheme.titleMedium,),
-                        Opacity(
-                            opacity: 0.65,
-                            child: Row(
-                              children: [
-                                Text(work.author, style: Theme.of(context).textTheme.labelSmall,),
-                                const Spacer(),
-                                Row(children: [
-                                  const Icon(Icons.language, size: 14.0,),
-                                  Text(" ${work.language}", style: Theme.of(context).textTheme.labelSmall,),
-                                ]),
-                              ],
-                            )
+                        Row(
+                          // crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            // Container(color: Colors.white, height: 25, width: 25),
+                            AO3Symbols(
+                                height: 40, width: 40,
+                                ratingSymbol: work.ratingSymbol,
+                                RPOSymbol: work.RPOSymbol,
+                                warningSymbol: work.warningSymbol,
+                                statusSymbol: work.statusSymbol
+                            ),
+                            Text(work.title, style: Theme.of(context).textTheme.titleMedium, maxLines: 2, overflow: TextOverflow.ellipsis)
+                                .marginOnly(left: 10).flexTight(1)
+                          ],
                         ),
+                        Row(
+                          children: [
+                            Text(work.author, style: Theme.of(context).textTheme.labelSmall,),
+                            const Spacer(),
+                            IconLabel(icon: Icons.language, text: work.language)
+                          ],
+                        ).opacity(0.65).marginTop(10),
                         Visibility(
                           visible: work.addTags.isNotEmpty,
                           child: Opacity(
@@ -127,29 +145,26 @@ class WorkCard extends StatelessWidget {
                           ),
                         ),
                         const SizedBox(height: 10.0,),
-                        Visibility(visible: work.summary.isNotEmpty, child: ExpandedMarkdownBox(body: work.summary, showButton: false, stayOpen: true)),
+                        ExpandedMarkdownBox(body: work.summary, showButton: false, stayOpen: true).visibleIf(work.summary.isNotEmpty),
                         ExpandableButton(
                           child: Container(
                             padding: const EdgeInsets.all(4),
                             child: const Row(mainAxisAlignment: MainAxisAlignment.center, children: [Icon(Icons.keyboard_arrow_up, size: 26,)],),
                           ),
                         ),
-                        Opacity(
-                          opacity: 0.65,
-                          child: Row(
-                            children: [
-                              Visibility(
-                                  visible: work.chapterStats.isNotEmpty,
-                                  child: IconLabel(icon: Icons.menu_book, text: work.chapterStats)
-                              ),
-                              IconLabel(icon: Icons.abc, text: "${work.words}", size: 26.0, margin: const EdgeInsets.only(left: 5.0)),
-                              IconLabel(icon: Icons.favorite, text: "${work.kudos}", margin: const EdgeInsets.only(left: 5.0)),
-                              IconLabel(icon: Icons.comment, text: "${work.comments}", margin: const EdgeInsets.only(left: 5.0)),
-                              const Spacer(),
-                              Text(work.statusDate, style: Theme.of(context).textTheme.labelSmall,),
-                            ],
-                          ),
-                        )
+                        Row(
+                          children: [
+                            Visibility(
+                                visible: work.chapterStats.isNotEmpty,
+                                child: IconLabel(icon: Icons.menu_book, text: work.chapterStats)
+                            ),
+                            IconLabel(icon: Icons.abc, text: "${work.words}", size: 26.0, margin: const EdgeInsets.only(left: 5.0)),
+                            IconLabel(icon: Icons.favorite, text: "${work.kudos}", margin: const EdgeInsets.only(left: 5.0)),
+                            IconLabel(icon: Icons.remove_red_eye, text: "${work.hits}", margin: const EdgeInsets.only(left: 5.0)),
+                            const Spacer(),
+                            Text(work.statusDate, style: Theme.of(context).textTheme.labelSmall,),
+                          ],
+                        ).opacity(0.65),
                       ],
                     ),
                   )

@@ -1,3 +1,4 @@
+import 'package:exui/exui.dart';
 import 'package:flutter/material.dart';
 
 
@@ -50,13 +51,10 @@ class IconLabel extends StatelessWidget {
       }
     }
 
-    return Visibility(
-      visible: text.isNotEmpty,
-      child: Container(
-        margin: margin,
-        padding: padding,
-        child: Row( children: list ),
-      )
-    );
+    return Container(
+      margin: margin,
+      padding: padding,
+      child: Row( children: list ),
+    ).visibleIf(text.isNotEmpty);
   }
 }

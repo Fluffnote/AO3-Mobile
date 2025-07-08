@@ -2,6 +2,7 @@ import 'package:ao3mobile/data/models/Chapter.dart';
 import 'package:ao3mobile/data/models/Work.dart';
 import 'package:sembast/sembast.dart';
 
+import '../../layout/ui/core/AO3Symbols.dart';
 import '../DB/SDB.dart';
 
 

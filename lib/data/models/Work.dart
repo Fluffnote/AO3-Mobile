@@ -1,37 +1,9 @@
 import 'dart:core';
 
+import '../../layout/ui/core/AO3Symbols.dart';
 import 'Chapter.dart';
 
-enum ContentRating {
-  None,
-  General,
-  Teen,
-  Mature,
-  Explicit
-}
 
-enum RPO {
-  None,
-  FF,
-  FM,
-  Gen,
-  MM,
-  Multi,
-  Other
-}
-
-enum ContentWarning {
-  None,
-  Unspecified,
-  Explicit,
-  External
-}
-
-enum Status {
-  Unknown,
-  InProgress,
-  Completed
-}
 
 class Work {
 
