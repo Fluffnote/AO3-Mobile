@@ -3,10 +3,12 @@ import 'dart:async';
 import 'package:ao3mobile/data/models/History.dart';
 import 'package:ao3mobile/data/repositories/ChapterRepo.dart';
 import 'package:ao3mobile/data/repositories/WorkRepo.dart';
+import 'package:exui/exui.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:ao3mobile/layout/ui/MiscUtils.dart';
+import 'package:flutter_widget_from_html_core/flutter_widget_from_html_core.dart';
 import 'package:gpt_markdown/gpt_markdown.dart';
 import '../data/models/Chapter.dart';
 import '../data/models/Work.dart';
@@ -51,6 +53,7 @@ class _ReadingView extends State<ReadingView> {
     _scrollOffset = (history.pos);
     _scrollMax = (history.maxPos);
     if (_scrollController.positions.isNotEmpty && !loaded) {
+      await Future.delayed(const Duration( milliseconds: 500));
       _scrollController.jumpTo(_scrollOffset.toDouble());
       loaded = true;
     }
@@ -81,7 +84,7 @@ class _ReadingView extends State<ReadingView> {
         future: chapter,
         builder: (context, snapshot) {
             if (snapshot.hasData) {
-              setup();
+              // setup();
 
               return Scaffold(
                   appBar: AppBar(
@@ -116,7 +119,7 @@ class _ReadingView extends State<ReadingView> {
                         pinned: false,
                         elevation: 1000.0,
                       ),
-                      ReadingViewContent(chapter: snapshot.data!)
+                      ReadingViewContent(chapter: snapshot.data!, setup: setup(),)
                     ],
                   ),
                 )
@@ -133,7 +136,9 @@ class _ReadingView extends State<ReadingView> {
 
 class ReadingViewContent extends StatefulWidget {
   final Chapter chapter;
-  const ReadingViewContent({super.key, required this.chapter});
+  Future<void> setup;
+
+  ReadingViewContent({super.key, required this.chapter, required this.setup});
 
   @override
   State<ReadingViewContent> createState() => _ReadingViewContentState();
@@ -141,6 +146,13 @@ class ReadingViewContent extends StatefulWidget {
 
 class _ReadingViewContentState extends State<ReadingViewContent> {
   late Future<Chapter> chapter;
+
+  @override
+  void initState() {
+    super.initState();
+
+    widget.setup;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -164,47 +176,44 @@ class _ReadingViewContentState extends State<ReadingViewContent> {
             margin: const EdgeInsets.fromLTRB(15, 15, 15, 30),
             child: Text(chapterHead, style: Theme.of(context).textTheme.headlineSmall),
           ),
-          Visibility(
-              visible: widget.chapter.summary.isNotEmpty,
-              child: Container(
-                  margin: const EdgeInsets.fromLTRB(15, 0, 15, 0),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Container(
-                        margin: const EdgeInsets.only(bottom: 10),
-                        child: Text("Summary: ", style: Theme.of(context).textTheme.titleMedium,),
-                      ),
-                      ExpandedMarkdownBox(body: widget.chapter.summary),
-                      const Divider(),
-                    ],
-                  )
+          Container(
+              margin: const EdgeInsets.fromLTRB(15, 0, 15, 0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Container(
+                    margin: const EdgeInsets.only(bottom: 10),
+                    child: Text("Summary: ", style: Theme.of(context).textTheme.titleMedium,),
+                  ),
+                  ExpandedMarkdownBox(body: widget.chapter.summary),
+                  const Divider(),
+                ],
               )
-          ),
-          Visibility(
-              visible: widget.chapter.notes.isNotEmpty,
-              child: Container(
-                margin: const EdgeInsets.fromLTRB(15, 0, 15, 0),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Container(
-                      margin: const EdgeInsets.only(bottom: 10),
-                      child: Text("Notes: ", style: Theme.of(context).textTheme.titleMedium,),
-                    ),
-                    ExpandedMarkdownBox(body: widget.chapter.notes),
-                    const Divider(),
-                  ],
+          ).visibleIf(widget.chapter.summary.isNotEmpty),
+          Container(
+            margin: const EdgeInsets.fromLTRB(15, 0, 15, 0),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Container(
+                  margin: const EdgeInsets.only(bottom: 10),
+                  child: Text("Notes: ", style: Theme.of(context).textTheme.titleMedium,),
                 ),
-              )
-          ),
+                ExpandedMarkdownBox(body: widget.chapter.notes),
+                const Divider(),
+              ],
+            ),
+          ).visibleIf(widget.chapter.notes.isNotEmpty),
           Container(
               margin: const EdgeInsets.fromLTRB(15, 0, 15, 0),
               child: const SizedBox(height: 30)
           ),
           Container(
               margin: const EdgeInsets.fromLTRB(15, 0, 15, 0),
-              child: GptMarkdown(widget.chapter.body)
+              child: HtmlWidget(
+                widget.chapter.body,
+                enableCaching: true,
+              )
           ),
           Container(
               margin: const EdgeInsets.fromLTRB(15, 0, 15, 0),
@@ -218,22 +227,19 @@ class _ReadingViewContentState extends State<ReadingViewContent> {
               margin: const EdgeInsets.fromLTRB(15, 0, 15, 0),
               child: const SizedBox(height: 10)
           ),
-          Visibility(
-            visible: widget.chapter.nextId != 0,
-            child: Container(
-                margin: const EdgeInsets.fromLTRB(15, 0, 15, 45),
-                child: InkWell(
-                  onTap: (){
-                    Navigator.pop(context);
-                    Navigator.push(context, MaterialPageRoute(builder: (context) => ReadingView(workId: widget.chapter.workId, chapterId: widget.chapter.nextId)));
-                  },
-                  child: Container(
-                    padding: const EdgeInsets.all(4),
-                    child: Row(mainAxisAlignment: MainAxisAlignment.center, children: [Text("Next Chapter", style: Theme.of(context).textTheme.titleMedium)],),
-                  ),
-                )
-            )
-          )
+          Container(
+              margin: const EdgeInsets.fromLTRB(15, 0, 15, 45),
+              child: InkWell(
+                onTap: (){
+                  Navigator.pop(context);
+                  Navigator.push(context, MaterialPageRoute(builder: (context) => ReadingView(workId: widget.chapter.workId, chapterId: widget.chapter.nextId)));
+                },
+                child: Container(
+                  padding: const EdgeInsets.all(4),
+                  child: Row(mainAxisAlignment: MainAxisAlignment.center, children: [Text("Next Chapter", style: Theme.of(context).textTheme.titleMedium)],),
+                ),
+              )
+          ).visibleIf(widget.chapter.nextId != 0),
         ],
       )
     ]));

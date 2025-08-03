@@ -95,13 +95,11 @@ class ChapterRepo {
     }
     if (page.getElementById("work") != null) {
       String body = page.getElementById("work")!.parent!.innerHtml;
-      temp.body = convert(
-          body.replaceAll('<h3 class="landmark heading" id="work">Chapter Text</h3>', "")
-              .replaceAll('<h3 class="landmark heading" id="work">Work Text:</h3>', "")
-      , styleOptions: {"hr":"- - -", "emDelimiter":"*", "bulletListMarker":"-"}); // Getting body
+      temp.body = body.replaceAll('<h3 class="landmark heading" id="work">Chapter Text</h3>', "")
+                      .replaceAll('<h3 class="landmark heading" id="work">Work Text:</h3>', ""); // Getting body
     }
     else {
-      temp.body = convert(page.body!.innerHtml as Object, styleOptions: {"hr":"- - -", "emDelimiter":"*", "bulletListMarker":"-"});
+      temp.body = page.body!.innerHtml;
     }
 
 
