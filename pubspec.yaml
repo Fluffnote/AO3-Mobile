@@ -54,6 +54,7 @@ dependencies:
   path_provider: ^2.1.5
   sembast_sqflite: ^2.2.1
   exui: ^1.0.7
+  expandable_widgets: ^1.0.3+1
 
 dev_dependencies:
   flutter_test:

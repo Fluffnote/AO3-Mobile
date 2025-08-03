@@ -1,6 +1,7 @@
 import 'package:ao3mobile/data/repositories/WorkRepo.dart';
 import 'package:ao3mobile/layout/ui/core/IconLabel.dart';
 import 'package:expandable/expandable.dart';
+import 'package:exui/exui.dart';
 import 'package:flutter/material.dart';
 import 'package:ao3mobile/layout/ui/MiscUtils.dart';
 import 'package:ao3mobile/views/readingView.dart';
@@ -36,12 +37,6 @@ class _WorkView extends State<WorkView> {
     });
     work = workRepo.getWork(widget.workId, widget.refreshType);
   }
-
-  // @override
-  // void reassemble() {
-  //   super.reassemble();
-  //   work = getWork(widget.workId);
-  // }
   
   @override
   void dispose() {
@@ -140,16 +135,15 @@ class MainWorkView extends StatelessWidget {
         Container(
           margin: const EdgeInsets.fromLTRB(15.0, 15.0, 15.0, 0),
           child: Text("${work.chapterStats} chapters", style: Theme.of(context).textTheme.bodyLarge,),
-        ),
-        for (var chapter in work.chapters) ListTile(
+        ).marginBottom(10),
+        for (int i = work.chapters.length - 1; i > -1; i--) ListTile(
           onTap: () {
-            Navigator.push(context, MaterialPageRoute(builder: (context) => ReadingView(workId: work.id, chapterId: chapter.id)));
+            Navigator.push(context, MaterialPageRoute(builder: (context) => ReadingView(workId: work.id, chapterId: work.chapters[i].id)));
           },
-          title: Text("${chapter.num}. ${chapter.title}"),
+          title: Text("${work.chapters[i].num}. ${work.chapters[i].title}"),
           titleTextStyle: Theme.of(context).textTheme.titleMedium,
-          // trailing: Icon(Icons.download),
         ),
-        const SizedBox(height: 30,),
+        const SizedBox(height: 60,),
       ]),
     );
   }

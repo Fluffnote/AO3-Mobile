@@ -84,7 +84,6 @@ class _SearchView extends State<SearchView> {
                   searchCon.clear();
                   setState(() {
                     query = "";
-                    works = searchRepo.workSearch(SearchQueryParameters(query: ""));
                   });
                 },
                 icon: const Icon(Icons.clear),
@@ -103,12 +102,11 @@ class _SearchView extends State<SearchView> {
           systemOverlayStyle: SystemUiOverlayStyle(
             statusBarColor: Theme.of(context).primaryColor,
           )
-          // forceMaterialTransparency: true,
         ),
         FutureBuilder(
           future: works,
           builder: (context, snapshot) {
-            if (snapshot.hasData) {
+            if (snapshot.hasData && (snapshot.requireData as SearchData).numFound.isNotEmpty) {
               return PartialWorkList(searchData: snapshot.requireData as SearchData);
             } else if (snapshot.hasError) {
               return SliverToBoxAdapter(child: FutureErrorBody(snapshot: snapshot));

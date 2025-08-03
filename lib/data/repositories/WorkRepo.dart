@@ -148,8 +148,8 @@ class WorkRepo {
           chapterKey.workId = workId;
           chapterKey.id = int.parse(tempIDClipping.substring(0, tempIDClipping.indexOf('"')));
 
-          chapterKey.num = tempIDClipping.substring(tempIDClipping.indexOf(".") + 2, tempIDClipping.indexOf("<"));
-          chapterKey.title = tempIDClipping.substring(tempIDClipping.indexOf(">") + 1, tempIDClipping.indexOf("."));
+          chapterKey.title = tempIDClipping.substring(tempIDClipping.indexOf(".") + 2, tempIDClipping.indexOf("<"));
+          chapterKey.num = tempIDClipping.substring(tempIDClipping.indexOf(">") + 1, tempIDClipping.indexOf("."));
 
           chapterKey.order = index + 1;
           chapterKey.workTitle = temp.title;
