@@ -2,6 +2,7 @@ import 'package:ao3mobile/data/models/Chapter.dart';
 import 'package:ao3mobile/data/providers/AO3_P.dart';
 import 'package:ao3mobile/data/providers/Work_P.dart';
 import 'package:ao3mobile/data/repositories/ChapterRepo.dart';
+import 'package:ao3mobile/layout/ui/core/AO3Symbols.dart';
 import 'package:html/dom.dart' as dom;
 import 'package:html2md/html2md.dart';
 import 'package:intl/intl.dart';
@@ -147,8 +148,8 @@ class WorkRepo {
           chapterKey.workId = workId;
           chapterKey.id = int.parse(tempIDClipping.substring(0, tempIDClipping.indexOf('"')));
 
-          chapterKey.num = tempIDClipping.substring(tempIDClipping.indexOf(".") + 2, tempIDClipping.indexOf("<"));
-          chapterKey.title = tempIDClipping.substring(tempIDClipping.indexOf(">") + 1, tempIDClipping.indexOf("."));
+          chapterKey.title = tempIDClipping.substring(tempIDClipping.indexOf(".") + 2, tempIDClipping.indexOf("<"));
+          chapterKey.num = tempIDClipping.substring(tempIDClipping.indexOf(">") + 1, tempIDClipping.indexOf("."));
 
           chapterKey.order = index + 1;
           chapterKey.workTitle = temp.title;
@@ -190,6 +191,39 @@ class WorkRepo {
     dom.Element header = part.getElementsByClassName("header module").first;
     temp.title = header.children.first.children.first.text;
     temp.author = header.children.first.children.last.text;
+
+    if (part.getElementsByClassName("required-tags").isNotEmpty) {
+      dom.Element symbolsParent = part.getElementsByClassName("required-tags").first;
+
+      String rating = symbolsParent.getElementsByClassName("rating").first.text;
+      if (rating == "Not Rated") temp.ratingSymbol = ContentRating.None;
+      if (rating == "General Audiences") temp.ratingSymbol = ContentRating.General;
+      if (rating == "Teen And Up Audiences") temp.ratingSymbol = ContentRating.Teen;
+      if (rating == "Mature") temp.ratingSymbol = ContentRating.Mature;
+      if (rating == "Explicit") temp.ratingSymbol = ContentRating.Explicit;
+
+      String rpo = symbolsParent.getElementsByClassName("category").first.text;
+      if (rpo.contains("No category")) temp.RPOSymbol = RPO.None;
+      if (rpo.contains("F/F")) temp.RPOSymbol = RPO.FF;
+      if (rpo.contains("M/M")) temp.RPOSymbol = RPO.MM;
+      if (rpo.contains("F/M")) temp.RPOSymbol = RPO.FM;
+      if (rpo.contains("Gen")) temp.RPOSymbol = RPO.Gen;
+      if (rpo.contains("Other")) temp.RPOSymbol = RPO.Other;
+      if (rpo.contains("Multi")) temp.RPOSymbol = RPO.Multi;
+
+      String warning = symbolsParent.getElementsByClassName("warnings").first.text;
+      if (warning.contains("No Archive Warnings Apply")) temp.warningSymbol = ContentWarning.None;
+      if (warning.contains("Choose Not To Use Archive Warnings")) temp.warningSymbol = ContentWarning.Unspecified;
+      if (warning.contains("External")) temp.warningSymbol = ContentWarning.External;
+      if (warning.contains("Graphic Depictions Of Violence")) temp.warningSymbol = ContentWarning.Explicit;
+      if (warning.contains("Major Character Death")) temp.warningSymbol = ContentWarning.Explicit;
+      if (warning.contains("Rape/Non-Con")) temp.warningSymbol = ContentWarning.Explicit;
+      if (warning.contains("Underage Sex")) temp.warningSymbol = ContentWarning.Explicit;
+
+      String status = symbolsParent.getElementsByClassName("iswip").first.text;
+      if (status.contains("Work in Progress")) temp.statusSymbol = Status.InProgress;
+      if (status.contains("Complete Work")) temp.statusSymbol = Status.Completed;
+    }
 
 
 

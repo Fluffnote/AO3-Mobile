@@ -2,6 +2,8 @@ import 'dart:math';
 
 import 'package:ao3mobile/data/repositories/WorkRepo.dart';
 import 'package:ao3mobile/views/readingView.dart';
+import 'package:ao3mobile/views/workView.dart';
+import 'package:exui/exui.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
@@ -116,7 +118,9 @@ class _HistoryListState extends State<HistoryList> {
               onTap: () {
                 Navigator.push(context, MaterialPageRoute(builder: (context) => ReadingView(workId: history.workId, chapterId: history.chapId)));
               },
-              title: Text(history.workName),
+              title: Text(history.workName).onTap(() {
+                Navigator.push(context, MaterialPageRoute(builder: (context) => WorkView(workId: history.workId)));
+              }),
               subtitle: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [

@@ -64,7 +64,6 @@ class _ReadingView extends State<ReadingView> {
     if ((_scrollOffset - _savedScrollOffset).abs() >= _scrollSaveDistance) {
       _savedScrollOffset = _scrollOffset;
       chapterRepo.updateHistoryPos(widget.workId, widget.chapterId, _savedScrollOffset, _scrollMax);
-      if (kDebugMode) print("saved spot");
     }
     setState(() {});
   }
@@ -220,7 +219,7 @@ class _ReadingViewContentState extends State<ReadingViewContent> {
               child: const SizedBox(height: 10)
           ),
           Visibility(
-            visible: widget.chapter.id != 0,
+            visible: widget.chapter.nextId != 0,
             child: Container(
                 margin: const EdgeInsets.fromLTRB(15, 0, 15, 45),
                 child: InkWell(

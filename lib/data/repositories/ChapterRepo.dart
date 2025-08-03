@@ -63,7 +63,7 @@ class ChapterRepo {
       temp.workTitle = page.getElementsByClassName("title heading").first.text.replaceAll("\n", "").trim();
     }
 
-    if (chapterId == -1) {
+    if (chapterId == 0) {
       temp.num = "1";
       if (page.getElementsByClassName("title heading").isNotEmpty) {
         temp.title = page.getElementsByClassName("title heading").first.text.replaceAll("\n", "").trim();
