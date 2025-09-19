@@ -159,10 +159,10 @@
   },
   "schematics": {
     "@ionic/angular-toolkit:component": {
-      "styleext": "scss"
+      "styleext": "less"
     },
     "@ionic/angular-toolkit:page": {
-      "styleext": "scss"
+      "styleext": "less"
     }
   }
 }
