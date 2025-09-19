@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="app_name">AO3 Mobile</string>
+    <string name="title_activity_main">AO3 Mobile</string>
+    <string name="package_name">com.fluffnote.ao3Mobile</string>
+    <string name="custom_url_scheme">com.fluffnote.ao3Mobile</string>
+</resources>
