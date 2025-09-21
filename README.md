@@ -1,4 +1,4 @@
-# AO3Mobile
+# AO3 Mobile Unofficial
 
 An unofficial AO3 reader app
 
