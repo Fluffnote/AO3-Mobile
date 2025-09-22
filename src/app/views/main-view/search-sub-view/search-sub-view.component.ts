@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import {IonContent, IonHeader, IonTitle, IonToolbar} from '@ionic/angular/standalone';
+import {IonContent, IonHeader, IonSearchbar, IonTitle, IonToolbar} from '@ionic/angular/standalone';
 
 @Component({
   selector: 'app-search-sub-view',
@@ -9,7 +9,8 @@ import {IonContent, IonHeader, IonTitle, IonToolbar} from '@ionic/angular/standa
     IonHeader,
     IonToolbar,
     IonTitle,
-    IonContent
+    IonContent,
+    IonSearchbar
   ]
 })
 export class SearchSubViewComponent  implements OnInit {
