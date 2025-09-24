@@ -9,11 +9,26 @@ const config: CapacitorConfig = {
     url: localServer,
     cleartext: true
   },
-  "plugins": {
-    "StatusBar": {
-      "overlaysWebView": false,
-      "style": "dark",
-      "backgroundColor": "#970000"
+  plugins: {
+    StatusBar: {
+      overlaysWebView: false,
+      style: "dark",
+      backgroundColor: "#970000"
+    },
+    CapacitorSQLite: {
+      iosDatabaseLocation: 'Library/CapacitorDatabase',
+      iosIsEncryption: false,
+      iosKeychainPrefix: 'ao3-mobile',
+      iosBiometric: {
+        biometricAuth: false,
+        biometricTitle : "Biometric login for capacitor sqlite"
+      },
+      androidIsEncryption: false,
+      androidBiometric: {
+        biometricAuth : false,
+        biometricTitle : "Biometric login for capacitor sqlite",
+        biometricSubTitle : "Log in using your biometric"
+      }
     }
   }
 };

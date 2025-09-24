@@ -7,7 +7,8 @@
       "projectType": "application",
       "schematics": {
         "@schematics/angular:component": {
-          "style": "less"
+          "style": "less",
+          "skipTests": true
         }
       },
       "root": "",
@@ -159,10 +160,16 @@
   },
   "schematics": {
     "@ionic/angular-toolkit:component": {
-      "styleext": "less"
+      "styleext": "less",
+      "skipTests": true
     },
     "@ionic/angular-toolkit:page": {
       "styleext": "less"
+    },
+    "@schematics/angular": {
+      "component": {
+        "spec": false
+      }
     }
   }
 }

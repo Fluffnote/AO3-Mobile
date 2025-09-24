@@ -1,5 +1,14 @@
 import { Component, OnInit } from '@angular/core';
-import {IonContent, IonHeader, IonSearchbar, IonTitle, IonToolbar} from '@ionic/angular/standalone';
+import {
+  IonButton,
+  IonButtons,
+  IonContent,
+  IonHeader, IonIcon,
+  IonSearchbar,
+  IonTitle,
+  IonToolbar
+} from '@ionic/angular/standalone';
+import {HomeSubViewComponent} from '../home-sub-view/home-sub-view.component';
 
 @Component({
   selector: 'app-search-sub-view',
@@ -10,7 +19,11 @@ import {IonContent, IonHeader, IonSearchbar, IonTitle, IonToolbar} from '@ionic/
     IonToolbar,
     IonTitle,
     IonContent,
-    IonSearchbar
+    IonSearchbar,
+    HomeSubViewComponent,
+    IonButtons,
+    IonButton,
+    IonIcon
   ]
 })
 export class SearchSubViewComponent  implements OnInit {
