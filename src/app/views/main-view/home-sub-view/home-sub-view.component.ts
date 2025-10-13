@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import {IonButton, IonChip, IonIcon, IonLabel} from '@ionic/angular/standalone';
+import {Browser} from '@capacitor/browser';
 
 @Component({
   selector: 'main-home-sub-view',
@@ -17,5 +18,7 @@ export class HomeSubViewComponent  implements OnInit {
   constructor() { }
 
   ngOnInit() {}
+
+  openBrowser(url: string) { Browser.open({url}); }
 
 }

@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import {IonContent, IonHeader, IonTitle, IonToolbar} from '@ionic/angular/standalone';
 
 @Component({
-  selector: 'app-timeline-sub-view',
+  selector: 'main-timeline-sub-view',
   templateUrl: './timeline-sub-view.component.html',
   styleUrls: ['./timeline-sub-view.component.less'],
   imports: [

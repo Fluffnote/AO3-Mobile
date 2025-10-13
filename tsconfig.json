@@ -13,6 +13,8 @@
     "experimentalDecorators": true,
     "importHelpers": true,
     "target": "ES2022",
+    "resolveJsonModule": true,
+    "allowSyntheticDefaultImports": true,
     "module": "preserve"
   },
   "angularCompilerOptions": {

@@ -1,7 +1,7 @@
 import type { CapacitorConfig } from '@capacitor/cli';
 import {localServer} from './localSettings';
 
-const config: CapacitorConfig = {
+let config: CapacitorConfig = {
   appId: 'com.fluffnote.ao3Mobile',
   appName: 'AO3 Mobile',
   webDir: 'dist/AO3-Mobile/browser',
@@ -16,7 +16,7 @@ const config: CapacitorConfig = {
       backgroundColor: "#970000"
     },
     CapacitorSQLite: {
-      iosDatabaseLocation: 'Library/CapacitorDatabase',
+      iosDatabaseLocation: 'Library/Database',
       iosIsEncryption: false,
       iosKeychainPrefix: 'ao3-mobile',
       iosBiometric: {

@@ -5,21 +5,21 @@
   <hr class="mt-4">
   <div class="d-flex">
     <h3 class="my-2">AO3 News</h3>
-    <ion-button class="ms-auto my-auto ion-text-color" fill="clear">All News<ion-icon name="open-outline" class="ms-2"></ion-icon></ion-button>
+    <ion-button class="ms-auto my-auto ion-text-color" fill="clear" (click)="openBrowser('https://archiveofourown.org/admin_posts')">All News<ion-icon name="open-outline" class="ms-2"></ion-icon></ion-button>
   </div>
   <hr>
   <h3 class="mt-4 mb-3">Follow us</h3>
   <p>Follow the Archive on Twitter or Tumblr for status updates, and don't forget to check out the Organization for Transformative Works' news outlets for updates on our other projects!</p>
   <div>
-    <ion-chip [outline]="true">
+    <ion-chip [outline]="true" (click)="openBrowser('https://www.transformativeworks.org/where-find-us/')">
       <ion-icon name="open-outline"></ion-icon>
       <ion-label>OTW News Outlets</ion-label>
     </ion-chip>
-    <ion-chip [outline]="true">
+    <ion-chip [outline]="true" (click)="openBrowser('https://twitter.com/AO3_Status')">
       <ion-icon name="logo-twitter"></ion-icon>
       <ion-label>&#64;AO3_Status on Twitter</ion-label>
     </ion-chip>
-    <ion-chip [outline]="true">
+    <ion-chip [outline]="true" (click)="openBrowser('https://ao3org.tumblr.com/')">
       <ion-icon name="logo-tumblr"></ion-icon>
       <ion-label>ao3org on Tumblr</ion-label>
     </ion-chip>

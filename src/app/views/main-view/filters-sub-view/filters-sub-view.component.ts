@@ -1,8 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import {IonContent, IonHeader, IonTitle, IonToolbar} from '@ionic/angular/standalone';
+import {AO3SymbolsComponent} from '../../../UI/ao3-symbols/ao3-symbols.component';
+import {AO3} from '../../../data/handlers/ao3';
 
 @Component({
-  selector: 'app-filters-sub-view',
+  selector: 'main-filters-sub-view',
   templateUrl: './filters-sub-view.component.html',
   styleUrls: ['./filters-sub-view.component.less'],
   imports: [
@@ -14,8 +16,12 @@ import {IonContent, IonHeader, IonTitle, IonToolbar} from '@ionic/angular/standa
 })
 export class FiltersSubViewComponent  implements OnInit {
 
-  constructor() { }
+  constructor(private ao3: AO3) { }
 
-  ngOnInit() {}
+  out = ""
+
+  ngOnInit() {
+    this.ao3.getWorkPage(68994691).subscribe(data => this.out = data);
+  }
 
 }

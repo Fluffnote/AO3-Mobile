@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import {IonIcon, IonTabBar, IonTabButton, IonTabs} from '@ionic/angular/standalone';
+import {AO3} from '../../data/handlers/ao3';
 
 @Component({
   selector: 'app-main-view',
