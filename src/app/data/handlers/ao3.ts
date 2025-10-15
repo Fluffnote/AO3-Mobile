@@ -1,50 +1,34 @@
 import { Injectable } from '@angular/core';
-import {
-  HttpClient,
-  HttpErrorResponse,
-  HttpEvent,
-  HttpEventType,
-  HttpHandlerFn,
-  HttpRequest
-} from '@angular/common/http';
-import {catchError, Observable, tap, throwError} from 'rxjs';
+import {Observable} from 'rxjs';
+import {Http} from './http/http';
 
 
 
-export function loggingInterceptor(req: HttpRequest<unknown>, next: HttpHandlerFn): Observable<HttpEvent<unknown>> {
-  return next(req).pipe(tap(event => {
-    if (event.type === HttpEventType.Response) {
-      console.log(req.url, 'returned a response with status', event.status);
-      console.log(event);
-    }
-  }));
-}
+// export function loggingInterceptor(req: HttpRequest<unknown>, next: HttpHandlerFn): Observable<HttpEvent<unknown>> {
+//   return next(req).pipe(tap(event => {
+//     console.log(req);
+//     if (event.type === HttpEventType.Response || event.type === HttpEventType.ResponseHeader) {
+//       console.log(req.url, 'returned a response with status', event.status);
+//     }
+//   }));
+// }
 
 @Injectable({
   providedIn: 'root'
 })
 export class AO3 {
 
-  constructor(private http: HttpClient) { }
+  constructor() { }
 
   private _baseUrl = 'https://archiveofourown.org/';
-
-  private getData(url: string, options: any) {
-    return this.http.get(url, options).pipe(catchError(this.handleError));
-  }
-
-  private handleError(err: HttpErrorResponse) {
-    console.log(err);
-    return throwError(() => new Error(err.error.message || 'Server error'));
-  }
 
 
   // Actual API calls go here
   getWorkPage(id: number): Observable<any> {
     const url = this._baseUrl + 'works/' + id;
-    const params = {view_adult: true}
-    const options = {mode: 'no-cors', headers: {}, params: params};
-    return this.getData(url, options);
+    const params = {"view_adult": "true"}
+    const options = {url, params}
+    return Http.instance.get(options);
   }
 
 }

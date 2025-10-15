@@ -11,8 +11,7 @@ import {Init} from './data/init';
 import {SQL} from './data/DB/sql';
 import {CapSQLite} from './data/DB/lib/cap-sqlite';
 import {DbNameVersion} from './data/DB/lib/db-name-version';
-import {provideHttpClient, withFetch, withInterceptors} from '@angular/common/http';
-import {AO3, loggingInterceptor} from './data/handlers/ao3';
+import {AO3} from './data/handlers/ao3';
 
 export function initializeFactory(init: Init) {
   return () => init.initializeApp();
@@ -24,10 +23,6 @@ export const appConfig: ApplicationConfig = {
     provideBrowserGlobalErrorListeners(),
     provideZoneChangeDetection({ eventCoalescing: true }),
     provideRouter(routes), provideIonicAngular({}),
-    provideAppInitializer(async () => initializeFactory),
-    provideHttpClient(
-      withFetch(),
-      withInterceptors([loggingInterceptor])
-    )
+    provideAppInitializer(async () => initializeFactory)
   ]
 };

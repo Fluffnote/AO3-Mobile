@@ -1,5 +1,6 @@
 import { Routes } from '@angular/router';
 import {MainViewComponent} from './views/main-view/main-view.component';
+import {FiltersSubViewComponent} from './views/main-view/filters-sub-view/filters-sub-view.component';
 
 export const routes: Routes = [
   {
