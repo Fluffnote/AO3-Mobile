@@ -46,24 +46,48 @@ export class WorkParser extends ParserBase implements Parser {
     // Set Characters
     // Set Additional Tags
     // Set Language
+    this.ifClassExists(dom.body, "language", (list) => {
+      work.language = (list[list.length-1] as HTMLDivElement).innerText.trim();
+    })
 
 
 
     //// Stats
 
-    // Set Published Date
-    // Set Last Updated Date
-    // Set Complete Date
-    // Set Chapter Stats
-    // Set Words
-    // Set Comments
-    // Set Kudos
-    // Set Bookmarks
-    // Set Hits
+    this.ifClassExists(dom.body, "stats", (list) => {
+      const stats = list[list.length-1] as HTMLDivElement;
+
+      // Set Published Date
+      // Set Last Updated Date
+      // Set Complete Date
+      // Set Chapter Stats
+      // Set Words
+      this.ifClassExists(stats, "words", (list) => {
+        work.words = Number((list[list.length-1] as HTMLDivElement).innerText.replaceAll(/\D/g, ""));
+      })
+      // Set Comments
+      this.ifClassExists(stats, "comments", (list) => {
+        work.comments = Number((list[list.length-1] as HTMLDivElement).innerText.replaceAll(/\D/g, ""));
+      })
+      // Set Kudos
+      this.ifClassExists(stats, "kudos", (list) => {
+        work.kudos = Number((list[list.length-1] as HTMLDivElement).innerText.replaceAll(/\D/g, ""));
+      })
+      // Set Bookmarks
+      // Set Hits
+      this.ifClassExists(stats, "hits", (list) => {
+        work.hits = Number((list[list.length-1] as HTMLDivElement).innerText.replaceAll(/\D/g, ""));
+      })
+    })
 
 
 
     //// Chapter(s) setup
+
+
+
+
+    //// Send to db for cache
 
 
 
