@@ -39,7 +39,7 @@ export class Work {
   hits: number = 0;
 
   // Extra
-  lastFetchDate: Date = new Date();
-  parserVersion: string = "";
+  lastFetchDate: Date = new Date(0);
+  parserVersion: number = -1;
 
 }
