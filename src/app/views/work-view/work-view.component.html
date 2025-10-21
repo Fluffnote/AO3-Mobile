@@ -1,0 +1,31 @@
+<ion-header>
+  <ion-toolbar color="primary">
+    <ion-buttons slot="start">
+      <ion-back-button></ion-back-button>
+    </ion-buttons>
+    <ion-title>{{ (work!=null)?work!.title:'' }}</ion-title>
+  </ion-toolbar>
+</ion-header>
+<ion-content>
+  <ion-refresher slot="fixed" (ionRefresh)="handleRefresh($event)">
+    <ion-refresher-content></ion-refresher-content>
+  </ion-refresher>
+  @if (work != null) {
+    <div class="m-3">
+      <h1 class="mb-4">{{ work!.title }}</h1>
+      <div class="dim d-flex align-items-center"><ion-icon name="person" class="me-2"></ion-icon><span>{{ work!.author }}</span></div>
+      <div class="dim d-flex align-items-center"><ion-icon name="locate" class="me-2"></ion-icon><span>{{ work!.rating }}</span></div>
+      <div class="dim d-flex align-items-center"><ion-icon name="warning" class="me-2"></ion-icon><span>{{ work!.warning }}</span></div>
+      <div class="dim d-flex align-items-center"><ion-icon name="grid" class="me-2"></ion-icon><span>{{ work!.fandoms }}</span></div>
+      <div class="dim d-flex align-items-center"><ion-icon name="pencil" class="me-2"></ion-icon><span>Published - {{ dateOnly(work!.publishedDate!) }}</span></div>
+      <div class="dim d-flex align-items-center"><ion-icon name="time" class="me-2"></ion-icon><span>Updated - {{ dateOnly(work!.lastUpdatedDate!) }}</span></div>
+      <div class="dim d-flex align-items-center"><ion-icon name="language" class="me-2"></ion-icon><span>{{ work!.language }}</span></div>
+      <div class="dim d-flex align-items-center"><ion-icon name="text" class="me-2"></ion-icon><span>{{ work!.words | number }}</span></div>
+      <div class="dim d-flex align-items-center"><ion-icon name="bookmarks" class="me-2"></ion-icon><span>{{ work!.bookmarks | number }}</span></div>
+      <div class="dim d-flex align-items-center"><ion-icon name="heart" class="me-2"></ion-icon><span>{{ work!.kudos | number }}</span></div>
+      <div class="dim d-flex align-items-center"><ion-icon name="chatbox" class="me-2"></ion-icon><span>{{ work!.comments | number }}</span></div>
+      <div class="dim d-flex align-items-center"><ion-icon name="eye" class="me-2"></ion-icon><span>{{ work!.hits | number }}</span></div>
+    </div>
+    <div class="mx-3"><div [innerHTML]="work!.summary"></div></div>
+  }
+</ion-content>

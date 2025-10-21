@@ -1,7 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import {IonContent, IonHeader, IonTitle, IonToolbar} from '@ionic/angular/standalone';
-import {AO3} from '../../../data/handlers/ao3';
-import {WorkParser} from '../../../data/parsers/work-parser';
+import {IonButton, IonContent, IonHeader, IonNavLink, IonTitle, IonToolbar} from '@ionic/angular/standalone';
+import {RouterLink} from '@angular/router';
 
 @Component({
   selector: 'main-filters-sub-view',
@@ -11,23 +10,18 @@ import {WorkParser} from '../../../data/parsers/work-parser';
     IonContent,
     IonHeader,
     IonTitle,
-    IonToolbar
+    IonToolbar,
+    RouterLink,
+    IonButton,
+    IonNavLink
   ]
 })
 export class FiltersSubViewComponent  implements OnInit {
 
-  constructor(
-    private ao3: AO3
-  ) { }
+  constructor() { }
 
   out = ""
-  workParser = new WorkParser();
 
-  ngOnInit() {
-    this.ao3.getWorkPage(69567981).subscribe(data => {
-      this.out = data.data
-      this.workParser.parse(new DOMParser().parseFromString(data.data, "text/html"));
-    });
-  }
+  ngOnInit() { }
 
 }

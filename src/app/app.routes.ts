@@ -14,5 +14,6 @@ export const routes: Routes = [
       { path: 'settings', loadComponent: () => import('./views/main-view/settings-sub-view/settings-sub-view.component').then((c) => c.SettingsSubViewComponent) },
     ]
   },
+  { path: 'work/:workId', loadComponent: () => import('./views/work-view/work-view.component').then((c) => c.WorkViewComponent) },
   { path: '', redirectTo: 'main/search', pathMatch: 'full', }
 ];

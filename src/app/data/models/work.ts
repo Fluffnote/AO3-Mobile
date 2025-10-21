@@ -28,9 +28,9 @@ export class Work {
   language: string = "";
 
   // Stats
-  publishedDate: string = "";
-  lastUpdatedDate: string = "";
-  completeDate: string = "";
+  publishedDate: Date | null = null;
+  lastUpdatedDate: Date | null = null;
+  completeDate: Date | null = null;
   chapterStats: string = "";
   words: number = 0;
   comments: number = 0;

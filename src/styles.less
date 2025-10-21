@@ -47,11 +47,16 @@
 
 
 // Global rules
-.sc-ion-searchbar-md-h {
+.sc-ion-searchbar-md-h, .sc-ion-searchbar-ios-h {
   --box-shadow: none !important;
 }
-.sc-ion-searchbar-ios-h {
-  --box-shadow: none !important;
+
+.md .spinner-circular, .ios .spinner-circular {
+  color: var(--ion-text-color);
+}
+
+ion-refresher.refresher-native .arrow-container ion-icon {
+  color: var(--ion-text-color) !important;
 }
 
 .ion-text-color {

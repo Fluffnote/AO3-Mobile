@@ -7,6 +7,13 @@ export interface Parser {
 
 export class ParserBase {
   ifClassExists(elem: HTMLElement, className: string, fn: (elemList: HTMLCollectionOf<Element>) => void): void {
-    if (elem.getElementsByClassName(className).length > 0) fn(elem.getElementsByClassName(className));
+    if (elem.getElementsByClassName(className).length > 0) {
+      try {
+        fn(elem.getElementsByClassName(className));
+      }
+      catch (e) {
+        logger.error("Can't run sub-function");
+      }
+    }
   }
 }
