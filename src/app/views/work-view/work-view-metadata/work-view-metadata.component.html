@@ -21,6 +21,25 @@
       <div class="dim d-flex align-items-center"><ion-icon name="heart" class="me-2"></ion-icon><span>{{ work!.kudos | number }}</span></div>
       <div class="dim d-flex align-items-center"><ion-icon name="chatbox" class="me-2"></ion-icon><span>{{ work!.comments | number }}</span></div>
       <div class="dim d-flex align-items-center"><ion-icon name="eye" class="me-2"></ion-icon><span>{{ work!.hits | number }}</span></div>
+
+      <h5>Relationships:</h5>
+      <div>
+        @for (tag of work.relationships; track tag) {
+          <ion-chip>{{tag}}</ion-chip>
+        }
+      </div>
+      <h5>Characters:</h5>
+      <div>
+        @for (tag of work.characters; track tag) {
+          <ion-chip>{{tag}}</ion-chip>
+        }
+      </div>
+      <h5>Tags:</h5>
+      <div>
+        @for (tag of work.addTags; track tag) {
+          <ion-chip>{{tag}}</ion-chip>
+        }
+      </div>
     </div>
   </ui-drop-down-container>
 }

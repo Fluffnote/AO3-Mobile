@@ -7,9 +7,11 @@ export class Chapter {
   order: number = 1;
 
   // Main info
+  chapterListHeader: string = "";
   chapterHeader: string = "";
   summary: string = "";
   notes: string[] = [];
+  endNotes: string[] = [];
   body: string = "";
 
   // Extra

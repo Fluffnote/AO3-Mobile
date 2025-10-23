@@ -15,5 +15,6 @@ export const routes: Routes = [
     ]
   },
   { path: 'work/:workId', loadComponent: () => import('./views/work-view/work-view.component').then((c) => c.WorkViewComponent) },
+  { path: 'work/:workId/chapter/:chapterId', loadComponent: () => import('./views/chapter-view/chapter-view.component').then((c) => c.ChapterViewComponent) },
   { path: '', redirectTo: 'main/search', pathMatch: 'full', }
 ];

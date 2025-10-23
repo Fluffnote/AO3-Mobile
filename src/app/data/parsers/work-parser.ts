@@ -1,6 +1,7 @@
 import {Work} from '../models/work';
 import {Parser, ParserBase} from '../models/parser';
 import {logger} from '../handlers/logger';
+import {Chapter} from '../models/chapter';
 
 export class WorkParser extends ParserBase implements Parser {
   version = 1;
@@ -133,6 +134,26 @@ export class WorkParser extends ParserBase implements Parser {
 
 
     //// Chapter(s) setup
+    if (dom.getElementById("selected_id") != null) { // Multi chapter
+      const list = dom.getElementById("selected_id") as HTMLSelectElement;
+
+      for (let i = 0; i < list.length; i++) {
+        let chap = new Chapter()
+        chap.id = Number(list.item(i)!.value)
+        chap.workId = work.id
+        chap.chapterListHeader = list.item(i)!.text
+        chap.order = i + 1
+        work.chapters.push(chap)
+      }
+    }
+    else { // One-shot
+      let chap = new Chapter()
+      chap.id = 0
+      chap.workId = work.id
+      chap.chapterListHeader = work.title
+      chap.order = 1
+      work.chapters.push(chap)
+    }
 
 
 
@@ -141,7 +162,7 @@ export class WorkParser extends ParserBase implements Parser {
 
 
 
-    // logger.info(JSON.stringify(work))
+    // logger.info(JSON.stringify(work.chapters))
     return work;
   }
 }

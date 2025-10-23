@@ -32,4 +32,13 @@ export class AO3 {
     return Http.instance.get(options);
   }
 
+  getChapterPage(workId: number, chapterId: number): Observable<any> {
+    let url;
+    if (chapterId > 0) url = this._baseUrl + 'works/' + workId + '/chapters/' + chapterId;
+    else url = this._baseUrl + 'works/' + workId;
+    const params = {"view_adult": "true"}
+    const options = {url, params}
+    return Http.instance.get(options);
+  }
+
 }

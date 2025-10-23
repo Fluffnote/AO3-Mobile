@@ -19,6 +19,13 @@
     <div class="mx-3 mt-4"><views-work-view-metadata [work]="work"></views-work-view-metadata></div>
     <div class="mx-3 mt-3"><ui-drop-down-html [HTML]="work!.summary"></ui-drop-down-html></div>
     <div class="mx-3 mt-3"><h4>{{ work.chapterStats }} Chapters</h4></div>
+    <div class="mt-3">
+      @for (chapter of work.chapters.slice().reverse(); track chapter.id) {
+        <ion-item>
+          <ion-label class="ion-text-nowrap">{{ chapter.chapterListHeader.length>0?chapter.chapterListHeader:chapter.chapterHeader }}</ion-label>
+        </ion-item>
+      }
+    </div>
 
     <ion-fab slot="fixed" vertical="bottom" horizontal="end">
       <ion-fab-button>
@@ -26,4 +33,10 @@
       </ion-fab-button>
     </ion-fab>
   }
+  @else {
+    <div class="position-relative h-100 w-100">
+      <div class="position-absolute top-50 start-50 translate-middle"><ion-spinner></ion-spinner></div>
+    </div>
+  }
+  <div class="bottom-bumper"></div>
 </ion-content>

@@ -1,0 +1,45 @@
+<ion-header>
+  <ion-toolbar color="primary">
+    <ion-buttons slot="start">
+      <ion-back-button></ion-back-button>
+    </ion-buttons>
+    <ion-buttons slot="secondary">
+      <ion-button (click)="openWebPage()"><ion-icon slot="icon-only" name="globe-outline"></ion-icon></ion-button>
+    </ion-buttons>
+    <ion-title>{{ (chapter!=null)?chapter!.chapterHeader:'' }}</ion-title>
+  </ion-toolbar>
+</ion-header>
+<ion-content>
+  <ion-refresher slot="fixed" (ionRefresh)="handleRefresh($event)">
+    <ion-refresher-content></ion-refresher-content>
+  </ion-refresher>
+  @if (chapter != null) {
+    <h3 class="mx-3 mt-3">{{ chapter!.chapterHeader }}</h3>
+    @if (chapter!.notes.length > 0) {
+      <h5 class="mx-3 mt-4">Summary:</h5>
+      <div class="mx-3 mt-3"><ui-drop-down-html [HTML]="chapter!.summary"></ui-drop-down-html></div>
+      <hr class="mx-3 my-0">
+    }
+    @if (chapter!.notes.length > 0) {
+      <h5 class="mx-3 mt-4">Notes:</h5>
+      @for (note of chapter.notes; track note) {
+        <div class="mx-3 mt-3"><ui-drop-down-html [HTML]="note"></ui-drop-down-html></div>
+      }
+      <hr class="mx-3 mt-3">
+    }
+    <div class="mx-3 mt-3 mb-5" [innerHTML]="chapter!.body"></div>
+    @if (chapter!.endNotes.length > 0) {
+      <hr class="mx-3 mt-5">
+      <h5 class="mx-3 mt-3">Notes:</h5>
+      @for (note of chapter.endNotes; track note) {
+        <div class="mx-3 mt-3"><ui-drop-down-html [HTML]="note"></ui-drop-down-html></div>
+      }
+    }
+  }
+  @else {
+    <div class="position-relative h-100 w-100">
+      <div class="position-absolute top-50 start-50 translate-middle"><ion-spinner></ion-spinner></div>
+    </div>
+  }
+  <div class="bottom-bumper"></div>
+</ion-content>

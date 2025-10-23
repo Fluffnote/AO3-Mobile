@@ -2,7 +2,7 @@ import {Component, Input, OnInit} from '@angular/core';
 import {Work} from '../../../data/models/work';
 import {DropDownContainerComponent} from '../../../UI/drop-down-container/drop-down-container.component';
 import {DecimalPipe} from '@angular/common';
-import {IonIcon} from '@ionic/angular/standalone';
+import {IonChip, IonIcon} from '@ionic/angular/standalone';
 
 @Component({
   selector: 'views-work-view-metadata',
@@ -11,7 +11,8 @@ import {IonIcon} from '@ionic/angular/standalone';
   imports: [
     DropDownContainerComponent,
     DecimalPipe,
-    IonIcon
+    IonIcon,
+    IonChip
   ]
 })
 export class WorkViewMetadataComponent  implements OnInit {

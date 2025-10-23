@@ -3,8 +3,8 @@ import {
   IonBackButton, IonButton,
   IonButtons,
   IonContent, IonFab, IonFabButton,
-  IonHeader, IonIcon,
-  IonRefresher, IonRefresherContent,
+  IonHeader, IonIcon, IonItem, IonLabel,
+  IonRefresher, IonRefresherContent, IonSpinner,
   IonTitle,
   IonToolbar
 } from "@ionic/angular/standalone";
@@ -36,7 +36,10 @@ import {DropDownHTMLComponent} from '../../UI/drop-down-html/drop-down-html.comp
     IonIcon,
     DropDownHTMLComponent,
     IonFab,
-    IonFabButton
+    IonFabButton,
+    IonSpinner,
+    IonItem,
+    IonLabel
   ]
 })
 export class WorkViewComponent  implements OnInit {
@@ -71,7 +74,7 @@ export class WorkViewComponent  implements OnInit {
   }
 
   openWebPage() {
-    Browser.open({ url: "https://archiveofourown.org/works/"+this.workId });
+    Browser.open({ url: "https://archiveofourown.org/works/"+this.workId+"?view_adult=true" });
   }
 
   grabWork() {
