@@ -1,8 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import {
-  IonBackButton,
+  IonBackButton, IonButton,
   IonButtons,
-  IonContent,
+  IonContent, IonFab, IonFabButton,
   IonHeader, IonIcon,
   IonRefresher, IonRefresherContent,
   IonTitle,
@@ -14,6 +14,9 @@ import {AO3} from '../../data/handlers/ao3';
 import {WorkParser} from '../../data/parsers/work-parser';
 import {DecimalPipe, NgIf} from '@angular/common';
 import {RefresherCustomEvent} from '@ionic/angular';
+import {WorkViewMetadataComponent} from './work-view-metadata/work-view-metadata.component';
+import {Browser} from '@capacitor/browser';
+import {DropDownHTMLComponent} from '../../UI/drop-down-html/drop-down-html.component';
 
 @Component({
     selector: 'app-work-view',
@@ -28,8 +31,12 @@ import {RefresherCustomEvent} from '@ionic/angular';
     IonBackButton,
     IonRefresher,
     IonRefresherContent,
+    WorkViewMetadataComponent,
+    IonButton,
     IonIcon,
-    DecimalPipe
+    DropDownHTMLComponent,
+    IonFab,
+    IonFabButton
   ]
 })
 export class WorkViewComponent  implements OnInit {
@@ -42,6 +49,8 @@ export class WorkViewComponent  implements OnInit {
   workParser = new WorkParser();
   workId: string | null = null;
   work: Work | null = null;
+
+  bookmarked: boolean = false;
 
   ngOnInit() {
     this.route.paramMap.subscribe(params => {
@@ -57,14 +66,18 @@ export class WorkViewComponent  implements OnInit {
     });
   }
 
+  toggleBookmark() {
+    this.bookmarked = !this.bookmarked
+  }
+
+  openWebPage() {
+    Browser.open({ url: "https://archiveofourown.org/works/"+this.workId });
+  }
+
   grabWork() {
     if (this.workId != null) this.ao3.getWorkPage(Number(this.workId)).subscribe(data => {
       this.work = this.workParser.parse(new DOMParser().parseFromString(data.data, "text/html"));
     });
-  }
-
-  dateOnly(date: Date) {
-    return date.toISOString().split('T')[0];
   }
 
 }

@@ -1,0 +1,15 @@
+<div>
+  @if (HTML.length > 200) {
+    <div [ngClass]="collapsed ? 'HTMLCollapse' : ''">
+      <div [innerHTML]="HTML"></div>
+    </div>
+    <div>
+      <ion-button expand="block" fill="clear" (click)="toggle()">
+        <ion-icon slot="icon-only" [name]="collapsed?'chevron-down':'chevron-up'"></ion-icon>
+      </ion-button>
+    </div>
+  }
+  @else {
+    <div [innerHTML]="HTML"></div>
+  }
+</div>

@@ -1,0 +1,26 @@
+@if (work != null) {
+  <ui-drop-down-container>
+    <div ngProjectAs="collapsed">
+      <div class="dim d-flex align-items-center"><ion-icon name="person" class="me-2"></ion-icon><span>{{ work!.author }}</span></div>
+      <div class="dim d-flex align-items-center"><ion-icon name="locate" class="me-2"></ion-icon><span>{{ work!.rating }}</span></div>
+      <div class="dim d-flex align-items-center"><ion-icon name="warning" class="me-2"></ion-icon><span>{{ work!.warning }}</span></div>
+      <div class="dim d-flex align-items-center"><ion-icon name="grid" class="me-2"></ion-icon><span>{{ work!.fandoms }}</span></div>
+      <div class="dim d-flex align-items-center"><ion-icon name="pencil" class="me-2"></ion-icon><span>Published - {{ dateOnly(work!.publishedDate!) }}</span></div>
+      <div class="dim d-flex align-items-center"><ion-icon name="time" class="me-2"></ion-icon><span>Updated - {{ dateOnly(work!.lastUpdatedDate!) }}</span></div>
+    </div>
+    <div>
+      <div class="dim d-flex align-items-center"><ion-icon name="person" class="me-2"></ion-icon><span>{{ work!.author }}</span></div>
+      <div class="dim d-flex align-items-center"><ion-icon name="locate" class="me-2"></ion-icon><span>{{ work!.rating }}</span></div>
+      <div class="dim d-flex align-items-center"><ion-icon name="warning" class="me-2"></ion-icon><span>{{ work!.warning }}</span></div>
+      <div class="dim d-flex align-items-center"><ion-icon name="grid" class="me-2"></ion-icon><span>{{ work!.fandoms }}</span></div>
+      <div class="dim d-flex align-items-center"><ion-icon name="pencil" class="me-2"></ion-icon><span>Published - {{ dateOnly(work!.publishedDate!) }}</span></div>
+      <div class="dim d-flex align-items-center"><ion-icon name="time" class="me-2"></ion-icon><span>Updated - {{ dateOnly(work!.lastUpdatedDate!) }}</span></div>
+      <div class="dim d-flex align-items-center"><ion-icon name="language" class="me-2"></ion-icon><span>{{ work!.language }}</span></div>
+      <div class="dim d-flex align-items-center"><ion-icon name="text" class="me-2"></ion-icon><span>{{ work!.words | number }}</span></div>
+      <div class="dim d-flex align-items-center"><ion-icon name="bookmarks" class="me-2"></ion-icon><span>{{ work!.bookmarks | number }}</span></div>
+      <div class="dim d-flex align-items-center"><ion-icon name="heart" class="me-2"></ion-icon><span>{{ work!.kudos | number }}</span></div>
+      <div class="dim d-flex align-items-center"><ion-icon name="chatbox" class="me-2"></ion-icon><span>{{ work!.comments | number }}</span></div>
+      <div class="dim d-flex align-items-center"><ion-icon name="eye" class="me-2"></ion-icon><span>{{ work!.hits | number }}</span></div>
+    </div>
+  </ui-drop-down-container>
+}
