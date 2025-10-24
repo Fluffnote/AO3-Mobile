@@ -1,6 +1,6 @@
 <ion-header>
   <ion-toolbar color="primary">
-    <ion-searchbar class="p-0 shadow-none mx-2" color="primary"></ion-searchbar>
+    <ion-searchbar class="p-0 shadow-none mx-2" color="primary" (ionChange)="onSearchChange($event)"></ion-searchbar>
     <ion-buttons slot="primary">
       <ion-button>
         <ion-icon slot="icon-only" name="filter"></ion-icon>
@@ -9,5 +9,13 @@
   </ion-toolbar>
 </ion-header>
 <ion-content>
-  <main-home-sub-view></main-home-sub-view>
+  @if (amountFound > -1) {
+    <div class="mx-3 mt-3"><span>{{ amountFound | number }} Found</span></div>
+    @for (work of works; track work.id) {
+      <div class="mx-2 mt-3"><ui-search-card [work]="work"></ui-search-card></div>
+    }
+  }
+  @else {
+    <main-home-sub-view></main-home-sub-view>
+  }
 </ion-content>

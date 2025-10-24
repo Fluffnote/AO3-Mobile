@@ -3,12 +3,12 @@ import {
   IonBackButton, IonButton,
   IonButtons,
   IonContent, IonFab, IonFabButton,
-  IonHeader, IonIcon, IonItem, IonLabel,
+  IonHeader, IonIcon, IonItem, IonLabel, IonNavLink,
   IonRefresher, IonRefresherContent, IonSpinner,
   IonTitle,
   IonToolbar
 } from "@ionic/angular/standalone";
-import {ActivatedRoute} from '@angular/router';
+import {ActivatedRoute, RouterLink} from '@angular/router';
 import {Work} from '../../data/models/work';
 import {AO3} from '../../data/handlers/ao3';
 import {WorkParser} from '../../data/parsers/work-parser';
@@ -39,7 +39,9 @@ import {DropDownHTMLComponent} from '../../UI/drop-down-html/drop-down-html.comp
     IonFabButton,
     IonSpinner,
     IonItem,
-    IonLabel
+    IonLabel,
+    IonNavLink,
+    RouterLink
   ]
 })
 export class WorkViewComponent  implements OnInit {

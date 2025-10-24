@@ -2,7 +2,7 @@ import {logger} from '../handlers/logger';
 
 export interface Parser {
   version: number;
-  parse(dom: Document): any;
+  parse(dom: Document | HTMLElement): any;
 }
 
 export class ParserBase {
@@ -12,7 +12,8 @@ export class ParserBase {
         fn(elem.getElementsByClassName(className));
       }
       catch (e) {
-        logger.error("Can't run sub-function");
+        logger.error((e as Error).message);
+        logger.error((e as Error).stack+"");
       }
     }
   }
