@@ -1,4 +1,4 @@
-import {Parser, ParserBase} from '../models/parser';
+import {Parser, ParserBase} from './parser';
 import {SearchResponse} from '../models/search';
 import {logger} from '../handlers/logger';
 import {WorkSearchParser} from './work-parser';

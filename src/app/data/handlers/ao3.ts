@@ -1,18 +1,7 @@
 import { Injectable } from '@angular/core';
 import {Observable} from 'rxjs';
-import {Http} from './http/http';
+import {Http} from './http';
 import {WorkFilter} from '../models/filters/work-filter';
-
-
-
-// export function loggingInterceptor(req: HttpRequest<unknown>, next: HttpHandlerFn): Observable<HttpEvent<unknown>> {
-//   return next(req).pipe(tap(event => {
-//     console.log(req);
-//     if (event.type === HttpEventType.Response || event.type === HttpEventType.ResponseHeader) {
-//       console.log(req.url, 'returned a response with status', event.status);
-//     }
-//   }));
-// }
 
 @Injectable({
   providedIn: 'root'

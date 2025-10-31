@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import {IonButton, IonContent, IonHeader, IonNavLink, IonTitle, IonToolbar} from '@ionic/angular/standalone';
-import {RouterLink} from '@angular/router';
+import {IonContent, IonHeader, IonTitle, IonToolbar} from '@ionic/angular/standalone';
+import {logger} from '../../../data/handlers/logger';
 
 @Component({
   selector: 'main-filters-sub-view',
@@ -10,10 +10,7 @@ import {RouterLink} from '@angular/router';
     IonContent,
     IonHeader,
     IonTitle,
-    IonToolbar,
-    RouterLink,
-    IonButton,
-    IonNavLink
+    IonToolbar
   ]
 })
 export class FiltersSubViewComponent  implements OnInit {
@@ -23,5 +20,11 @@ export class FiltersSubViewComponent  implements OnInit {
   out = ""
 
   ngOnInit() { }
+
+  scrollHandler(event: any) {
+    logger.info("pos: "+event.detail.scrollTop);
+    logger.info("inner: "+document.getElementById("InnerContent")!.offsetHeight);
+    logger.info("outer: "+document.getElementById("OuterContent")!.offsetHeight);
+  }
 
 }

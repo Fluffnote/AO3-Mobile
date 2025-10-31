@@ -24,7 +24,7 @@ export class Work {
   fandoms: string[] = [];
   relationships: string[] = [];
   characters: string[] = [];
-  addTags: string[] = [];
+  freeforms: string[] = [];
   language: string = "";
 
   // Stats

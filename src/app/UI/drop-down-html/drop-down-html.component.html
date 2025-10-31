@@ -3,7 +3,7 @@
     <div [ngClass]="collapsed ? 'HTMLCollapse' : ''">
       <div [innerHTML]="HTML"></div>
     </div>
-    <div>
+    <div class="button">
       <ion-button expand="block" fill="clear" (click)="toggle()">
         <ion-icon slot="icon-only" [name]="collapsed?'chevron-down':'chevron-up'"></ion-icon>
       </ion-button>

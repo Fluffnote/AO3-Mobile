@@ -12,6 +12,7 @@ export class ParserBase {
         fn(elem.getElementsByClassName(className));
       }
       catch (e) {
+        logger.error("Error in ifClassExists: "+className+" := "+elem.innerHTML.substring(0, 100));
         logger.error((e as Error).message);
         logger.error((e as Error).stack+"");
       }

@@ -17,6 +17,8 @@ import {RefresherCustomEvent} from '@ionic/angular';
 import {WorkViewMetadataComponent} from './work-view-metadata/work-view-metadata.component';
 import {Browser} from '@capacitor/browser';
 import {DropDownHTMLComponent} from '../../UI/drop-down-html/drop-down-html.component';
+import {SQL} from '../../data/DB/sql';
+import {logger} from '../../data/handlers/logger';
 
 @Component({
     selector: 'app-work-view',
@@ -48,7 +50,8 @@ export class WorkViewComponent  implements OnInit {
 
   constructor(
     private route: ActivatedRoute,
-    private ao3: AO3
+    private ao3: AO3,
+    private sql: SQL
   ) { }
 
   workParser = new WorkParser();
@@ -80,9 +83,14 @@ export class WorkViewComponent  implements OnInit {
   }
 
   grabWork() {
-    if (this.workId != null) this.ao3.getWorkPage(Number(this.workId)).subscribe(data => {
-      this.work = this.workParser.parse(new DOMParser().parseFromString(data.data, "text/html"));
-    });
+    if (this.workId != null) {
+      this.ao3.getWorkPage(Number(this.workId)).subscribe(data => {
+        this.work = this.workParser.parse(new DOMParser().parseFromString(data.data, "text/html"));
+      });
+      this.sql.execute("INSERT INTO HISTORY (WORK_ID) VALUES (?)", [Number(this.workId)]).then(data => {
+        logger.log(JSON.stringify(data));
+      })
+    }
   }
 
 }

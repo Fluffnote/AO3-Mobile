@@ -1,4 +1,4 @@
-import {Parser, ParserBase} from '../models/parser';
+import {Parser, ParserBase} from './parser';
 import {Chapter} from '../models/chapter';
 import {logger} from '../handlers/logger';
 
@@ -60,6 +60,17 @@ export class ChapterParser extends ParserBase implements Parser {
       const body = list[0] as HTMLDivElement;
       chapter.body = body.innerHTML.replace(/<h3 class="landmark heading" id="work">.*<\/h3>/g,"").trim()
     })
+
+    if (chapter.body.length == 0) {
+      if (dom.getElementById("chapters") != null) {
+        const chaps = dom.getElementById("chapters") as HTMLDivElement;
+
+        this.ifClassExists(chaps, "userstuff", (list) => {
+          const body = list[0] as HTMLDivElement;
+          chapter.body = body.innerHTML.replace(/<h3 class="landmark heading" id="work">.*<\/h3>/g,"").trim()
+        })
+      }
+    }
 
 
 

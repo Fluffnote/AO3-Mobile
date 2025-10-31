@@ -1,5 +1,5 @@
 import {Work} from '../models/work';
-import {Parser, ParserBase} from '../models/parser';
+import {Parser, ParserBase} from './parser';
 import {logger} from '../handlers/logger';
 import {Chapter} from '../models/chapter';
 import {ContentRating, ContentWarning, RPO, Status} from '../models/ao3-symbols.enum';
@@ -78,7 +78,7 @@ export class WorkParser extends ParserBase implements Parser {
     this.ifClassExists(dom.body, "freeform tags", (list) => {
       const ul = (list[list.length-1] as HTMLDivElement).children[0] as HTMLUListElement;
       for (let i = 0; i < ul.children.length; i++) {
-        work.addTags.push((ul.children[i] as HTMLLIElement).innerText.trim());
+        work.freeforms.push((ul.children[i] as HTMLLIElement).innerText.trim());
       }
     })
     // Set Language
@@ -274,7 +274,7 @@ export class WorkSearchParser extends ParserBase implements Parser {
       // Set Freeform Tags
       this.ifClassExists(ul, "freeforms", (list) => {
         for (let i = 0; i < list.length; i++) {
-          work.addTags.push((list[i] as HTMLLIElement).innerText.trim());
+          work.freeforms.push((list[i] as HTMLLIElement).innerText.trim());
         }
       })
     })
