@@ -19,6 +19,7 @@ import {Browser} from '@capacitor/browser';
 import {DropDownHTMLComponent} from '../../UI/drop-down-html/drop-down-html.component';
 import {SQL} from '../../data/DB/sql';
 import {logger} from '../../data/handlers/logger';
+import {WorkPipeline} from '../../data/handlers/class/work-pipeline';
 
 @Component({
     selector: 'app-work-view',
@@ -40,10 +41,10 @@ import {logger} from '../../data/handlers/logger';
     IonFab,
     IonFabButton,
     IonSpinner,
+    IonNavLink,
     IonItem,
     IonLabel,
-    IonNavLink,
-    RouterLink
+    RouterLink,
   ]
 })
 export class WorkViewComponent  implements OnInit {
@@ -51,7 +52,7 @@ export class WorkViewComponent  implements OnInit {
   constructor(
     private route: ActivatedRoute,
     private ao3: AO3,
-    private sql: SQL
+    private workPipe: WorkPipeline
   ) { }
 
   workParser = new WorkParser();
@@ -68,10 +69,10 @@ export class WorkViewComponent  implements OnInit {
   }
 
   handleRefresh(event: RefresherCustomEvent) {
-    if (this.workId != null) this.ao3.getWorkPage(Number(this.workId)).subscribe(data => {
-      this.work = this.workParser.parse(new DOMParser().parseFromString(data.data, "text/html"));
-      event.target.complete();
-    });
+    if (this.workId != null) this.workPipe.get(Number(this.workId), 2).subscribe(work => {
+        this.work = work;
+        event.target.complete();
+    })
   }
 
   toggleBookmark() {
@@ -84,11 +85,9 @@ export class WorkViewComponent  implements OnInit {
 
   grabWork() {
     if (this.workId != null) {
-      this.ao3.getWorkPage(Number(this.workId)).subscribe(data => {
-        this.work = this.workParser.parse(new DOMParser().parseFromString(data.data, "text/html"));
-      });
-      this.sql.execute("INSERT INTO HISTORY (WORK_ID) VALUES (?)", [Number(this.workId)]).then(data => {
-        logger.log(JSON.stringify(data));
+      this.workPipe.get(Number(this.workId), 1).subscribe(work => {
+        logger.info("work: "+JSON.stringify(work.chapters));
+        this.work = work;
       })
     }
   }

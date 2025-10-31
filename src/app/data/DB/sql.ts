@@ -56,7 +56,7 @@ export class SQL {
 
 
   query(query: string): Observable<any[]> { return createObservable(this.queryPromise, query) }
-  private async queryPromise(query: string): Promise<any[]> {
+  async queryPromise(query: string): Promise<any[]> {
     if (!this.db) throw new Error('Database connection is not open');
     const result = await this.db.query(query);
     return result.values || [];

@@ -2,6 +2,8 @@ import { Injectable } from '@angular/core';
 import {Observable} from 'rxjs';
 import {Http} from './http';
 import {WorkFilter} from '../models/filters/work-filter';
+import {CapacitorHttp, HttpResponse} from '@capacitor/core';
+import {logger} from './logger';
 
 @Injectable({
   providedIn: 'root'
@@ -28,6 +30,14 @@ export class AO3 {
     const params = {"view_adult": "true"}
     const options = {url, params}
     return Http.instance.get(options);
+  }
+
+  async getWorkPageAsync(id: number): Promise<HttpResponse> {
+    const url = this._baseUrl + 'works/' + id;
+    const params = {"view_adult": "true"}
+    const options = {url, params}
+    logger.info(JSON.stringify(options));
+    return await CapacitorHttp.get(options);
   }
 
   getChapterPage(workId: number, chapterId: number): Observable<any> {

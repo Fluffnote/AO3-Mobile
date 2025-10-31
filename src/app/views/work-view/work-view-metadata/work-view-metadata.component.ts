@@ -3,6 +3,7 @@ import {Work} from '../../../data/models/work';
 import {DropDownContainerComponent} from '../../../UI/drop-down-container/drop-down-container.component';
 import {DecimalPipe} from '@angular/common';
 import {IonChip, IonIcon} from '@ionic/angular/standalone';
+import {logger} from '../../../data/handlers/logger';
 
 @Component({
   selector: 'views-work-view-metadata',
@@ -24,7 +25,7 @@ export class WorkViewMetadataComponent  implements OnInit {
   ngOnInit() {}
 
   dateOnly(date: Date) {
-    return date.toISOString().split('T')[0];
+    return date.toISOString().split('T')[0] || "";
   }
 
 }

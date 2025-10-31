@@ -6,8 +6,8 @@ import {ContentRating, ContentWarning, RPO, Status} from '../models/ao3-symbols.
 
 export class WorkParser extends ParserBase implements Parser {
   version = 1;
-  parse(dom: Document): Work {
-    let work = new Work();
+  parse(startObj: Work, dom: Document): Work {
+    let work = startObj
     work.lastFetchDate = new Date();
     work.parserVersion = this.version;
 
@@ -158,12 +158,6 @@ export class WorkParser extends ParserBase implements Parser {
 
 
 
-
-    //// Send to db for cache
-
-
-
-    // logger.info(JSON.stringify(work.chapters))
     return work;
   }
 }

@@ -2,7 +2,7 @@ import {logger} from '../handlers/logger';
 
 export interface Parser {
   version: number;
-  parse(dom: Document | HTMLElement): any;
+  parse(startObj: any, dom: Document | HTMLElement): any;
 }
 
 export class ParserBase {
