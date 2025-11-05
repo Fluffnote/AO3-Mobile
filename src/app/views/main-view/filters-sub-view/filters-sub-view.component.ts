@@ -21,10 +21,4 @@ export class FiltersSubViewComponent  implements OnInit {
 
   ngOnInit() { }
 
-  scrollHandler(event: any) {
-    logger.info("pos: "+event.detail.scrollTop);
-    logger.info("inner: "+document.getElementById("InnerContent")!.offsetHeight);
-    logger.info("outer: "+document.getElementById("OuterContent")!.offsetHeight);
-  }
-
 }

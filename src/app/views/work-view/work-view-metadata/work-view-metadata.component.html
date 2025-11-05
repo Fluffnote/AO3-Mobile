@@ -1,45 +1,83 @@
 @if (work != null) {
   <ui-drop-down-container>
     <div ngProjectAs="collapsed">
-      <div class="dim d-flex align-items-center"><ion-icon name="person" class="me-2"></ion-icon><span>{{ work!.author }}</span></div>
-      <div class="dim d-flex align-items-center"><ion-icon name="locate" class="me-2"></ion-icon><span>{{ work!.rating }}</span></div>
-      <div class="dim d-flex align-items-center"><ion-icon name="warning" class="me-2"></ion-icon><span>{{ work!.warning }}</span></div>
-      <div class="dim d-flex align-items-center"><ion-icon name="grid" class="me-2"></ion-icon><span>{{ work!.fandoms }}</span></div>
-      <div class="dim d-flex align-items-center"><ion-icon name="pencil" class="me-2"></ion-icon><span>Published - {{ dateOnly(work!.publishedDate!) }}</span></div>
-      <div class="dim d-flex align-items-center"><ion-icon name="time" class="me-2"></ion-icon><span>Updated - {{ dateOnly(work!.lastUpdatedDate!) }}</span></div>
+      @if (work!.author.length > 0) {
+        <div class="dim d-flex align-items-center"><ion-icon name="person" class="me-2"></ion-icon><span>{{ work!.author }}</span></div>
+      }
+      @if (work!.rating.length > 0) {
+        <div class="dim d-flex align-items-center"><ion-icon name="locate" class="me-2"></ion-icon><span>{{ work!.rating }}</span></div>
+      }
+      @if (work!.warning.length > 0) {
+        <div class="dim d-flex align-items-center"><ion-icon name="warning" class="me-2"></ion-icon><span>{{ work!.warning }}</span></div>
+      }
+      @if (work!.categories.length > 0) {
+        <div class="dim d-flex align-items-center"><ion-icon name="people" class="me-2"></ion-icon><span>{{ work!.categories }}</span></div>
+      }
+      @if (work!.fandoms.length > 0) {
+        <div class="dim d-flex align-items-center"><ion-icon name="grid" class="me-2"></ion-icon><span>{{ work!.fandoms }}</span></div>
+      }
+      @if (work!.publishedDate != null) {
+        <div class="dim d-flex align-items-center"><ion-icon name="pencil" class="me-2"></ion-icon><span>Published - {{ dateOnly(work!.publishedDate!) }}</span></div>
+      }
+      @if (work!.lastUpdatedDate != null) {
+        <div class="dim d-flex align-items-center"><ion-icon name="time" class="me-2"></ion-icon><span>Updated - {{ dateOnly(work!.lastUpdatedDate!) }}</span></div>
+      }
     </div>
     <div>
-      <div class="dim d-flex align-items-center"><ion-icon name="person" class="me-2"></ion-icon><span>{{ work!.author }}</span></div>
-      <div class="dim d-flex align-items-center"><ion-icon name="locate" class="me-2"></ion-icon><span>{{ work!.rating }}</span></div>
-      <div class="dim d-flex align-items-center"><ion-icon name="warning" class="me-2"></ion-icon><span>{{ work!.warning }}</span></div>
-      <div class="dim d-flex align-items-center"><ion-icon name="grid" class="me-2"></ion-icon><span>{{ work!.fandoms }}</span></div>
-      <div class="dim d-flex align-items-center"><ion-icon name="pencil" class="me-2"></ion-icon><span>Published - {{ dateOnly(work!.publishedDate!) }}</span></div>
-      <div class="dim d-flex align-items-center"><ion-icon name="time" class="me-2"></ion-icon><span>Updated - {{ dateOnly(work!.lastUpdatedDate!) }}</span></div>
-      <div class="dim d-flex align-items-center"><ion-icon name="language" class="me-2"></ion-icon><span>{{ work!.language }}</span></div>
+      @if (work!.author.length > 0) {
+        <div class="dim d-flex align-items-center"><ion-icon name="person" class="me-2"></ion-icon><span>{{ work!.author }}</span></div>
+      }
+      @if (work!.rating.length > 0) {
+        <div class="dim d-flex align-items-center"><ion-icon name="locate" class="me-2"></ion-icon><span>{{ work!.rating }}</span></div>
+      }
+      @if (work!.warning.length > 0) {
+        <div class="dim d-flex align-items-center"><ion-icon name="warning" class="me-2"></ion-icon><span>{{ work!.warning }}</span></div>
+      }
+      @if (work!.categories.length > 0) {
+        <div class="dim d-flex align-items-center"><ion-icon name="people" class="me-2"></ion-icon><span>{{ work!.categories }}</span></div>
+      }
+      @if (work!.fandoms.length > 0) {
+        <div class="dim d-flex align-items-center"><ion-icon name="grid" class="me-2"></ion-icon><span>{{ work!.fandoms }}</span></div>
+      }
+      @if (work!.publishedDate != null) {
+        <div class="dim d-flex align-items-center"><ion-icon name="pencil" class="me-2"></ion-icon><span>Published - {{ dateOnly(work!.publishedDate!) }}</span></div>
+      }
+      @if (work!.lastUpdatedDate != null) {
+        <div class="dim d-flex align-items-center"><ion-icon name="time" class="me-2"></ion-icon><span>Updated - {{ dateOnly(work!.lastUpdatedDate!) }}</span></div>
+      }
+      @if (work!.language.length > 0) {
+        <div class="dim d-flex align-items-center"><ion-icon name="language" class="me-2"></ion-icon><span>{{ work!.language }}</span></div>
+      }
       <div class="dim d-flex align-items-center"><ion-icon name="text" class="me-2"></ion-icon><span>{{ work!.words | number }}</span></div>
       <div class="dim d-flex align-items-center"><ion-icon name="bookmarks" class="me-2"></ion-icon><span>{{ work!.bookmarks | number }}</span></div>
       <div class="dim d-flex align-items-center"><ion-icon name="heart" class="me-2"></ion-icon><span>{{ work!.kudos | number }}</span></div>
       <div class="dim d-flex align-items-center"><ion-icon name="chatbox" class="me-2"></ion-icon><span>{{ work!.comments | number }}</span></div>
       <div class="dim d-flex align-items-center"><ion-icon name="eye" class="me-2"></ion-icon><span>{{ work!.hits | number }}</span></div>
 
-      <h5>Relationships:</h5>
-      <div>
-        @for (tag of work.relationships; track tag) {
-          <ion-chip>{{tag}}</ion-chip>
-        }
-      </div>
-      <h5>Characters:</h5>
-      <div>
-        @for (tag of work.characters; track tag) {
-          <ion-chip>{{tag}}</ion-chip>
-        }
-      </div>
-      <h5>Tags:</h5>
-      <div>
-        @for (tag of work.freeforms; track tag) {
-          <ion-chip>{{tag}}</ion-chip>
-        }
-      </div>
+      @if (work.relationships.length > 0) {
+        <h5>Relationships:</h5>
+        <div>
+          @for (tag of work.relationships; track tag) {
+            <ion-chip>{{tag}}</ion-chip>
+          }
+        </div>
+      }
+      @if (work.characters.length > 0) {
+        <h5>Characters:</h5>
+        <div>
+          @for (tag of work.characters; track tag) {
+            <ion-chip>{{tag}}</ion-chip>
+          }
+        </div>
+      }
+      @if (work.freeforms.length > 0) {
+        <h5>Tags:</h5>
+        <div>
+          @for (tag of work.freeforms; track tag) {
+            <ion-chip>{{tag}}</ion-chip>
+          }
+        </div>
+      }
     </div>
   </ui-drop-down-container>
 }

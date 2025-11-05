@@ -70,8 +70,8 @@ export class WorkViewComponent  implements OnInit {
 
   handleRefresh(event: RefresherCustomEvent) {
     if (this.workId != null) this.workPipe.get(Number(this.workId), 2).subscribe(work => {
-        this.work = work;
-        event.target.complete();
+      this.work = work;
+      event.target.complete();
     })
   }
 
@@ -86,7 +86,6 @@ export class WorkViewComponent  implements OnInit {
   grabWork() {
     if (this.workId != null) {
       this.workPipe.get(Number(this.workId), 1).subscribe(work => {
-        logger.info("work: "+JSON.stringify(work.chapters));
         this.work = work;
       })
     }

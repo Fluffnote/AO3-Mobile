@@ -32,14 +32,6 @@ export class AO3 {
     return Http.instance.get(options);
   }
 
-  async getWorkPageAsync(id: number): Promise<HttpResponse> {
-    const url = this._baseUrl + 'works/' + id;
-    const params = {"view_adult": "true"}
-    const options = {url, params}
-    logger.info(JSON.stringify(options));
-    return await CapacitorHttp.get(options);
-  }
-
   getChapterPage(workId: number, chapterId: number): Observable<any> {
     let url;
     if (chapterId > 0) url = this._baseUrl + 'works/' + workId + '/chapters/' + chapterId;

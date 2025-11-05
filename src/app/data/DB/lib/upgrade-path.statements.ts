@@ -33,6 +33,7 @@ export class UpgradePathStatements {
          )`,
         `CREATE TABLE IF NOT EXISTS CHAPTER_CACHE (
             ID INT PRIMARY KEY,
+            CHAP_ID INT,
             WORK_ID INT,
             NEXT_ID INT,
             ORDER_NUM INT,

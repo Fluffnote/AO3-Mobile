@@ -1,6 +1,6 @@
 <ion-header>
   <ion-toolbar color="primary">
-    <ion-searchbar class="p-0 shadow-none mx-2" color="primary" (ionChange)="onSearchChange($event)" [inputmode]="'search'"></ion-searchbar>
+    <ion-searchbar #SearchBar class="p-0 shadow-none mx-2" color="primary" (ionChange)="onSearchChange($event)"></ion-searchbar>
     <ion-buttons slot="primary">
       <ion-button>
         <ion-icon slot="icon-only" name="filter"></ion-icon>
@@ -10,9 +10,28 @@
 </ion-header>
 <ion-content>
   @if (amountFound > -1) {
-    <div class="mx-3 mt-3"><span>{{ amountFound | number }} Found</span></div>
+    @if (amountFound > 0) {
+      <div class="mx-3 mt-3"><span>{{ amountFound | number }} Found</span></div>
+    }
     @for (work of works; track work.id) {
       <div class="mx-2 mt-3"><ui-search-card [work]="work"></ui-search-card></div>
+    }
+    @if (!searchEnd) {
+      <ion-infinite-scroll (ionInfinite)="onSearchNext($event)">
+        <ion-infinite-scroll-content></ion-infinite-scroll-content>
+      </ion-infinite-scroll>
+    }
+    @else {
+      @if (amountFound > 0) {
+        <div class="d-flex w-100">
+          <div class="mx-auto my-4 opacity-50"><span>Ran out of fics :/</span></div>
+        </div>
+      }
+      @else {
+        <div class="d-flex w-100 h-100">
+          <div class="m-auto opacity-50"><h1>Nothin' here yet :/</h1></div>
+        </div>
+      }
     }
   }
   @else {

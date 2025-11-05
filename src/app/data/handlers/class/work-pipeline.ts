@@ -7,6 +7,7 @@ import {AO3} from '../ao3';
 import {WorkParser} from '../../parsers/work-parser';
 import {logger} from '../logger';
 import {HttpResponse} from '@capacitor/core';
+import {ChapterPipeline} from './chapter-pipeline';
 
 @Injectable({
   providedIn: 'root'
@@ -22,17 +23,16 @@ export class WorkPipeline {
   //
   // [refreshType] = 0 : Doesn't refresh - Only grabs database info
   //
-  // [refreshType] = 1 : Soft refresh - Will attempt to refresh info if it has been more than 30 min from last fetch
+  // [refreshType] = 1 : Soft refresh - Will attempt to refresh info if it has been more than 1 hour from last fetch
   //
   // [refreshType] = 2 : Hard refresh - Will attempt to refresh info regardless of last fetch
   get(id: number, refreshType?: number): Observable<Work> {
     refreshType = refreshType ? refreshType : 0;
     return createObservable(this.DB2Work, this.sql, id).pipe(concatMap(work => this.refreshWork(work as Work, refreshType)));
-    // return this.DB2WorkObs(id).pipe(concatMap(work => this.refreshWork(work as Work, refreshType)));
   }
 
   private refreshWork(work: Work, refreshType: number): Observable<Work> {
-    if (refreshType >= 1) {
+    if (refreshType >= 2 || (refreshType == 1 && work.lastFetchDate.getTime() < new Date().getTime() - (60 * 60 * 1000))) {
       return this.ao3.getWorkPage(work.id).pipe(map(response => this.responseToWork(work, response)));
     }
 
@@ -45,7 +45,7 @@ export class WorkPipeline {
 
   private responseToWork(startObj: Work, response: HttpResponse): Work {
     let work = new WorkParser().parse(startObj, new DOMParser().parseFromString(response.data, "text/html"))
-    this.Work2DB(work); // Caching object
+    WorkPipeline.Work2DB(this.sql, work); // Caching object
     return work;
   }
 
@@ -66,11 +66,11 @@ export class WorkPipeline {
         work.statusSymbol = workData.STATUS_SYMBOL;
         work.rating = workData.RATING;
         work.warning = workData.WARNING;
-        work.categories = workData.CATEGORIES.split("|");
-        work.fandoms = workData.FANDOMS.split("|");
-        work.relationships = workData.REALATIONSHIPS.split("|");
-        work.characters = workData.CHARACTERS.split("|");
-        work.freeforms = workData.FREEFORMS.split("|");
+        work.categories = workData.CATEGORIES.split("|;|");
+        work.fandoms = workData.FANDOMS.split("|;|");
+        work.relationships = workData.REALATIONSHIPS.split("|;|");
+        work.characters = workData.CHARACTERS.split("|;|");
+        work.freeforms = workData.FREEFORMS.split("|;|");
         work.language = workData.LANGUAGE_ID;
         work.publishedDate = workData.PUBLISHED_DATE != null? new Date(workData.PUBLISHED_DATE) : null;
         work.lastUpdatedDate = workData.LAST_UPDATED_DATE != null? new Date(workData.LAST_UPDATED_DATE) : null;
@@ -84,6 +84,8 @@ export class WorkPipeline {
         work.lastFetchDate = workData.LAST_FETCHED_DATE != null? new Date(workData.LAST_FETCHED_DATE) : new Date(0);
         work.parserVersion = workData.PARSER_VERSION;
       }
+
+      work.chapters = await ChapterPipeline.WorkChapters(sql, work.id);
     }
     catch (err) {
       logger.error((err as Error).message);
@@ -93,8 +95,8 @@ export class WorkPipeline {
     return work;
   }
 
-  private async Work2DB(work: Work): Promise<void> {
-    const check = await this.sql.queryPromise("SELECT * FROM WORK_CACHE WHERE id = " + work.id);
+  static async Work2DB(sql:SQL, work: Work): Promise<void> {
+    const check = await sql.queryPromise("SELECT * FROM WORK_CACHE WHERE id = " + work.id);
     if (check.length == 0) { // Insert
       const insertSQL =
         `INSERT INTO WORK_CACHE (ID, TITLE, AUTHOR, SUMMARY, RATING_SYMBOL,
@@ -109,10 +111,10 @@ export class WorkPipeline {
                  ?, ?, ?, ?, ?,
                  ?, ?, ?, ?, ?,
                  ?, ?)`;
-      await this.sql.execute(insertSQL, [
+      await sql.execute(insertSQL, [
         work.id, work.title, work.author, work.summary, work.ratingSymbol,
         work.rpoSymbol, work.warningSymbol, work.statusSymbol, work.rating, work.warning,
-        work.categories.join("|"), work.fandoms.join("|"), work.relationships.join("|"), work.characters.join("|"), work.freeforms.join("|"),
+        work.categories.join("|;|"), work.fandoms.join("|;|"), work.relationships.join("|;|"), work.characters.join("|;|"), work.freeforms.join("|;|"),
         work.language, work.publishedDate, work.lastUpdatedDate, work.completeDate, work.chapterStats,
         work.words, work.comments, work.kudos, work.bookmarks, work.hits,
         work.lastFetchDate, work.parserVersion
@@ -127,14 +129,21 @@ export class WorkPipeline {
                                WORDS = ?, COMMENTS = ?, KUDOS = ?, BOOKMARKS = ?, HITS = ?,
                                LAST_FETCHED_DATE = ?, PARSER_VERSION = ?
          WHERE ID = `;
-      await this.sql.execute(updateSQL+work.id, [
+      await sql.execute(updateSQL+work.id, [
         work.title, work.author, work.summary, work.ratingSymbol,
         work.rpoSymbol, work.warningSymbol, work.statusSymbol, work.rating, work.warning,
-        work.categories.join("|"), work.fandoms.join("|"), work.relationships.join("|"), work.characters.join("|"), work.freeforms.join("|"),
+        work.categories.join("|;|"), work.fandoms.join("|;|"), work.relationships.join("|;|"), work.characters.join("|;|"), work.freeforms.join("|;|"),
         work.language, work.publishedDate, work.lastUpdatedDate, work.completeDate, work.chapterStats,
         work.words, work.comments, work.kudos, work.bookmarks, work.hits,
         work.lastFetchDate, work.parserVersion
       ])
+    }
+
+    // Cache chapters
+    if (work.chapters != null) {
+      for (let chapter of work.chapters) {
+        ChapterPipeline.Chapter2DB(sql, chapter)
+      }
     }
   }
 }

@@ -1,5 +1,5 @@
 import {Component, ElementRef, OnInit, ViewChild} from '@angular/core';
-import {ActivatedRoute} from '@angular/router';
+import {ActivatedRoute, RouterLink} from '@angular/router';
 import {AO3} from '../../data/handlers/ao3';
 import {RefresherCustomEvent} from '@ionic/angular';
 import {Browser} from '@capacitor/browser';
@@ -16,6 +16,7 @@ import {ChapterParser} from '../../data/parsers/chapter-parser';
 import {logger} from '../../data/handlers/logger';
 import {ElementLoadDirective} from '../../UI/element-load.dir';
 import {History} from '../../data/models/history';
+import {ChapterPipeline} from '../../data/handlers/class/chapter-pipeline';
 
 @Component({
   selector: 'app-chapter-view',
@@ -34,14 +35,15 @@ import {History} from '../../data/models/history';
     IonSpinner,
     IonTitle,
     IonToolbar,
-    ElementLoadDirective
+    ElementLoadDirective,
+    RouterLink
   ]
 })
 export class ChapterViewComponent  implements OnInit {
 
   constructor(
     private route: ActivatedRoute,
-    private ao3: AO3
+    private chapterPipe: ChapterPipeline
   ) { }
 
   @ViewChild("Content") content!: IonContent;
@@ -67,14 +69,14 @@ export class ChapterViewComponent  implements OnInit {
   }
 
   grabChapter() {
-    if (this.workId != null && this.chapterId != null) this.ao3.getChapterPage(Number(this.workId), Number(this.chapterId)).subscribe(data => {
-      this.chapter = this.chapterParser.parse(new DOMParser().parseFromString(data.data, "text/html"));
+    if (this.workId != null && this.chapterId != null) this.chapterPipe.get(Number(this.workId), Number(this.chapterId), 1).subscribe(chapter => {
+      this.chapter = chapter
     });
   }
 
   handleRefresh(event: RefresherCustomEvent) {
-    if (this.workId != null && this.chapterId != null) this.ao3.getChapterPage(Number(this.workId), Number(this.chapterId)).subscribe(data => {
-      this.chapter = this.chapterParser.parse(new DOMParser().parseFromString(data.data, "text/html"));
+    if (this.workId != null && this.chapterId != null) this.chapterPipe.get(Number(this.workId), Number(this.chapterId), 2).subscribe(chapter => {
+      this.chapter = chapter;
       this.maxHeight = ((document.getElementById("InnerContent")!.offsetHeight) - (document.getElementById("OuterContent")!.offsetHeight));
       event.target.complete();
     });

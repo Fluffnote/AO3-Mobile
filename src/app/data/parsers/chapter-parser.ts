@@ -4,8 +4,8 @@ import {logger} from '../handlers/logger';
 
 export class ChapterParser extends ParserBase implements Parser {
   version = 1;
-  parse(dom: Document): Chapter {
-    let chapter = new Chapter();
+  parse(startObj: Chapter, dom: Document): Chapter {
+    let chapter = startObj;
     chapter.lastFetchDate = new Date();
     chapter.parserVersion = this.version;
 
@@ -71,10 +71,6 @@ export class ChapterParser extends ParserBase implements Parser {
         })
       }
     }
-
-
-
-    //// Send to db for cache
 
 
 

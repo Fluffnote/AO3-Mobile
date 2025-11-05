@@ -1,3 +1,9 @@
-const localServer : string = "http://10.0.0.150:4200";
+import type {CapacitorConfig} from '@capacitor/cli';
 
-export {localServer};
+const localConfig: CapacitorConfig = {
+  server: {
+    url: "http://localhost:4200",
+    cleartext: true
+  }
+};
+export default localConfig;

@@ -28,13 +28,20 @@
         }
         <hr class="mx-3 mt-3">
       }
-      <div class="mx-3 mt-5 mb-5" [innerHTML]="chapter!.body" (elemLoad)="bodyLoad()"></div>
+      <div class="mx-3 mt-5 mb-5 body" [innerHTML]="chapter!.body" (elemLoad)="bodyLoad()"></div>
       @if (chapter!.endNotes.length > 0) {
         <hr class="mx-3 mt-5">
         <h5 class="mx-3 mt-3">Notes:</h5>
         @for (note of chapter.endNotes; track note) {
           <div class="mx-3 mt-3"><ui-drop-down-html [HTML]="note"></ui-drop-down-html></div>
         }
+      }
+      @if (chapter!.nextId > 0) {
+        <div>
+          <ion-button expand="block" fill="clear" [routerLink]="'/work/' + workId + '/chapter/' + chapter!.nextId">
+            <ion-icon slot="icon-only" [name]="'chevron-down'"></ion-icon>
+          </ion-button>
+        </div>
       }
     }
     @else {

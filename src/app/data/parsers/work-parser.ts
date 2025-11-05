@@ -49,6 +49,7 @@ export class WorkParser extends ParserBase implements Parser {
     // Set Categories
     this.ifClassExists(dom.body, "category tags", (list) => {
       const ul = (list[list.length-1] as HTMLDivElement).children[0] as HTMLUListElement;
+      work.categories = [];
       for (let i = 0; i < ul.children.length; i++) {
         work.categories.push((ul.children[i] as HTMLLIElement).innerText.trim());
       }
@@ -56,6 +57,7 @@ export class WorkParser extends ParserBase implements Parser {
     // Set Fandoms
     this.ifClassExists(dom.body, "fandom tags", (list) => {
       const ul = (list[list.length-1] as HTMLDivElement).children[0] as HTMLUListElement;
+      work.fandoms = [];
       for (let i = 0; i < ul.children.length; i++) {
         work.fandoms.push((ul.children[i] as HTMLLIElement).innerText.trim());
       }
@@ -63,6 +65,7 @@ export class WorkParser extends ParserBase implements Parser {
     // Set Relationships
     this.ifClassExists(dom.body, "relationship tags", (list) => {
       const ul = (list[list.length-1] as HTMLDivElement).children[0] as HTMLUListElement;
+      work.relationships = [];
       for (let i = 0; i < ul.children.length; i++) {
         work.relationships.push((ul.children[i] as HTMLLIElement).innerText.trim());
       }
@@ -70,6 +73,7 @@ export class WorkParser extends ParserBase implements Parser {
     // Set Characters
     this.ifClassExists(dom.body, "character tags", (list) => {
       const ul = (list[list.length-1] as HTMLDivElement).children[0] as HTMLUListElement;
+      work.characters = [];
       for (let i = 0; i < ul.children.length; i++) {
         work.characters.push((ul.children[i] as HTMLLIElement).innerText.trim());
       }
@@ -77,6 +81,7 @@ export class WorkParser extends ParserBase implements Parser {
     // Set Additional Tags
     this.ifClassExists(dom.body, "freeform tags", (list) => {
       const ul = (list[list.length-1] as HTMLDivElement).children[0] as HTMLUListElement;
+      work.freeforms = [];
       for (let i = 0; i < ul.children.length; i++) {
         work.freeforms.push((ul.children[i] as HTMLLIElement).innerText.trim());
       }
@@ -136,6 +141,7 @@ export class WorkParser extends ParserBase implements Parser {
 
     //// Chapter(s) setup
     if (dom.getElementById("selected_id") != null) { // Multi chapter
+      work.chapters = [];
       const list = dom.getElementById("selected_id") as HTMLSelectElement;
 
       for (let i = 0; i < list.length; i++) {
@@ -148,6 +154,7 @@ export class WorkParser extends ParserBase implements Parser {
       }
     }
     else { // One-shot
+      work.chapters = [];
       let chap = new Chapter()
       chap.id = 0
       chap.workId = work.id
