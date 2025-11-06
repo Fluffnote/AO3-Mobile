@@ -3,7 +3,7 @@ import {IonButton, IonChip, IonIcon, IonLabel} from '@ionic/angular/standalone';
 import {Browser} from '@capacitor/browser';
 
 @Component({
-  selector: 'main-home-sub-view',
+  selector: 'views-home-sub-view',
   templateUrl: './home-sub-view.component.html',
   styleUrls: ['./home-sub-view.component.less'],
   imports: [

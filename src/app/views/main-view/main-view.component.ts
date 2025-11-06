@@ -3,7 +3,7 @@ import {IonIcon, IonTabBar, IonTabButton, IonTabs} from '@ionic/angular/standalo
 import {AO3} from '../../data/handlers/ao3';
 
 @Component({
-  selector: 'app-main-view',
+  selector: 'views-main-view',
   templateUrl: './main-view.component.html',
   styleUrls: ['./main-view.component.less'],
   imports: [

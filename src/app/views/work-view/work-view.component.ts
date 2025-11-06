@@ -22,7 +22,7 @@ import {logger} from '../../data/handlers/logger';
 import {WorkPipeline} from '../../data/handlers/class/work-pipeline';
 
 @Component({
-    selector: 'app-work-view',
+    selector: 'views-work-view',
     templateUrl: './work-view.component.html',
     styleUrls: ['./work-view.component.less'],
   imports: [

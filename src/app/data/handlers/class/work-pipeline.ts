@@ -32,7 +32,7 @@ export class WorkPipeline {
   }
 
   private refreshWork(work: Work, refreshType: number): Observable<Work> {
-    if (refreshType >= 2 || (refreshType == 1 && work.lastFetchDate.getTime() < new Date().getTime() - (60 * 60 * 1000))) {
+    if (refreshType >= 2 || (refreshType == 1 && work.lastFetchDate.getTime() < new Date().getTime() - (24 * 60 * 60 * 1000))) {
       return this.ao3.getWorkPage(work.id).pipe(map(response => this.responseToWork(work, response)));
     }
 
@@ -53,7 +53,7 @@ export class WorkPipeline {
     let work = new Work();
     work.id = id;
     try {
-      const works = await sql.queryPromise("SELECT * FROM WORK_CACHE WHERE ID = " + id);
+      const works = await sql.queryPromise(`SELECT * FROM WORK_CACHE WHERE ID = ${id}`);
       if (works.length > 0) {
         const workData = works[0];
         work.id = workData.ID;

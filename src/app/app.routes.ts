@@ -11,7 +11,7 @@ export const routes: Routes = [
       { path: 'filters', loadComponent: () => import('./views/main-view/filters-sub-view/filters-sub-view.component').then((c) => c.FiltersSubViewComponent) },
       { path: 'timeline', loadComponent: () => import('./views/main-view/timeline-sub-view/timeline-sub-view.component').then((c) => c.TimelineSubViewComponent) },
       { path: 'library', loadComponent: () => import('./views/main-view/library-sub-view/library-sub-view.component').then((c) => c.LibrarySubViewComponent) },
-      { path: 'settings', loadComponent: () => import('./views/main-view/settings-sub-view/settings-sub-view.component').then((c) => c.SettingsSubViewComponent) },
+      { path: 'settings', loadComponent: () => import('./views/main-view/extras-sub-view/extras-sub-view.component').then((c) => c.ExtrasSubViewComponent) },
     ]
   },
   { path: 'work/:workId', loadComponent: () => import('./views/work-view/work-view.component').then((c) => c.WorkViewComponent) },

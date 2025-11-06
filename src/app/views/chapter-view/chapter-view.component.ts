@@ -17,9 +17,10 @@ import {logger} from '../../data/handlers/logger';
 import {ElementLoadDirective} from '../../UI/element-load.dir';
 import {History} from '../../data/models/history';
 import {ChapterPipeline} from '../../data/handlers/class/chapter-pipeline';
+import {HistoryMgmt} from '../../data/handlers/history-mgmt';
 
 @Component({
-  selector: 'app-chapter-view',
+  selector: 'views-chapter-view',
   templateUrl: './chapter-view.component.html',
   styleUrls: ['./chapter-view.component.less'],
   imports: [
@@ -43,7 +44,8 @@ export class ChapterViewComponent  implements OnInit {
 
   constructor(
     private route: ActivatedRoute,
-    private chapterPipe: ChapterPipeline
+    private chapterPipe: ChapterPipeline,
+    private historyMgmt: HistoryMgmt
   ) { }
 
   @ViewChild("Content") content!: IonContent;
@@ -53,7 +55,7 @@ export class ChapterViewComponent  implements OnInit {
   chapterId: string | null = null;
   chapter: Chapter | null = null;
 
-  history: History = new History();
+  history: History | null = null;
 
   // Scroll vars
   maxHeight: number = 0;
@@ -69,15 +71,25 @@ export class ChapterViewComponent  implements OnInit {
   }
 
   grabChapter() {
-    if (this.workId != null && this.chapterId != null) this.chapterPipe.get(Number(this.workId), Number(this.chapterId), 1).subscribe(chapter => {
-      this.chapter = chapter
-    });
+    if (this.workId != null && this.chapterId != null) {
+      this.historyMgmt.get(Number(this.workId), Number(this.chapterId)).subscribe(history => {
+        this.history = history;
+      })
+
+      this.chapterPipe.get(Number(this.workId), Number(this.chapterId), 1).subscribe(chapter => {
+        this.chapter = chapter
+      });
+    }
   }
 
   handleRefresh(event: RefresherCustomEvent) {
     if (this.workId != null && this.chapterId != null) this.chapterPipe.get(Number(this.workId), Number(this.chapterId), 2).subscribe(chapter => {
       this.chapter = chapter;
       this.maxHeight = ((document.getElementById("InnerContent")!.offsetHeight) - (document.getElementById("OuterContent")!.offsetHeight));
+      if (this.history != null) {
+        this.history.scrollMax = this.maxHeight;
+        this.historyMgmt.update(this.history!);
+      }
       event.target.complete();
     });
   }
@@ -87,22 +99,28 @@ export class ChapterViewComponent  implements OnInit {
   }
 
   bodyLoad() {
-    if (this.chapter != null && this.history.scrollPosition >= 100) { // Resume reading position
+    if (this.chapter != null && this.history != null && this.history.scrollPosition >= 100) { // Resume reading position
       this.content.scrollToPoint(0, this.history.scrollPosition, 100);
     }
     this.maxHeight = ((document.getElementById("InnerContent")!.offsetHeight) - (document.getElementById("OuterContent")!.offsetHeight));
+    if (this.history != null) {
+      this.history.scrollMax = this.maxHeight;
+      this.historyMgmt.update(this.history!);
+    }
   }
 
   scrollHandler(event: any) {
     if (Math.abs(event.detail.scrollTop - this.savedScrollPos) >= this.scrollDiff) {
       this.savedScrollPos = JSON.parse(JSON.stringify(event.detail.scrollTop));
       // logger.info("pos: "+Math.round((this.savedScrollPos/this.maxHeight)*100)); // Read percentage
-      this.history.scrollPosition = this.savedScrollPos;
+      if (this.history != null) this.history.scrollPosition = this.savedScrollPos;
+      this.historyMgmt.update(this.history!);
     }
 
     if (event.detail.scrollTop >= this.maxHeight) { // Reached bottom
       this.savedScrollPos = JSON.parse(JSON.stringify(this.maxHeight));
-      this.history.scrollPosition = this.savedScrollPos;
+      if (this.history != null) this.history.scrollPosition = this.savedScrollPos;
+      this.historyMgmt.update(this.history!);
     }
   }
 

@@ -2,7 +2,16 @@
   <ion-toolbar color="primary">
     <ion-title>Timeline</ion-title>
   </ion-toolbar>
+  <ion-toolbar color="primary">
+    <ion-segment>
+      <ion-segment-button value="history" content-id="history">
+        <ion-label>History</ion-label>
+      </ion-segment-button>
+    </ion-segment>
+  </ion-toolbar>
 </ion-header>
 <ion-content>
-
+  <ion-segment-view>
+    <ion-segment-content id="history"><views-history-sub-view></views-history-sub-view></ion-segment-content>
+  </ion-segment-view>
 </ion-content>

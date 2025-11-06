@@ -54,6 +54,13 @@ export class SQL {
     }
   }
 
+  async resetDatabase() {
+    await this.closeDatabase();
+    await this.sqliteService.deleteDB({ database: this.databaseName })
+    await this.initializeDatabase();
+    logger.info("Database Reset Done");
+  }
+
 
   query(query: string): Observable<any[]> { return createObservable(this.queryPromise, query) }
   async queryPromise(query: string): Promise<any[]> {

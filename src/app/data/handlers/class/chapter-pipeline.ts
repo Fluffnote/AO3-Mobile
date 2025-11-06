@@ -31,7 +31,7 @@ export class ChapterPipeline {
   }
 
   private refreshChapter(chapter: Chapter, refreshType: number): Observable<Chapter> {
-    if (refreshType >= 2 || (refreshType == 1 && chapter.lastFetchDate.getTime() < new Date().getTime() - (60 * 60 * 1000))) {
+    if (refreshType >= 2 || (refreshType == 1 && chapter.lastFetchDate.getTime() < new Date().getTime() - (24 * 60 * 60 * 1000))) {
       return this.ao3.getChapterPage(chapter.workId, chapter.id).pipe(map(response => this.responseToChapter(chapter, response)));
     }
 
@@ -53,10 +53,10 @@ export class ChapterPipeline {
     chapter.workId = workId;
     chapter.id = chapterId;
     try {
-      const chapters = await sql.queryPromise(`SELECT * FROM CHAPTER_CACHE WHERE CHAP_ID = ${chapter.id} AND WORK_ID = ${chapter.workId}`);
+      const chapters = await sql.queryPromise(`SELECT * FROM CHAPTER_CACHE WHERE CHAPTER_ID = ${chapter.id} AND WORK_ID = ${chapter.workId}`);
       if (chapters.length > 0) {
         const chapterData = chapters[0];
-        chapter.id = chapterData.CHAP_ID;
+        chapter.id = chapterData.CHAPTER_ID;
         chapter.workId = chapterData.WORK_ID;
         chapter.nextId = chapterData.NEXT_ID;
         chapter.order = chapterData.ORDER_NUM
@@ -79,10 +79,10 @@ export class ChapterPipeline {
   }
 
   static async Chapter2DB(sql:SQL, chapter: Chapter): Promise<void> {
-    const check = await sql.queryPromise(`SELECT * FROM CHAPTER_CACHE WHERE CHAP_ID = ${chapter.id} AND WORK_ID = ${chapter.workId}`);
+    const check = await sql.queryPromise(`SELECT * FROM CHAPTER_CACHE WHERE CHAPTER_ID = ${chapter.id} AND WORK_ID = ${chapter.workId}`);
     if (check.length == 0) { // Insert
       const insertSQL =
-        `INSERT INTO CHAPTER_CACHE (CHAP_ID, WORK_ID, NEXT_ID, ORDER_NUM, CHAPTER_LIST_HEADER,
+        `INSERT INTO CHAPTER_CACHE (CHAPTER_ID, WORK_ID, NEXT_ID, ORDER_NUM, CHAPTER_LIST_HEADER,
                                    CHAPTER_HEADER, SUMMARY, NOTES, END_NOTES, BODY,
                                    LAST_FETCHED_DATE, PARSER_VERSION)
          VALUES (?, ?, ?, ?, ?,
@@ -99,7 +99,7 @@ export class ChapterPipeline {
         `UPDATE CHAPTER_CACHE SET NEXT_ID = ?, ORDER_NUM = ?, CHAPTER_LIST_HEADER = ?,
                                   CHAPTER_HEADER = ?, SUMMARY = ?, NOTES = ?, END_NOTES = ?, BODY = ?,
                                   LAST_FETCHED_DATE = ?, PARSER_VERSION = ?
-         WHERE CHAP_ID = ${chapter.id} AND WORK_ID = ${chapter.workId}`;
+         WHERE CHAPTER_ID = ${chapter.id} AND WORK_ID = ${chapter.workId}`;
       await sql.execute(updateSQL, [
         chapter.nextId, chapter.order, chapter.chapterListHeader,
         chapter.chapterHeader, chapter.summary, chapter.notes.join("|;|"), chapter.endNotes.join("|;|"), chapter.body,
@@ -116,7 +116,7 @@ export class ChapterPipeline {
       for (let chapterData of check) {
         let chapter = new Chapter();
         chapter.workId = workId;
-        chapter.id = chapterData.CHAP_ID;
+        chapter.id = chapterData.CHAPTER_ID;
         chapter.nextId = chapterData.NEXT_ID;
         chapter.order = chapterData.ORDER_NUM
         chapter.chapterListHeader = chapterData.CHAPTER_LIST_HEADER;

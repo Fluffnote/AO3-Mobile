@@ -7,7 +7,7 @@ import {
   IonSearchbar,
   IonToolbar
 } from '@ionic/angular/standalone';
-import {HomeSubViewComponent} from '../home-sub-view/home-sub-view.component';
+import {HomeSubViewComponent} from './home-sub-view/home-sub-view.component';
 import {Search} from '../../../data/handlers/search';
 import {Work} from '../../../data/models/work';
 import {DecimalPipe} from '@angular/common';
@@ -18,7 +18,7 @@ import {InfiniteScrollCustomEvent} from '@ionic/angular';
 import {Keyboard} from '@capacitor/keyboard';
 
 @Component({
-  selector: 'main-search-sub-view',
+  selector: 'views-search-sub-view',
   templateUrl: './search-sub-view.component.html',
   styleUrls: ['./search-sub-view.component.less'],
   imports: [

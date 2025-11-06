@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import {IonContent, IonHeader, IonTitle, IonToolbar} from '@ionic/angular/standalone';
 
 @Component({
-  selector: 'main-library-sub-view',
+  selector: 'views-library-sub-view',
   templateUrl: './library-sub-view.component.html',
   styleUrls: ['./library-sub-view.component.less'],
   imports: [

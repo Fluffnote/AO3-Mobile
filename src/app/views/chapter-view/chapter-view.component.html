@@ -14,7 +14,7 @@
     <ion-refresher-content></ion-refresher-content>
   </ion-refresher>
   <div id="InnerContent">
-    @if (chapter != null) {
+    @if (chapter != null && history != null) {
       <h3 class="mx-3 mt-3">{{ chapter!.chapterHeader }}</h3>
       @if (chapter!.notes.length > 0) {
         <h5 class="mx-3 mt-4">Summary:</h5>

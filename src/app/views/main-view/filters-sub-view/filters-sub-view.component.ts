@@ -3,7 +3,7 @@ import {IonContent, IonHeader, IonTitle, IonToolbar} from '@ionic/angular/standa
 import {logger} from '../../../data/handlers/logger';
 
 @Component({
-  selector: 'main-filters-sub-view',
+  selector: 'views-filters-sub-view',
   templateUrl: './filters-sub-view.component.html',
   styleUrls: ['./filters-sub-view.component.less'],
   imports: [

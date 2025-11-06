@@ -1,6 +1,6 @@
 {
-  "name": "ao3-mobile",
-  "version": "0.0.1",
+  "name": "ao3-dweller",
+  "version": "0.1.0",
   "scripts": {
     "ng": "ng",
     "start": "ng s --host 0.0.0.0",

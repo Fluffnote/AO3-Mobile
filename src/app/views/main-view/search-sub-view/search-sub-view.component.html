@@ -1,11 +1,11 @@
 <ion-header>
   <ion-toolbar color="primary">
     <ion-searchbar #SearchBar class="p-0 shadow-none mx-2" color="primary" (ionChange)="onSearchChange($event)"></ion-searchbar>
-    <ion-buttons slot="primary">
-      <ion-button>
-        <ion-icon slot="icon-only" name="filter"></ion-icon>
-      </ion-button>
-    </ion-buttons>
+<!--    <ion-buttons slot="primary">-->
+<!--      <ion-button>-->
+<!--        <ion-icon slot="icon-only" name="filter"></ion-icon>-->
+<!--      </ion-button>-->
+<!--    </ion-buttons>-->
   </ion-toolbar>
 </ion-header>
 <ion-content>
@@ -35,6 +35,6 @@
     }
   }
   @else {
-    <main-home-sub-view></main-home-sub-view>
+    <views-home-sub-view></views-home-sub-view>
   }
 </ion-content>

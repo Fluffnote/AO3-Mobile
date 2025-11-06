@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import {
   CapacitorSQLite,
-  CapacitorSQLitePlugin, capSQLiteUpgradeOptions,
+  CapacitorSQLitePlugin, capSQLiteOptions, capSQLiteUpgradeOptions,
   SQLiteConnection,
   SQLiteDBConnection
 } from '@capacitor-community/sqlite';
@@ -63,7 +63,11 @@ export class CapSQLite {
     await this.sqlitePlugin.addUpgradeStatement(options);
     return;
   }
-  async saveToStore(database:string) : Promise<void> {
+  async saveToStore(database:string): Promise<void> {
     return await this.sqliteConnection.saveToStore(database);
+  }
+
+  async deleteDB(options: capSQLiteOptions): Promise<void> {
+    return await this.sqlitePlugin.deleteDatabase(options)
   }
 }
