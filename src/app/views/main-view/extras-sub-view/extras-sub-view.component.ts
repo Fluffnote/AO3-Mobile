@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import {IonButton, IonContent, IonHeader, IonItem, IonLabel, IonTitle, IonToolbar} from '@ionic/angular/standalone';
 import packageJson from '../../../../../package.json';
 import {SQL} from '../../../data/DB/sql';
+import {HistoryMgmt} from '../../../data/handlers/history-mgmt';
 
 @Component({
   selector: 'views-extras-sub-view',
@@ -16,7 +17,10 @@ import {SQL} from '../../../data/DB/sql';
 })
 export class ExtrasSubViewComponent implements OnInit {
 
-  constructor(private sql : SQL) { }
+  constructor(
+    private sql : SQL,
+    private historyMgmt: HistoryMgmt,
+  ) { }
 
   ngOnInit() {}
 
@@ -24,6 +28,7 @@ export class ExtrasSubViewComponent implements OnInit {
 
   onResetDB() {
     this.sql.resetDatabase();
+    this.historyMgmt.updateHistoryList();
   }
 
 }
