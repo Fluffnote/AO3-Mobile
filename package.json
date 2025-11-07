@@ -6,6 +6,8 @@
     "start": "ng s --host 0.0.0.0",
     "start-android": "npx cap run android",
     "build": "ng build",
+    "build-android": "ng build && npx cap sync && npx cap open android",
+    "sync": "ng build && npx cap sync",
     "watch": "ng build --watch --configuration development",
     "test": "ng test"
   },
