@@ -9,7 +9,7 @@ import {SQL} from './data/DB/sql';
   styleUrl: './app.less'
 })
 export class App implements AfterViewInit, OnDestroy{
-  protected readonly title = signal('AO3-Mobile');
+  protected readonly title = signal('AO3-Dweller');
 
   constructor(private sql : SQL) {}
 

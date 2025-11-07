@@ -5,7 +5,7 @@ let config: CapacitorConfig = localConfig || {}
 
 config.appId = 'com.fluffnote.ao3dweller';
 config.appName = 'AO3 Dweller';
-config.webDir = 'dist/AO3-Mobile/browser';
+config.webDir = 'dist/AO3-Dweller/browser';
 config.plugins = {
   StatusBar: {
     overlaysWebView: false,
@@ -15,7 +15,7 @@ config.plugins = {
   CapacitorSQLite: {
     iosDatabaseLocation: 'Library/Database',
     iosIsEncryption: false,
-    iosKeychainPrefix: 'ao3-mobile',
+    iosKeychainPrefix: 'ao3-dweller',
     iosBiometric: {
       biometricAuth: false,
       biometricTitle : "Biometric login for capacitor sqlite"

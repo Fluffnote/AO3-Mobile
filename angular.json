@@ -3,7 +3,7 @@
   "version": 1,
   "newProjectRoot": "projects",
   "projects": {
-    "AO3-Mobile": {
+    "AO3-Dweller": {
       "projectType": "application",
       "schematics": {
         "@schematics/angular:component": {
@@ -95,10 +95,10 @@
           "builder": "@angular/build:dev-server",
           "configurations": {
             "production": {
-              "buildTarget": "AO3-Mobile:build:production"
+              "buildTarget": "AO3-Dweller:build:production"
             },
             "development": {
-              "buildTarget": "AO3-Mobile:build:development"
+              "buildTarget": "AO3-Dweller:build:development"
             }
           },
           "defaultConfiguration": "development"
@@ -118,7 +118,7 @@
             "assets": [
               {
                 "glob": "**/*",
-                "input": "public"
+                "input": "assets"
               }
             ],
             "styles": [
@@ -129,24 +129,24 @@
         "ionic-cordova-serve": {
           "builder": "@ionic/angular-toolkit:cordova-serve",
           "options": {
-            "cordovaBuildTarget": "AO3-Mobile:ionic-cordova-build",
-            "devServerTarget": "AO3-Mobile:serve"
+            "cordovaBuildTarget": "AO3-Dweller:ionic-cordova-build",
+            "devServerTarget": "AO3-Dweller:serve"
           },
           "configurations": {
             "production": {
-              "cordovaBuildTarget": "AO3-Mobile:ionic-cordova-build:production",
-              "devServerTarget": "AO3-Mobile:serve:production"
+              "cordovaBuildTarget": "AO3-Dweller:ionic-cordova-build:production",
+              "devServerTarget": "AO3-Dweller:serve:production"
             }
           }
         },
         "ionic-cordova-build": {
           "builder": "@ionic/angular-toolkit:cordova-build",
           "options": {
-            "browserTarget": "AO3-Mobile:build"
+            "browserTarget": "AO3-Dweller:build"
           },
           "configurations": {
             "production": {
-              "browserTarget": "AO3-Mobile:build:production"
+              "browserTarget": "AO3-Dweller:build:production"
             }
           }
         }

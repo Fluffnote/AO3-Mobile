@@ -1,4 +1,4 @@
-package com.fluffnote.ao3Mobile;
+package com.fluffnote.ao3dweller;
 
 import com.getcapacitor.BridgeActivity;
 

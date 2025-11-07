@@ -1,10 +1,10 @@
 apply plugin: 'com.android.application'
 
 android {
-    namespace "com.fluffnote.ao3Mobile"
+    namespace "com.fluffnote.ao3dweller"
     compileSdk rootProject.ext.compileSdkVersion
     defaultConfig {
-        applicationId "com.fluffnote.ao3Mobile"
+        applicationId "com.fluffnote.ao3dweller"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
         versionCode 1
