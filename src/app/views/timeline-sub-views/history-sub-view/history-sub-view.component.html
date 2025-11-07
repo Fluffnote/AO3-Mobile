@@ -1,3 +1,19 @@
-<p>
-  history-sub-view works!
-</p>
+<div class="h-100 w-100">
+  @if (historyList != null)  {
+    @if (historyList.length > 0) {
+      @for (history of historyList; track history) {
+        <div class="mx-2 mt-3"><ui-history-card [history]="history"></ui-history-card></div>
+      }
+    }
+    @else {
+      <div class="position-relative h-100 w-100">
+        <div class="position-absolute top-50 start-50 translate-middle"><h1>Nothin' here yet :/</h1></div>
+      </div>
+    }
+  }
+  @else {
+    <div class="position-relative h-100 w-100">
+      <div class="position-absolute top-50 start-50 translate-middle"><ion-spinner></ion-spinner></div>
+    </div>
+  }
+</div>

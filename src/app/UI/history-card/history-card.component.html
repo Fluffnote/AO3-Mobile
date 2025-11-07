@@ -1,0 +1,13 @@
+@if (history != null) {
+  <div class="history-card w-100 p-3">
+    <div [routerLink]="'/work/' + history.workId">
+      <h4 class="m-0">{{history.workTitle}}</h4>
+      <span class="tiny-info mb-3">{{history.author}}</span>
+    </div>
+    <hr class="my-0">
+    <div [routerLink]="'/work/' + history.workId + '/chapter/' + history.chapterId">
+      <p class="my-2">{{history.chapterHeader}}</p>
+      <ion-progress-bar [value]="progressAmount" [color]="progressAmount==1?'success':'warning'"></ion-progress-bar>
+    </div>
+  </div>
+}

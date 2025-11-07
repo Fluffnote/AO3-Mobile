@@ -1,4 +1,4 @@
-import {Component, ElementRef, OnInit, ViewChild} from '@angular/core';
+import {Component, ElementRef, OnDestroy, OnInit, ViewChild} from '@angular/core';
 import {ActivatedRoute, RouterLink} from '@angular/router';
 import {AO3} from '../../data/handlers/ao3';
 import {RefresherCustomEvent} from '@ionic/angular';
@@ -40,7 +40,7 @@ import {HistoryMgmt} from '../../data/handlers/history-mgmt';
     RouterLink
   ]
 })
-export class ChapterViewComponent  implements OnInit {
+export class ChapterViewComponent  implements OnInit, OnDestroy {
 
   constructor(
     private route: ActivatedRoute,
@@ -70,14 +70,19 @@ export class ChapterViewComponent  implements OnInit {
     })
   }
 
+  ngOnDestroy() {
+    this.historyMgmt.updateHistoryList();
+  }
+
   grabChapter() {
     if (this.workId != null && this.chapterId != null) {
-      this.historyMgmt.get(Number(this.workId), Number(this.chapterId)).subscribe(history => {
-        this.history = history;
-      })
-
       this.chapterPipe.get(Number(this.workId), Number(this.chapterId), 1).subscribe(chapter => {
         this.chapter = chapter
+
+        this.historyMgmt.get(Number(this.workId), Number(this.chapterId)).subscribe(history => {
+          this.history = history;
+          history.chapterHeader = JSON.parse(JSON.stringify(this.chapter!.chapterHeader));
+        })
       });
     }
   }
@@ -124,4 +129,5 @@ export class ChapterViewComponent  implements OnInit {
     }
   }
 
+  protected readonly History = History;
 }

@@ -6,7 +6,7 @@
     <ion-buttons slot="secondary">
       <ion-button (click)="openWebPage()"><ion-icon slot="icon-only" name="globe-outline"></ion-icon></ion-button>
     </ion-buttons>
-    <ion-title>{{ (chapter!=null)?chapter!.chapterHeader:'' }}</ion-title>
+    <ion-title>{{ (history!=null)?history!.workTitle:'' }}</ion-title>
   </ion-toolbar>
 </ion-header>
 <ion-content #Content id="OuterContent" [scrollEvents]="true" [scrollY]="true" (ionScroll)="scrollHandler($any($event))">
