@@ -18,6 +18,7 @@ import {ElementLoadDirective} from '../../UI/element-load.dir';
 import {History} from '../../data/models/history';
 import {ChapterPipeline} from '../../data/handlers/class/chapter-pipeline';
 import {HistoryMgmt} from '../../data/handlers/history-mgmt';
+import {HideHeaderDirective} from '../../UI/hide-header.dir';
 
 @Component({
   selector: 'views-chapter-view',
@@ -37,7 +38,8 @@ import {HistoryMgmt} from '../../data/handlers/history-mgmt';
     IonTitle,
     IonToolbar,
     ElementLoadDirective,
-    RouterLink
+    RouterLink,
+    HideHeaderDirective
   ]
 })
 export class ChapterViewComponent  implements OnInit, OnDestroy {

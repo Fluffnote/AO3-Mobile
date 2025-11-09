@@ -16,6 +16,7 @@ import {logger} from '../../../data/handlers/logger';
 import {Router} from '@angular/router';
 import {InfiniteScrollCustomEvent} from '@ionic/angular';
 import {Keyboard} from '@capacitor/keyboard';
+import {HideHeaderDirective} from '../../../UI/hide-header.dir';
 
 @Component({
   selector: 'views-search-sub-view',
@@ -33,7 +34,8 @@ import {Keyboard} from '@capacitor/keyboard';
     DecimalPipe,
     SearchCardComponent,
     IonInfiniteScroll,
-    IonInfiniteScrollContent
+    IonInfiniteScrollContent,
+    HideHeaderDirective
   ]
 })
 export class SearchSubViewComponent  implements OnInit {

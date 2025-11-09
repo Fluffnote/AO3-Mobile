@@ -1,4 +1,4 @@
-<ion-header>
+<ion-header #Header>
   <ion-toolbar color="primary">
     <ion-searchbar #SearchBar class="p-0 shadow-none mx-2" color="primary" (ionChange)="onSearchChange($event)"></ion-searchbar>
 <!--    <ion-buttons slot="primary">-->
@@ -8,7 +8,7 @@
 <!--    </ion-buttons>-->
   </ion-toolbar>
 </ion-header>
-<ion-content>
+<ion-content [scrollEvents]="true" UIHideHeader [header]="Header">
   @if (amountFound > -1) {
     @if (amountFound > 0) {
       <div class="mx-3 mt-3"><span>{{ amountFound | number }} Found</span></div>

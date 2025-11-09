@@ -20,6 +20,7 @@ import {DropDownHTMLComponent} from '../../UI/drop-down-html/drop-down-html.comp
 import {SQL} from '../../data/DB/sql';
 import {logger} from '../../data/handlers/logger';
 import {WorkPipeline} from '../../data/handlers/class/work-pipeline';
+import {HideHeaderDirective} from '../../UI/hide-header.dir';
 
 @Component({
     selector: 'views-work-view',
@@ -45,6 +46,7 @@ import {WorkPipeline} from '../../data/handlers/class/work-pipeline';
     IonItem,
     IonLabel,
     RouterLink,
+    HideHeaderDirective,
   ]
 })
 export class WorkViewComponent  implements OnInit {
