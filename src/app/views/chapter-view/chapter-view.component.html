@@ -1,4 +1,4 @@
-<ion-header>
+<ion-header #Header>
   <ion-toolbar color="primary">
     <ion-buttons slot="start">
       <ion-back-button></ion-back-button>
@@ -9,7 +9,7 @@
     <ion-title>{{ (history!=null)?history!.workTitle:'' }}</ion-title>
   </ion-toolbar>
 </ion-header>
-<ion-content #Content id="OuterContent" [scrollEvents]="true" [scrollY]="true" (ionScroll)="scrollHandler($any($event))">
+<ion-content #Content id="OuterContent" [scrollEvents]="true" [scrollY]="true" (ionScroll)="scrollHandler($any($event))" UIHideHeader [header]="Header">
   <ion-refresher slot="fixed" (ionRefresh)="handleRefresh($event)">
     <ion-refresher-content></ion-refresher-content>
   </ion-refresher>
