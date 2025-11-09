@@ -1,5 +1,6 @@
 import { Directive, HostListener, Input, OnInit, Renderer2 } from '@angular/core';
 import { DomController } from '@ionic/angular';
+import {StatusBar} from '@capacitor/status-bar';
 
 @Directive({
   selector: '[UIHideHeader]'
@@ -29,10 +30,12 @@ export class HideHeaderDirective implements OnInit {
         this.domCtrl.write(() => {
           this.renderer.setStyle(this.header, 'margin-top', `-${ this.header.clientHeight }px`);
         });
+        StatusBar.hide();
       } else {
         this.domCtrl.write(() => {
           this.renderer.setStyle(this.header, 'margin-top', '0');
         });
+        StatusBar.show();
       }
 
       this.lastY = $event.detail.scrollTop;
