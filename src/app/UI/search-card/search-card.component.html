@@ -1,35 +1,47 @@
 @if (work != null) {
-  <ion-nav-link [routerLink]="'/work/' + work!.id">
-    <div class="search-card w-100 p-3">
-      <div class="d-flex align-items-center">
-        <ui-ao3-symbols
-          [size]="45"
-          [rating]="work!.ratingSymbol"
-          [warning]="work!.warningSymbol"
-          [rpo]="work!.rpoSymbol"
-          [status]="work!.statusSymbol"
-        ></ui-ao3-symbols>
-        <div class="ms-2"><span>{{work.title}}</span></div>
-      </div>
-      <div class="d-flex align-items-center top-info mt-2">
-        <span>{{work.author}}</span>
-        <ion-icon class="ms-auto" name="globe-outline"></ion-icon>
-        <span class="ms-2">{{work.language}}</span>
-      </div>
-      <div class="mt-3">
-        <ui-drop-down-html [HTML]="work.summary"></ui-drop-down-html>
-      </div>
-      <div class="d-flex align-items-center top-info mt-3">
-        <ion-icon name="book"></ion-icon>
-        <span class="ms-2">{{work.chapterStats}}</span>
-        <ion-icon class="ms-2" name="text"></ion-icon>
-        <span class="ms-2">{{work.words | number}}</span>
-        <ion-icon class="ms-2" name="heart"></ion-icon>
-        <span class="ms-2">{{work.kudos | number}}</span>
-        <ion-icon class="ms-2" name="eye"></ion-icon>
-        <span class="ms-2">{{work.hits | number}}</span>
-        <span class="ms-auto">{{work.lastUpdatedDate!=null?dateOnly(work.lastUpdatedDate):""}}</span>
-      </div>
+  <div class="search-card w-100 p-3">
+    <div class="d-flex align-items-center" [routerLink]="'/work/' + work!.id">
+      <ui-ao3-symbols
+        [size]="45"
+        [rating]="work!.ratingSymbol"
+        [warning]="work!.warningSymbol"
+        [rpo]="work!.rpoSymbol"
+        [status]="work!.statusSymbol"
+      ></ui-ao3-symbols>
+      <div class="ms-2"><span>{{work.title}}</span></div>
     </div>
-  </ion-nav-link>
+    <div class="d-flex align-items-center top-info mt-2" [routerLink]="'/work/' + work!.id">
+      <span>{{work.author}}</span>
+      <ion-icon class="ms-auto" name="globe-outline"></ion-icon>
+      <span class="ms-2">{{work.language}}</span>
+    </div>
+    @if (combinedTags.length > 0) {
+      <div class="overflow-x-scroll d-flex flex-nowrap mt-2">
+          @for (tag of combinedTags; track tag) {
+            <div class="tag">{{tag}}</div>
+          }
+      </div>
+    }
+    @if (work.freeforms.length > 0) {
+      <div class="overflow-x-scroll d-flex flex-nowrap mt-2">
+        @for (tag of work.freeforms; track tag) {
+          <div class="tag">{{tag}}</div>
+        }
+      </div>
+    }
+    <div class="mt-3">
+      <ui-drop-down-html [HTML]="work.summary" [route]="'/work/' + work!.id"></ui-drop-down-html>
+    </div>
+    <div class="d-flex align-items-center top-info mt-3" [routerLink]="'/work/' + work!.id">
+      <ion-icon name="book"></ion-icon>
+      <span class="ms-2">{{work.chapterStats}}</span>
+      <ion-icon class="ms-2" name="text"></ion-icon>
+      <span class="ms-2">{{work.words | number}}</span>
+      <ion-icon class="ms-2" name="heart"></ion-icon>
+      <span class="ms-2">{{work.kudos | number}}</span>
+      <ion-icon class="ms-2" name="eye"></ion-icon>
+      <span class="ms-2">{{work.hits | number}}</span>
+      <span class="ms-auto">{{work.lastUpdatedDate!=null?dateOnly(work.lastUpdatedDate):""}}</span>
+    </div>
+  </div>
 }

@@ -229,7 +229,7 @@ export class WorkSearchParser extends ParserBase implements Parser {
       this.ifClassExists(tags, "warnings", (list) => {
         const warning = (list[0] as HTMLSpanElement).innerText.trim();
         if (warning.includes("No Archive Warnings Apply")) work.warningSymbol = ContentWarning.None;
-        if (warning.includes("Choose Not To Use Archive Warnings")) work.warningSymbol = ContentWarning.Unspecified;
+        if (warning.includes("Chose Not To Use Archive Warnings")) work.warningSymbol = ContentWarning.Unspecified;
         if (warning.includes("External")) work.warningSymbol = ContentWarning.External;
         if (warning.includes("Graphic Depictions Of Violence")) work.warningSymbol = ContentWarning.Explicit;
         if (warning.includes("Major Character Death")) work.warningSymbol = ContentWarning.Explicit;

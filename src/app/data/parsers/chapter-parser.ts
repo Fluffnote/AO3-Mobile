@@ -45,6 +45,8 @@ export class ChapterParser extends ParserBase implements Parser {
     })
     // Set Notes
     this.ifClassExists(dom.body, "notes module", (list) => {
+      chapter.notes = [];
+      chapter.endNotes = [];
       for (let i = 0; i < list.length; i++) {
         const notes = list[i] as HTMLDivElement;
         if (notes.classList.contains("end")) { // End Notes

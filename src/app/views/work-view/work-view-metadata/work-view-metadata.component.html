@@ -22,6 +22,27 @@
       @if (work!.lastUpdatedDate != null) {
         <div class="dim d-flex align-items-center"><ion-icon name="time" class="me-2"></ion-icon><span>Updated - {{ dateOnly(work!.lastUpdatedDate!) }}</span></div>
       }
+      @if (work.relationships.length > 0) {
+        <div class="overflow-x-scroll d-flex flex-nowrap mt-2">
+          @for (tag of work.relationships; track tag) {
+            <div class="tag">{{tag}}</div>
+          }
+        </div>
+      }
+      @if (work.characters.length > 0) {
+        <div class="overflow-x-scroll d-flex flex-nowrap mt-2">
+          @for (tag of work.characters; track tag) {
+            <div class="tag">{{tag}}</div>
+          }
+        </div>
+      }
+      @if (work.freeforms.length > 0) {
+        <div class="overflow-x-scroll d-flex flex-nowrap mt-2">
+          @for (tag of work.freeforms; track tag) {
+            <div class="tag">{{tag}}</div>
+          }
+        </div>
+      }
     </div>
     <div>
       @if (work!.author.length > 0) {

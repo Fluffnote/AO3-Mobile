@@ -1,6 +1,6 @@
 <div>
   @if (HTML.length > 400) {
-    <div [ngClass]="collapsed ? 'HTMLCollapse' : ''">
+    <div [ngClass]="collapsed ? 'HTMLCollapse' : ''" [routerLink]="route">
       <div [innerHTML]="HTML"></div>
     </div>
     <div class="button">
@@ -10,6 +10,6 @@
     </div>
   }
   @else {
-    <div [innerHTML]="HTML"></div>
+    <div [innerHTML]="HTML" [routerLink]="route"></div>
   }
 </div>
