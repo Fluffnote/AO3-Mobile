@@ -22,7 +22,7 @@ export class WorkViewMetadataComponent  implements OnInit {
 
   @Input() work: Work | null = null;
 
-  ngOnInit() {}
+  ngOnInit() { }
 
   dateOnly(date: Date) {
     return date.toISOString().split('T')[0] || "";

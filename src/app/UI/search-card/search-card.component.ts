@@ -1,7 +1,7 @@
 import {Component, Input, OnInit} from '@angular/core';
 import {Work} from '../../data/models/work';
 import {AO3SymbolsComponent} from '../ao3-symbols/ao3-symbols.component';
-import {IonIcon, IonNavLink} from '@ionic/angular/standalone';
+import {IonChip, IonIcon, IonNavLink} from '@ionic/angular/standalone';
 import {DropDownHTMLComponent} from '../drop-down-html/drop-down-html.component';
 import {DecimalPipe} from '@angular/common';
 import {RouterLink} from '@angular/router';
@@ -16,7 +16,8 @@ import {RouterLink} from '@angular/router';
     DropDownHTMLComponent,
     DecimalPipe,
     IonNavLink,
-    RouterLink
+    RouterLink,
+    IonChip
   ]
 })
 export class SearchCardComponent  implements OnInit {
@@ -28,7 +29,7 @@ export class SearchCardComponent  implements OnInit {
 
   ngOnInit() {
     if (this.work != null) {
-      this.combinedTags = [...this.work.warning, ...this.work.relationships, ...this.work.characters, ...this.work.freeforms]
+      this.combinedTags = [this.work.warning, ...this.work.fandoms, ...this.work.relationships, ...this.work.characters]
     }
   }
 
