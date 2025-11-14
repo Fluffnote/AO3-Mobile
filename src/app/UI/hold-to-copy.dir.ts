@@ -18,10 +18,8 @@ export class UIHoldToCopyDirective {
   start() {
     this.interval = setInterval(() => {
       this.progress += 10;
-      logger.info("progress: " + this.progress)
       if (this.progress >= this.duration) {
         this.reset();
-        logger.info("copy: " + this.copyItem)
         if (this.copyItem != null) {
           Clipboard.write({string: this.copyItem});
           Haptics.impact({ style: ImpactStyle.Medium })
