@@ -1,11 +1,11 @@
-import {Directive, EventEmitter, Input, Output} from '@angular/core';
+import {AfterViewInit, Directive, EventEmitter, Input, Output} from '@angular/core';
 
 @Directive({
-  selector: "[elemLoad]"
+  selector: "[UIElemLoad]"
 })
-export class ElementLoadDirective {
+export class ElementLoadDirective implements AfterViewInit {
 
-  @Output('elemLoad') initEvent: EventEmitter<any> = new EventEmitter();
+  @Output('UIElemLoad') initEvent: EventEmitter<any> = new EventEmitter();
 
   ngAfterViewInit() {
     this.initEvent.emit();

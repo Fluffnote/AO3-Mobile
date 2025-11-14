@@ -2,14 +2,11 @@
   "name": "ao3-dweller",
   "version": "0.1.0",
   "scripts": {
-    "ng": "ng",
     "start": "ng s --host 0.0.0.0",
     "start-android": "npx cap run android",
     "build": "ng build",
     "build-android": "ng build && npx cap sync && npx cap open android",
-    "sync": "ng build && npx cap sync",
-    "watch": "ng build --watch --configuration development",
-    "test": "ng test"
+    "sync": "npm install && ng build && npx cap sync"
   },
   "prettier": {
     "printWidth": 100,
@@ -36,6 +33,7 @@
     "@capacitor/android": "^7.4.3",
     "@capacitor/app": "^7.1.0",
     "@capacitor/browser": "^7.0.2",
+    "@capacitor/clipboard": "^7.0.2",
     "@capacitor/core": "^7.4.3",
     "@capacitor/haptics": "^7.0.2",
     "@capacitor/ios": "^7.4.3",

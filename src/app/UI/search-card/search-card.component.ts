@@ -5,6 +5,7 @@ import {IonChip, IonIcon, IonNavLink} from '@ionic/angular/standalone';
 import {DropDownHTMLComponent} from '../drop-down-html/drop-down-html.component';
 import {DecimalPipe} from '@angular/common';
 import {RouterLink} from '@angular/router';
+import {UIHoldToCopyDirective} from '../hold-to-copy.dir';
 
 @Component({
   selector: 'ui-search-card',
@@ -17,7 +18,8 @@ import {RouterLink} from '@angular/router';
     DecimalPipe,
     IonNavLink,
     RouterLink,
-    IonChip
+    IonChip,
+    UIHoldToCopyDirective
   ]
 })
 export class SearchCardComponent  implements OnInit {
