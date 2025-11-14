@@ -15,7 +15,7 @@
     <ion-refresher-content></ion-refresher-content>
   </ion-refresher>
   @if (work != null) {
-    <h1 class="mx-3 mt-3">{{ work!.title }}</h1>
+    <h1 class="mx-3 mt-3" [HoldToCopy]="work!.title">{{ work!.title }}</h1>
     <div class="mx-3 mt-4"><views-work-view-metadata [work]="work"></views-work-view-metadata></div>
     <div class="mx-3 mt-3"><ui-drop-down-html [HTML]="work!.summary"></ui-drop-down-html></div>
     <div class="mx-3 mt-3"><h4>{{ work.chapterStats }} Chapters</h4></div>

@@ -21,6 +21,7 @@ import {SQL} from '../../data/DB/sql';
 import {logger} from '../../data/handlers/logger';
 import {WorkPipeline} from '../../data/handlers/class/work-pipeline';
 import {HideHeaderDirective} from '../../UI/hide-header.dir';
+import {UIHoldToCopyDirective} from '../../UI/hold-to-copy.dir';
 
 @Component({
     selector: 'views-work-view',
@@ -47,6 +48,7 @@ import {HideHeaderDirective} from '../../UI/hide-header.dir';
     IonLabel,
     RouterLink,
     HideHeaderDirective,
+    UIHoldToCopyDirective,
   ]
 })
 export class WorkViewComponent  implements OnInit {

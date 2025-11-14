@@ -4,6 +4,7 @@ import {DropDownContainerComponent} from '../../../UI/drop-down-container/drop-d
 import {DecimalPipe} from '@angular/common';
 import {IonChip, IonIcon} from '@ionic/angular/standalone';
 import {logger} from '../../../data/handlers/logger';
+import {UIHoldToCopyDirective} from '../../../UI/hold-to-copy.dir';
 
 @Component({
   selector: 'views-work-view-metadata',
@@ -13,7 +14,8 @@ import {logger} from '../../../data/handlers/logger';
     DropDownContainerComponent,
     DecimalPipe,
     IonIcon,
-    IonChip
+    IonChip,
+    UIHoldToCopyDirective
   ]
 })
 export class WorkViewMetadataComponent  implements OnInit {
