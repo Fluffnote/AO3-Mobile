@@ -4,9 +4,11 @@
   "compileOnSave": false,
   "compilerOptions": {
     "strict": true,
+    "esModuleInterop": true,
     "noImplicitOverride": true,
     "noPropertyAccessFromIndexSignature": true,
     "noImplicitReturns": true,
+    "moduleResolution": "bundler",
     "noFallthroughCasesInSwitch": true,
     "skipLibCheck": true,
     "isolatedModules": true,
@@ -14,7 +16,6 @@
     "importHelpers": true,
     "target": "ES2022",
     "resolveJsonModule": true,
-    "allowSyntheticDefaultImports": true,
     "module": "preserve"
   },
   "angularCompilerOptions": {

@@ -12,7 +12,7 @@ import {ActivatedRoute, RouterLink} from '@angular/router';
 import {Work} from '../../data/models/work';
 import {AO3} from '../../data/handlers/ao3';
 import {WorkParser} from '../../data/parsers/work-parser';
-import {DecimalPipe, NgIf} from '@angular/common';
+import { DecimalPipe } from '@angular/common';
 import {RefresherCustomEvent} from '@ionic/angular';
 import {WorkViewMetadataComponent} from './work-view-metadata/work-view-metadata.component';
 import {Browser} from '@capacitor/browser';
