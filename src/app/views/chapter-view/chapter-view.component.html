@@ -13,7 +13,7 @@
   <ion-refresher slot="fixed" (ionRefresh)="handleRefresh($event)">
     <ion-refresher-content></ion-refresher-content>
   </ion-refresher>
-  <div id="InnerContent">
+  <div id="InnerContent" class="w-100">
     @if (chapter != null && history != null) {
       <h3 class="mx-3 mt-3">{{ chapter!.chapterHeader }}</h3>
       @if (chapter!.notes.length > 0) {
@@ -37,9 +37,10 @@
         }
       }
       @if (chapter!.nextId > 0) {
+        <hr class="mx-3 mt-3">
         <div>
-          <ion-button expand="block" fill="clear" [routerLink]="'/work/' + workId + '/chapter/' + chapter!.nextId">
-            <ion-icon slot="icon-only" [name]="'chevron-down'"></ion-icon>
+          <ion-button expand="block" fill="clear" (click)="nextChapter()">
+            <ion-label class="ion-text-color">Next Chapter</ion-label>
           </ion-button>
         </div>
       }

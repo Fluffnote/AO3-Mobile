@@ -8,11 +8,11 @@ import {
   IonTitle,
   IonToolbar
 } from "@ionic/angular/standalone";
-import {ActivatedRoute, RouterLink} from '@angular/router';
+import {ActivatedRoute, Router, RouterLink} from '@angular/router';
 import {Work} from '../../data/models/work';
 import {AO3} from '../../data/handlers/ao3';
 import {WorkParser} from '../../data/parsers/work-parser';
-import { DecimalPipe } from '@angular/common';
+import {DecimalPipe, NgClass} from '@angular/common';
 import {RefresherCustomEvent} from '@ionic/angular';
 import {WorkViewMetadataComponent} from './work-view-metadata/work-view-metadata.component';
 import {Browser} from '@capacitor/browser';
@@ -23,6 +23,9 @@ import {WorkPipeline} from '../../data/handlers/class/work-pipeline';
 import {HideHeaderDirective} from '../../UI/hide-header.dir';
 import {UIHoldToCopyDirective} from '../../UI/hold-to-copy.dir';
 import {BackButtonComponent} from '../../UI/back-button/back-button.component';
+import {History} from '../../data/models/history';
+import {Chapter} from '../../data/models/chapter';
+import {HistoryMgmt} from '../../data/handlers/history-mgmt';
 
 @Component({
     selector: 'views-work-view',
@@ -51,6 +54,7 @@ import {BackButtonComponent} from '../../UI/back-button/back-button.component';
     HideHeaderDirective,
     UIHoldToCopyDirective,
     BackButtonComponent,
+    NgClass,
   ]
 })
 export class WorkViewComponent  implements OnInit {
@@ -58,7 +62,9 @@ export class WorkViewComponent  implements OnInit {
   constructor(
     private route: ActivatedRoute,
     private ao3: AO3,
-    private workPipe: WorkPipeline
+    private workPipe: WorkPipeline,
+    private router: Router,
+    private historyMgmt: HistoryMgmt
   ) { }
 
   workParser = new WorkParser();
@@ -95,6 +101,18 @@ export class WorkViewComponent  implements OnInit {
         this.work = work;
       })
     }
+  }
+
+  chapterComplete(history: History | null) {
+    if (history == null) return "";
+    return history.scrollPosition >= history.scrollMax? "complete" : "";
+  }
+
+  openChapter(chapter: Chapter) {
+    if (chapter.history != null && (chapter.history.scrollPosition >= chapter.history.scrollMax)) {
+      this.historyMgmt.resetPos(this.work!.id, chapter.id)
+    }
+    this.router.navigate(['/work/' + this.work!.id + '/chapter/' + chapter.id]);
   }
 
 }

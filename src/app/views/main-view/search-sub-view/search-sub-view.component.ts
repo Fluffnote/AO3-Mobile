@@ -67,6 +67,10 @@ export class SearchSubViewComponent  implements OnInit {
         this.router.navigate(['/work', workId]);
         this.searchBar.value = "";
       }
+      else if (/(work:)\d+/.test(value)) {
+        this.router.navigate(['/work', value.replace("work:", "")]);
+        this.searchBar.value = "";
+      }
       else this.search.searchText(value as string).subscribe(() => { Keyboard.hide(); });
     }
     else {

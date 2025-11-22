@@ -22,20 +22,22 @@
     @if (work.chapters.length > 0) {
       <div class="mt-3">
         @for (chapter of work.chapters.slice().reverse(); track chapter.id) {
-          <ion-nav-link [routerLink]="'/work/' + work!.id + '/chapter/' + chapter.id">
+          <ion-nav-link (click)="openChapter(chapter)">
             <ion-item>
-              <ion-label class="ion-text-nowrap">{{ chapter.chapterListHeader.length>0?chapter.chapterListHeader:chapter.chapterHeader }}</ion-label>
+              <ion-label [ngClass]="chapterComplete(chapter.history)" class="ion-text-nowrap">{{ chapter.chapterListHeader.length>0?chapter.chapterListHeader:chapter.chapterHeader }}</ion-label>
             </ion-item>
           </ion-nav-link>
         }
       </div>
     }
 
-    <ion-fab slot="fixed" vertical="bottom" horizontal="end">
-      <ion-fab-button>
-        <ion-icon name="play"></ion-icon>
-      </ion-fab-button>
-    </ion-fab>
+    @if (work.resumeChapterId != null) {
+      <ion-fab slot="fixed" vertical="bottom" horizontal="end">
+        <ion-fab-button [routerLink]="'/work/' + work!.id + '/chapter/' + work!.resumeChapterId">
+          <ion-icon name="play"></ion-icon>
+        </ion-fab-button>
+      </ion-fab>
+    }
   }
   @else {
     <div class="position-relative h-100 w-100">

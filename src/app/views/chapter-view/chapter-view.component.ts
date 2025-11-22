@@ -1,5 +1,5 @@
 import {Component, ElementRef, OnDestroy, OnInit, ViewChild} from '@angular/core';
-import {ActivatedRoute, RouterLink} from '@angular/router';
+import {ActivatedRoute, Router, RouterLink} from '@angular/router';
 import {AO3} from '../../data/handlers/ao3';
 import {RefresherCustomEvent} from '@ionic/angular';
 import {Browser} from '@capacitor/browser';
@@ -10,7 +10,7 @@ import {
   IonButton,
   IonButtons,
   IonContent,
-  IonHeader, IonIcon, IonRefresher, IonRefresherContent, IonSpinner, IonTitle, IonToolbar
+  IonHeader, IonIcon, IonLabel, IonRefresher, IonRefresherContent, IonSpinner, IonTitle, IonToolbar
 } from '@ionic/angular/standalone';
 import {ChapterParser} from '../../data/parsers/chapter-parser';
 import {logger} from '../../data/handlers/logger';
@@ -27,7 +27,6 @@ import {BackButtonComponent} from '../../UI/back-button/back-button.component';
   styleUrls: ['./chapter-view.component.less'],
   imports: [
     DropDownHTMLComponent,
-    IonBackButton,
     IonButton,
     IonButtons,
     IonContent,
@@ -41,7 +40,8 @@ import {BackButtonComponent} from '../../UI/back-button/back-button.component';
     ElementLoadDirective,
     RouterLink,
     HideHeaderDirective,
-    BackButtonComponent
+    BackButtonComponent,
+    IonLabel
   ]
 })
 export class ChapterViewComponent  implements OnInit, OnDestroy {
@@ -49,7 +49,8 @@ export class ChapterViewComponent  implements OnInit, OnDestroy {
   constructor(
     private route: ActivatedRoute,
     private chapterPipe: ChapterPipeline,
-    private historyMgmt: HistoryMgmt
+    private historyMgmt: HistoryMgmt,
+    private router: Router
   ) { }
 
   @ViewChild("Content") content!: IonContent;
@@ -70,6 +71,8 @@ export class ChapterViewComponent  implements OnInit, OnDestroy {
     this.route.paramMap.subscribe(params => {
       this.workId = params.get('workId');
       this.chapterId = params.get('chapterId');
+      this.history = null;
+      this.chapter = null;
       this.grabChapter();
     })
   }
@@ -85,6 +88,7 @@ export class ChapterViewComponent  implements OnInit, OnDestroy {
 
         this.historyMgmt.get(Number(this.workId), Number(this.chapterId)).subscribe(history => {
           this.history = history;
+          logger.info("pos: "+this.history.scrollPosition+" max: "+this.history.scrollMax);
           history.chapterHeader = JSON.parse(JSON.stringify(this.chapter!.chapterHeader));
         })
       });
@@ -127,11 +131,17 @@ export class ChapterViewComponent  implements OnInit, OnDestroy {
     }
 
     if (event.detail.scrollTop >= this.maxHeight) { // Reached bottom
-      this.savedScrollPos = JSON.parse(JSON.stringify(this.maxHeight));
+      this.savedScrollPos = JSON.parse(JSON.stringify(this.maxHeight))+100;
       if (this.history != null) this.history.scrollPosition = this.savedScrollPos;
       this.historyMgmt.update(this.history!);
     }
   }
 
-  protected readonly History = History;
+  nextChapter() {
+    this.savedScrollPos = JSON.parse(JSON.stringify(this.maxHeight))+100; // Added to max to prevent decimals from causing issues
+    if (this.history != null) this.history.scrollPosition = this.savedScrollPos;
+    this.historyMgmt.update(this.history!);
+    this.historyMgmt.resetPos(this.chapter!.workId, this.chapter!.nextId)
+    this.router.navigate(['/work/' + this.workId + '/chapter/' + this.chapter!.nextId], {skipLocationChange: true});
+  }
 }
