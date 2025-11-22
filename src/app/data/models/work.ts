@@ -39,6 +39,7 @@ export class Work {
   hits: number = 0;
 
   // Extra
+  resumeChapterId: number | null = null;
   lastFetchDate: Date = new Date(0);
   parserVersion: number = -1;
 

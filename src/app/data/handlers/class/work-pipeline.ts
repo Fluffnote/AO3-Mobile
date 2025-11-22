@@ -8,6 +8,7 @@ import {WorkParser} from '../../parsers/work-parser';
 import {logger} from '../logger';
 import {HttpResponse} from '@capacitor/core';
 import {ChapterPipeline} from './chapter-pipeline';
+import {HistoryMgmt} from '../history-mgmt';
 
 @Injectable({
   providedIn: 'root'
@@ -86,6 +87,10 @@ export class WorkPipeline {
       }
 
       work.chapters = await ChapterPipeline.WorkChapters(sql, work.id);
+      work.resumeChapterId = await HistoryMgmt.DB2RecentChapterId(sql, work.id)
+      if (work.resumeChapterId == null && work.chapters.length > 0) { // If no resume chapter, set to the first chapter
+        work.resumeChapterId = work.chapters[0].id;
+      }
     }
     catch (err) {
       logger.error((err as Error).message);

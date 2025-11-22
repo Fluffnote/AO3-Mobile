@@ -53,10 +53,10 @@ export class HistoryMgmt {
   }
 
   get(workId: number, chapterId: number): Observable<History> {
-    return createObservable(this.DB2History, this.sql, workId, chapterId)
+    return createObservable(HistoryMgmt.DB2History, this.sql, workId, chapterId, true)
   }
 
-  private async DB2History(sql:SQL, workId: number, chapterId: number): Promise<History> {
+  static async DB2History(sql:SQL, workId: number, chapterId: number, createNew: boolean): Promise<History|null> {
     let history = new History();
     history.workId = workId;
     history.chapterId = chapterId;
@@ -70,7 +70,7 @@ export class HistoryMgmt {
         history.scrollPosition = historyData.SCROLL_POSITION;
         history.scrollMax = historyData.SCROLL_MAX;
       }
-      else { // Create a new entry
+      else if (createNew) { // Create a new entry
         const works = await sql.queryPromise(`SELECT * FROM WORK_CACHE WHERE ID = ${workId}`);
         if (works.length > 0) {
           const workData = works[0];
@@ -83,18 +83,50 @@ export class HistoryMgmt {
           `INSERT INTO HISTORY (WORK_ID, CHAPTER_ID, WORK_TITLE, AUTHOR, CHAPTER_HEADER,
                                    SCROLL_POSITION, SCROLL_MAX, ACCESS_DATE)
          VALUES (?, ?, ?, ?, ?,
-                 0, 0, ?)`;
+                 0, 10, ?)`;
         await sql.execute(insertSQL, [
           history.workId, history.chapterId, history.workTitle, history.author, history.chapterHeader,
           history.accessDate
         ])
       }
+      else return null;
     }
     catch (err) {
       logger.error((err as Error).message);
       logger.error((err as Error).stack+"");
     }
     return history;
+  }
+
+  static async DB2RecentChapterId(sql:SQL, workId: number): Promise<number|null> {
+    try {
+      const query =
+        `SELECT CHAPTER_ID, ACCESS_DATE
+         FROM HISTORY H
+         WHERE WORK_ID = ${workId}
+         ORDER BY ACCESS_DATE DESC`;
+
+      const histories = await sql.queryPromise(query);
+      if (histories.length > 0) { // Grab from DB
+        const historyData = histories[0];
+        return historyData.CHAPTER_ID;
+      }
+    }
+    catch (err) {
+      logger.error((err as Error).message);
+      logger.error((err as Error).stack+"");
+    }
+    return null;
+  }
+
+  async resetPos(workId: number, chapterId: number): Promise<void> {
+    try {
+      await this.sql.execute(`UPDATE HISTORY SET SCROLL_POSITION = 0 WHERE CHAPTER_ID = ${chapterId} AND WORK_ID = ${workId}`);
+    }
+    catch (err) {
+      logger.error((err as Error).message);
+      logger.error((err as Error).stack+"");
+    }
   }
 
   async update(history: History): Promise<void> {

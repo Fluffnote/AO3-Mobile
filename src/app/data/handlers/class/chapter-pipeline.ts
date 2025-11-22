@@ -7,6 +7,7 @@ import {createObservable} from '../create-observable';
 import {ChapterParser} from '../../parsers/chapter-parser';
 import {HttpResponse} from '@capacitor/core';
 import {logger} from '../logger';
+import {HistoryMgmt} from '../history-mgmt';
 
 @Injectable({
   providedIn: 'root'
@@ -68,6 +69,8 @@ export class ChapterPipeline {
         chapter.body = chapterData.BODY;
         chapter.lastFetchDate = chapterData.LAST_FETCHED_DATE != null? new Date(chapterData.LAST_FETCHED_DATE) : new Date(0);
         chapter.parserVersion = chapterData.PARSER_VERSION;
+
+        chapter.history = await HistoryMgmt.DB2History(sql, workId, chapterId, true)
       }
     }
     catch (err) {
@@ -127,6 +130,7 @@ export class ChapterPipeline {
         chapter.body = chapterData.BODY;
         chapter.lastFetchDate = chapterData.LAST_FETCHED_DATE != null? new Date(chapterData.LAST_FETCHED_DATE) : new Date(0);
         chapter.parserVersion = chapterData.PARSER_VERSION;
+        chapter.history = await HistoryMgmt.DB2History(sql, workId, chapter.id, false)
         chapters.push(chapter);
       }
     }

@@ -1,3 +1,5 @@
+import {History} from './history';
+
 export class Chapter {
 
   // Basic info
@@ -15,6 +17,7 @@ export class Chapter {
   body: string = "";
 
   // Extra
+  history: History | null = null;
   lastFetchDate: Date = new Date(0);
   parserVersion: number = -1;
 

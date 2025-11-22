@@ -3,6 +3,7 @@ import {IonApp, IonRouterOutlet} from '@ionic/angular/standalone';
 import {SQL} from './data/DB/sql';
 import { App as CapApp } from '@capacitor/app';
 import {Location} from '@angular/common';
+import {StatusBar} from '@capacitor/status-bar';
 
 @Component({
   selector: 'app-root',
@@ -20,6 +21,7 @@ export class App implements OnInit, AfterViewInit, OnDestroy{
 
   ngOnInit() {
     CapApp.addListener('backButton', () => {
+      StatusBar.show();
       this.location.back();
     });
   }
